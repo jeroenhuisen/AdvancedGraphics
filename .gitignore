@@ -38,3 +38,5 @@
 
 
 *.ipch
+*.log
+*.tlog
