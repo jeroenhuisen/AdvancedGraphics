@@ -3,6 +3,10 @@
 #define SCRWIDTH	 1280
 #define SCRHEIGHT	 800
 
+#include "raytracer.h"
+#include "camera.h"
+//#include "scene.h"
+
 namespace Tmpl8 {
 
 class Surface;
@@ -21,6 +25,7 @@ public:
 	void KeyDown( int a_Key ) { /* implement if you want to handle keys */ }
 private:
 	Surface* screen;
+	Raytracer tracer;
 };
 
 }; // namespace Tmpl8
