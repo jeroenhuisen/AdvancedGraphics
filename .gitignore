@@ -35,3 +35,6 @@
 *.filters
 *.vcxproj
 *.ilk
+
+
+*.ipch
