@@ -1,7 +1,7 @@
 #include "raytracer.h"
 #include "template.h"
 
-Raytracer::Raytracer() {
+Raytracer::Raytracer(Camera camera): camera(camera) {
 
 }
 
@@ -16,7 +16,8 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int scr
 
 void Raytracer::tracePixel(Tmpl8::Pixel* pixel, int x, int y) {
 	// do stuff
-	Ray r = Ray(camera.getPostion(), camera )
+	Ray r = Ray(camera.getPosition(), camera.getPixelDirection(x, y));
+	trace(r);
 }
 
 void Raytracer::trace(Ray r) {
