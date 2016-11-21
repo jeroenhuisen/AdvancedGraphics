@@ -1,7 +1,8 @@
 #include "raytracer.h"
 #include "template.h"
 
-Raytracer::Raytracer(Camera camera): camera(camera) {
+Raytracer::Raytracer(Scene* scene, Camera* camera): 
+	scene(scene), camera(camera) {
 
 }
 
@@ -16,10 +17,12 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int scr
 
 void Raytracer::tracePixel(Tmpl8::Pixel* pixel, int x, int y) {
 	// do stuff
-	Ray r = Ray(camera.getPosition(), camera.getPixelDirection(x, y));
-	trace(r);
+	Ray r = Ray(camera->getPosition(), camera->getPixelDirection(x, y));
+	*pixel = trace(r);
 }
 
-void Raytracer::trace(Ray r) {
-	I, N, mat = nearestIntersection(scene, r);
+Tmpl8::Pixel Raytracer::trace(Ray r) {
+	//I, N, mat = nearestIntersection(scene, r);
+	// Red test
+	return Tmpl8::Pixel(0xff0000);
 }

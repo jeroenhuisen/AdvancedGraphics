@@ -1,13 +1,18 @@
 #include "template.h"
 
+Game::Game() :
+	camera(SCRWIDTH, SCRHEIGHT, 60), scene(&camera), tracer(&scene, &camera) {
+
+}
+
 // -----------------------------------------------------------
 // Initialize the game
 // -----------------------------------------------------------
 void Game::Init()
 {	
-	Camera camera;
-	//Scene scene(camera);
-	//tracer = Raytracer(&scene);
+	//Camera camera(SCRWIDTH, SCRHEIGHT, 60);
+	//Scene scene(&camera);
+	//tracer = Raytracer(&scene, &camera);
 }
 
 // -----------------------------------------------------------

@@ -2,8 +2,8 @@
 #include "template.h"
 
 
-Object::Object(glm::vec3 position, glm::vec3 direction) :
-	position(position), direction(direction) {
+Object::Object(glm::vec3 pos, glm::vec3 dir) :
+	position(pos), direction(dir) {
 
 }
 

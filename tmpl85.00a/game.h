@@ -5,7 +5,7 @@
 
 #include "raytracer.h"
 #include "camera.h"
-//#include "scene.h"
+#include "scene.h"
 
 namespace Tmpl8 {
 
@@ -13,6 +13,7 @@ class Surface;
 class Game
 {
 public:
+	Game();
 	void SetTarget( Surface* _Surface ) { screen = _Surface; }
 	void Init();
 	void Shutdown() { /* implement if you want code to be executed upon app exit */ };
@@ -25,6 +26,9 @@ public:
 	void KeyDown( int a_Key ) { /* implement if you want to handle keys */ }
 private:
 	Surface* screen;
+
+	Camera camera;
+	Scene scene;
 	Raytracer tracer;
 };
 
