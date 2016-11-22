@@ -6,6 +6,10 @@
 #include "raytracer.h"
 #include "camera.h"
 #include "scene.h"
+#include "sphere.h"
+#include "material.h"
+#include "plane.h"
+//#include "sceneBuilder.cpp"
 
 namespace Tmpl8 {
 

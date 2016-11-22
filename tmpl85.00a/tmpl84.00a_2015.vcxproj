@@ -228,7 +228,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="ligth.cpp" />
+    <ClCompile Include="material.cpp" />
     <ClCompile Include="object.cpp" />
+    <ClCompile Include="plane.cpp" />
+    <ClCompile Include="primitive.cpp" />
     <ClCompile Include="ray.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -236,6 +240,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="sceneBuilder.cpp" />
+    <ClCompile Include="sphere.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -248,10 +254,15 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="light.h" />
+    <ClInclude Include="material.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="plane.h" />
+    <ClInclude Include="primitive.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="raytracer.h" />
     <ClInclude Include="scene.h" />
+    <ClInclude Include="sphere.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
     <ClInclude Include="threads.h" />

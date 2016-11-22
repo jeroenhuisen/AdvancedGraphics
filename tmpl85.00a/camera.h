@@ -16,4 +16,9 @@ private:
 public:
 	Camera(int width, int height, float horizontalFOV, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 viewingDirection = glm::vec3(0.0f, 0.0f, 1.0f));
 	glm::vec3 getPixelDirection(int x, int y);
+
+	// REMOVE
+	glm::vec3 intersection(Ray r) {
+		return glm::vec3();
+	}
 };

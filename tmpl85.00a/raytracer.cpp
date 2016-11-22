@@ -23,6 +23,16 @@ void Raytracer::tracePixel(Tmpl8::Pixel* pixel, int x, int y) {
 
 Tmpl8::Pixel Raytracer::trace(Ray r) {
 	//I, N, mat = nearestIntersection(scene, r);
-	// Red test
-	return Tmpl8::Pixel(0xff0000);
+	// Black test
+	glm::vec3 intersection;
+	glm::vec3 normal;
+	Material material(0x000000);
+	nearestIntersection(r, &intersection, &normal, &material);
+	return material.getColor();
 }
+
+void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material) {
+	// going for the slowest approach
+	scene->nearestIntersection(r, intersection, normal, material);
+}
+

@@ -20,10 +20,10 @@ Camera::Camera(int width, int height, float horizontalFOV, glm::vec3 position, g
 	mat3x3 yAxisLocal90(0.0f, 0.0f, 1.0f,
 						0.0f, 1.0f, 0.0f,
 						-1.0f, 0.0f, 0.0f);
-	p0 = center + zAxisLocal90C * direction * width2; //only with also height so
+	p0 = center - zAxisLocal90C * direction * width2; //only with also height so
 	p0 += yAxisLocal90C * direction * height2; // height done
-	p1 = center + zAxisLocal90 * direction * width2;
-	p1 += yAxisLocal90C * direction * height2;
+	p1 = center + zAxisLocal90 * direction * width2; //- since + didn t work but yeah... should be another rotation thing?
+	p1 += yAxisLocal90C * direction * height2; 
 	p2 = center + zAxisLocal90 * direction * width2;
 	p2 += yAxisLocal90 * direction * height2;
 
@@ -34,8 +34,8 @@ glm::vec3 Camera::getPixelDirection(int x, int y) {
 	// x-width2 is the pixel distance
 	//x - width2;
 	//y - height2;
-	float u = x / screenWidth;
-	float v = y / screenHeight;
+	float u = (float) x / screenWidth;
+	float v = (float) y / screenHeight;
 
 	vec3 pXY = p0 + u*(p1 - p0) + v*(p2 - p0);
 	vec3 d = (pXY - position);
