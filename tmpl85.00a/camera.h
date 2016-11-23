@@ -14,7 +14,7 @@ private:
 
 	glm::vec3 p0, p1, p2;
 public:
-	Camera(int width, int height, float horizontalFOV, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 viewingDirection = glm::vec3(0.0f, 0.0f, 1.0f));
+	Camera(int width, int height, float horizontalFOV, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 viewingDirection = glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::vec3 getPixelDirection(int x, int y);
 
 	// REMOVE

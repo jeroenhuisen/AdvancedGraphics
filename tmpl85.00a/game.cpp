@@ -18,8 +18,10 @@ void Game::Init()
 
 	Material* red = new Material(0xff0000);
 	Sphere* sphere = new Sphere(glm::vec3(10.0f, 10.0f, 10.0f), 2.0f, red);
-	Plane* plane = new Plane(glm::vec3(5, 5, 5), glm::vec3(0, 0.5, 0.5), 10, 100);
+	Plane* plane = new Plane(glm::vec3(0, 1108, 0), glm::vec3(0, 1, 0), 100, 200); //why does it has to be 200 but show as 100? idk.
 	scene.addObject(plane);
+	//scene.addObject(plane);
+	//scene.addObject(sphere);
 	//sceneBuilder(&scene);
 }
 
@@ -39,4 +41,5 @@ void Game::Tick( float dt )
 	tracer.traceScreen(screen->GetBuffer(), SCRWIDTH, SCRHEIGHT);
 	screen->Print( "hello world", 2, 2, 0xffffff );
 	//screen->Line( 2, 10, 50, 10, 0xff0000 );
+	std::cout << dt << std::endl;
 }

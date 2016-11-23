@@ -7,11 +7,55 @@ Raytracer::Raytracer(Scene* scene, Camera* camera):
 }
 
 void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int screenHeight) {
-	for (int y = 0; y < screenHeight; y++){
+	//Tmpl8::Pixel color = 0x000000;
+	//boolean test = true;
+	//int testCounter = 0;
+	for (int y = 0; y < screenHeight; y++) {
 		for (int x = 0; x < screenWidth; x++) {
 			screenBuffer++; //hoping that this is how the buffer is alligned
 			tracePixel(screenBuffer, x, y);
+			if (x == screenWidth/2 && y == screenHeight/2){
+				*screenBuffer = 0x00FF00;
+			}
+			if (x == screenWidth / 2  && y == screenHeight/2 + 100) {
+				*screenBuffer = 0x00FF00;
+			}
+			if (x == screenWidth / 2  + 100 && y == screenHeight/2) {
+				*screenBuffer = 0x00FF00;
+			}
+			if (x == screenWidth / 2  + 100 && y == screenHeight / 2 + 100) {
+				*screenBuffer = 0x00FF00;
+			}
+			//*screenBuffer = color;
+			/*if (testCounter >= 10) {
+				if (test) {
+					color = 0x770000;
+
+					test = false;
+				}
+				else {
+					color = 0x000077;
+					test = true;
+				}
+				testCounter = 0;
+			
+			}
+			testCounter++;*/
 		}
+		/*if (testCounter >= 10) { 
+			if (test) {
+				color = 0x770000;
+
+				test = false;
+			}
+			else {
+
+				color = 0x000077;
+				test = true;
+			}
+			testCounter = 0;
+		}
+		testCounter++;*/
 	}
 }
 

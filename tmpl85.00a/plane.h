@@ -1,6 +1,7 @@
 #pragma once
-#include "object.h"
 #include "template.h"
+#include "object.h"
+#include <iostream>
 
 
 class Plane : public Object {
@@ -21,10 +22,11 @@ public:
 		glm::vec3 result = r.getDirection() * value + r.getOrigin();
 		//glm::vec3 max = position + direction * glm::vec3(width, height, 0);
 		//min is position;
-		if (position.x <= result.x && result.x <= width	&&
-			position.z <= result.z && result.z <= height ){ //&&
+		// if statement for y = 1 direction
+		if (position.x <= result.x && result.x <= position.x + width &&
+			position.z <= result.z && result.z <= position.z + height ){ //&&
 			///position.z >= result.z && max.x <= result.z) {
-			
+		
 				return result;
 		}
 		else {
