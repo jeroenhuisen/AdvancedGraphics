@@ -14,17 +14,18 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int scr
 		for (int x = 0; x < screenWidth; x++) {
 			screenBuffer++; //hoping that this is how the buffer is alligned
 			tracePixel(screenBuffer, x, y);
+			//Debugging dots.
 			if (x == screenWidth/2 && y == screenHeight/2){
-				*screenBuffer = 0x00FF00;
+				*screenBuffer = 0x0000FF;
 			}
 			if (x == screenWidth / 2  && y == screenHeight/2 + 100) {
-				*screenBuffer = 0x00FF00;
+				*screenBuffer = 0x0000FF;
 			}
 			if (x == screenWidth / 2  + 100 && y == screenHeight/2) {
-				*screenBuffer = 0x00FF00;
+				*screenBuffer = 0x0000FF;
 			}
 			if (x == screenWidth / 2  + 100 && y == screenHeight / 2 + 100) {
-				*screenBuffer = 0x00FF00;
+				*screenBuffer = 0x0000FF;
 			}
 			//*screenBuffer = color;
 			/*if (testCounter >= 10) {
