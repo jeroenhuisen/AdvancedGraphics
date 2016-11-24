@@ -3,7 +3,7 @@
 
 
 Camera::Camera(int width, int height, float horizontalFOV, glm::vec3 position, glm::vec3 viewingDirection ) :
-	Object(position, viewingDirection), screenWidth(width), screenHeight(height), horizontalFOV(horizontalFOV), width2(width/2), height2(height/2){
+	Placeable(position, viewingDirection), screenWidth(width), screenHeight(height), horizontalFOV(horizontalFOV), width2(width/2), height2(height/2){
 
 	screenDistance = width2 / tanf(horizontalFOV * PI / 360);
 	glm::vec3 center = direction * screenDistance + position;
@@ -29,15 +29,15 @@ Camera::Camera(int width, int height, float horizontalFOV, glm::vec3 position, g
 
 	p0.x = -width2;
 	p0.y = screenDistance;
-	p0.z = -height;
+	p0.z = -height2;
 
 	p1.x = width2;
 	p1.y = screenDistance;
-	p1.z = -height;
+	p1.z = -height2;
 
 	p2.x = -width2;
 	p2.y = screenDistance;
-	p2.z = height;
+	p2.z = height2;
 
 	//quite inefficient since multiple matrix multiplications and stuff while some geometry might also work? can atleast be combined 3 matrix for 3 points should be enough...
 }

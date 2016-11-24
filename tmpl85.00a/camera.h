@@ -1,8 +1,8 @@
 #pragma once
 #include "template.h"
-#include "object.h"
+#include "placeable.h"
 
-class Camera : public Object {
+class Camera : public Placeable {
 private:
 	float screenDistance;
 	int screenWidth;

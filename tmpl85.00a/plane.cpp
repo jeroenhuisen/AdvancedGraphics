@@ -1,8 +1,8 @@
 #include "template.h"
 #include "plane.h"
 
-Plane::Plane(vec3 position, vec3 direction, float width, float height) :
-	Object(position, direction), width(width), height(height) {
+Plane::Plane(vec3 position, vec3 direction, float width, float height, Material* material) :
+	Object(position, direction, material), width(width), height(height) {
 
 }
 
