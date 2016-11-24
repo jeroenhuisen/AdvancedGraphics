@@ -23,8 +23,10 @@ public:
 		//glm::vec3 max = position + direction * glm::vec3(width, height, 0);
 		//min is position;
 		// if statement for y = 1 direction
-		if (position.x <= result.x && result.x <= position.x + width &&
-			position.z <= result.z && result.z <= position.z + height ){ //&&
+		if (position.x <= r.getDirection().x && r.getDirection().x <= position.x + width &&
+			position.z <= r.getDirection().z && r.getDirection().z <= position.z + height){
+		//if (position.x <= result.x && result.x <= position.x + width &&
+		//	position.z <= result.z && result.z <= position.z + height ){ //&&
 			///position.z >= result.z && max.x <= result.z) {
 		
 				return result;
