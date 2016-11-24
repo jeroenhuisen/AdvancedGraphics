@@ -273,3 +273,8 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
+
+
+# exception for this project
+!tmpl85.00a/lib/SDL2-2.0.3/lib/x64
+!tmpl85.00a/lib/SDL2-2.0.3/lib/x86
