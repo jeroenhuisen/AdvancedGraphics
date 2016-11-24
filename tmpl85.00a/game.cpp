@@ -17,10 +17,12 @@ void Game::Init()
 
 
 	Material* red = new Material(0xff0000);
+	Material* green = new Material(0x00FF00);
 	Sphere* sphere = new Sphere(glm::vec3(10.0f, 10.0f, 10.0f), 2.0f, red);
-	Plane* plane = new Plane(glm::vec3(0, 1108, 0), glm::vec3(0, 1, 0), 100, 200); //why does it has to be 200 but show as 100? idk.
+	Plane* plane = new Plane(glm::vec3(0, 1108, 0), glm::vec3(0, 1, 0), 100, 200, red); //why does it has to be 200 but show as 100? idk.
+	Plane* plane1 = new Plane(glm::vec3(500, 1108, 500), glm::vec3(0, 1, 0), 100, 200, green); //why does it has to be 200 but show as 100? idk.
 	scene.addObject(plane);
-	//scene.addObject(plane);
+	scene.addObject(plane1);
 	//scene.addObject(sphere);
 	//sceneBuilder(&scene);
 }

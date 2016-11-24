@@ -1,16 +1,12 @@
-#include "object.h" 
+#include "object.h"
 #include "template.h"
 
-
-Object::Object(glm::vec3 pos, glm::vec3 dir) :
-	position(pos), direction(dir) {
+Object::Object(glm::vec3 position, glm::vec3 direction, Material* material):
+	Placeable(position, direction), material(material){
+//add this{
 
 }
 
-glm::vec3 Object::getPosition() {
-	return position;
-}
-
-glm::vec3 Object::getDirection() {
-	return direction;
+Material* Object::getMaterial() {
+	return material;
 }

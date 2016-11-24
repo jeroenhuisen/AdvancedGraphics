@@ -24,7 +24,7 @@ void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* norma
 		*intersection = result;
 		//*material = objects[i]->getMaterial();
 		if (result.x != 0) {
-			*material = 0xFF0000;//red
+			*material = *objects[i]->getMaterial();
 		}
 		//std::cout << objects[i]->getPosition().x << std::endl;
 	}

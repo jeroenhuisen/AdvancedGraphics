@@ -3,7 +3,7 @@
 
 
 Camera::Camera(int width, int height, float horizontalFOV, glm::vec3 position, glm::vec3 viewingDirection ) :
-	Object(position, viewingDirection), screenWidth(width), screenHeight(height), horizontalFOV(horizontalFOV), width2(width/2), height2(height/2){
+	Placeable(position, viewingDirection), screenWidth(width), screenHeight(height), horizontalFOV(horizontalFOV), width2(width/2), height2(height/2){
 
 	screenDistance = width2 / tanf(horizontalFOV * PI / 360);
 	glm::vec3 center = direction * screenDistance + position;

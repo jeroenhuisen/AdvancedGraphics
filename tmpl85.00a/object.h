@@ -1,16 +1,14 @@
 #pragma once
 #include "template.h"
-
 #include "ray.h"
+#include "placeable.h"
+#include "material.h"
 
-class Object {
+class Object : public Placeable{
 protected:
-	glm::vec3 position;
-	glm::vec3 direction;
+	Material* material; //could be a pointer if you want to change the the material externally with risk of changing material of multiple objects at the same time. I guess we do that...
 public:
-	Object(glm::vec3 position, glm::vec3 direction);
-	glm::vec3 getPosition();
-	glm::vec3 getDirection();
-
+	Object(glm::vec3 position, glm::vec3 direction, Material* material);
+	Material* getMaterial();
 	virtual glm::vec3 intersection(Ray r) = 0;
 };
