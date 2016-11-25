@@ -9,6 +9,7 @@
 #include "sphere.h"
 #include "material.h"
 #include "plane.h"
+#include "pointlight.h"
 //#include "sceneBuilder.cpp"
 
 namespace Tmpl8 {
