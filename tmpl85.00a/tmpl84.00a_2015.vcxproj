@@ -228,11 +228,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="ligth.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="placeable.cpp" />
     <ClCompile Include="plane.cpp" />
+    <ClCompile Include="pointlight.cpp" />
     <ClCompile Include="primitive.cpp" />
     <ClCompile Include="ray.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -260,6 +261,7 @@
     <ClInclude Include="object.h" />
     <ClInclude Include="placeable.h" />
     <ClInclude Include="plane.h" />
+    <ClInclude Include="pointlight.h" />
     <ClInclude Include="primitive.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="raytracer.h" />
