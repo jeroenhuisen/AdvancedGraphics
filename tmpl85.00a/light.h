@@ -2,11 +2,11 @@
 #include "template.h"
 #include "object.h"
 
-class Light : public Object {
+class Light : public Placeable {
 protected:
-	float lightItensity;
-	Tmpl8::Pixel ligthColor;
+	float lightIntensity;
+	Tmpl8::Pixel color;
 public:
-	
+	Light(glm::vec3 position, glm::vec3 direction, float lightIntensity, Tmpl8::Pixel color);
 
 };

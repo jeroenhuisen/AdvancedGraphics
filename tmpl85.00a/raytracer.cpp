@@ -14,49 +14,7 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int scr
 		for (int x = 0; x < screenWidth; x++) {
 			screenBuffer++; //hoping that this is how the buffer is alligned
 			tracePixel(screenBuffer, x, y);
-			//Debugging dots.
-			if (x == screenWidth/2 && y == screenHeight/2){
-				*screenBuffer = 0x0000FF;
-			}
-			if (x == screenWidth / 2  && y == screenHeight/2 + 100) {
-				*screenBuffer = 0x0000FF;
-			}
-			if (x == screenWidth / 2  + 100 && y == screenHeight/2) {
-				*screenBuffer = 0x0000FF;
-			}
-			if (x == screenWidth / 2  + 100 && y == screenHeight / 2 + 100) {
-				*screenBuffer = 0x0000FF;
-			}
-			//*screenBuffer = color;
-			/*if (testCounter >= 10) {
-				if (test) {
-					color = 0x770000;
-
-					test = false;
-				}
-				else {
-					color = 0x000077;
-					test = true;
-				}
-				testCounter = 0;
-			
-			}
-			testCounter++;*/
 		}
-		/*if (testCounter >= 10) { 
-			if (test) {
-				color = 0x770000;
-
-				test = false;
-			}
-			else {
-
-				color = 0x000077;
-				test = true;
-			}
-			testCounter = 0;
-		}
-		testCounter++;*/
 	}
 }
 
@@ -68,11 +26,12 @@ void Raytracer::tracePixel(Tmpl8::Pixel* pixel, int x, int y) {
 
 Tmpl8::Pixel Raytracer::trace(Ray r) {
 	//I, N, mat = nearestIntersection(scene, r);
-	// Black test
 	glm::vec3 intersection;
 	glm::vec3 normal;
 	Material material(0x000000);
 	nearestIntersection(r, &intersection, &normal, &material);
+	//
+
 	return material.getColor();
 }
 

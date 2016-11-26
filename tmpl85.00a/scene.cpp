@@ -15,6 +15,14 @@ std::vector<Object*> Scene::getObjects() {
 	return objects;
 }
 
+void Scene::addLight(Light* light) {
+	lights.push_back(light);
+}
+
+std::vector<Light*> Scene::getLights() {
+	return lights;
+}
+
 void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material) {
 	for (int i = 0; i < objects.size(); i++) {
 		glm::vec3 result = objects[i]->intersection(r);
