@@ -21,5 +21,5 @@ public:
 	void addLight(Light* light);
 	std::vector<Object*> getObjects();
 	std::vector<Light*> getLights();
-	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material);
+	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
 };

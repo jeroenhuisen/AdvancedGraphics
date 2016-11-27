@@ -11,8 +11,8 @@ private:
 	Scene* scene;
 	Camera* camera;
 	Tmpl8::Pixel trace(Ray r);
-	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material);
-	Tmpl8::Pixel directIllumination(glm::vec3 intersection, glm::vec3 normal);
+	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
+	float directIllumination(glm::vec3 intersection, glm::vec3 normal, float distance);
 public:
 	Raytracer(Scene* scene, Camera* camera);
 	void traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int screenHeight);

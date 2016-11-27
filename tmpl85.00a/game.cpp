@@ -21,7 +21,7 @@ void Game::Init()
 	Sphere* sphere = new Sphere(glm::vec3(10.0f, 10.0f, 10.0f), 2.0f, red);
 	Plane* plane = new Plane(glm::vec3(0, 1108, 0), glm::vec3(0, 1, 0), 100, 100, red);
 	Plane* plane1 = new Plane(glm::vec3(500, 1108, 300), glm::vec3(0, 1, 0), 100, 100, green);
-	PointLight* pointLight = new PointLight(glm::vec3(0, 0, 0), 10, 0xFFFFFF);
+	PointLight* pointLight = new PointLight(glm::vec3(0, 0, 0), 1, 0xFF00FF, 1.0f, 0.007f, 0.002f);
 	scene.addLight(pointLight);
 	scene.addObject(plane);
 	scene.addObject(plane1);

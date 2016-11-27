@@ -29,23 +29,40 @@ Tmpl8::Pixel Raytracer::trace(Ray r) {
 	glm::vec3 intersection;
 	glm::vec3 normal;
 	Material material(0x000000);
-	nearestIntersection(r, &intersection, &normal, &material);
-	//
+	float distance = INFINITE;
+	nearestIntersection(r, &intersection, &normal, &material, &distance);
+	
+	if (material.getColor() != 0) {
+		float mul = directIllumination(intersection, normal, distance);
+		
+		Tmpl8::Pixel test = Tmpl8::Pixel((material.getColor() & 0xFF0000) * mul + (material.getColor()&0x00FF00) * mul + (material.getColor()&0x0000FF) * mul);
+		//Tmpl8::Pixel test2 = material.getColor();// *mul;
+		unsigned long r = (material.getColor() & 0xFF0000) * mul;
+		unsigned long ra = r & 0xFF0000;
+		unsigned long g = (material.getColor() & 0x00FF00) * mul;
+		unsigned long ga = g & 0x00FF00;
+		unsigned long b = (material.getColor() & 0x0000FF)* mul;
+		unsigned long ba = b & 0x0000FF;
+		unsigned long rgb = ra + ga + ba;
+		return rgb;// std::cout << "bami";
+	}
 
-	return material.getColor() * directIllumination(intersection, normal);
+	return material.getColor() * directIllumination(intersection, normal, distance);
+
 }
 
-void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material) {
+void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 	// going for the slowest approach
-	scene->nearestIntersection(r, intersection, normal, material);
+	scene->nearestIntersection(r, intersection, normal, material, distance);
 }
 
-Tmpl8::Pixel Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
+float Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, float distance) {
 	Ray r = Ray(intersection, normal);
 	std::vector<Light*> lights = scene->getLights();
 	for (int i = 0; i < lights.size(); i++) {
-//		lights[i].
+		// wrong implementation
+		return lights[i]->calculateStrength(distance);
 	}
-	return 0xFFFFFF;
+	//return 0xFFFFFF;
 }
 

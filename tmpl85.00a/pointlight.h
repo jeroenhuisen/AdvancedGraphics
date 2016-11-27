@@ -4,5 +4,6 @@
 
 class PointLight : public Light {
 public:
-	PointLight(glm::vec3 position, float lightIntensity, Tmpl8::Pixel color);
+	PointLight(glm::vec3 position, float lightIntensity, Tmpl8::Pixel color, float attenuationConstant, float attenuationLinear, float attenuationQuadratic);
+	float calculateStrength(float distance);
 };

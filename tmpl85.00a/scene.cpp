@@ -23,14 +23,14 @@ std::vector<Light*> Scene::getLights() {
 	return lights;
 }
 
-void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material) {
-	float distance = INFINITE;
+void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+	*distance = INFINITE;
 	for (int i = 0; i < objects.size(); i++) {
 		float tempDistance = INFINITE;
 		glm::vec3 result = objects[i]->intersection(r, &tempDistance);
 		//std::cout << "x: " << result.x << "y: " << result.y << "z: " << result.z << std::endl;
-		if (distance > tempDistance) {
-			distance = tempDistance;
+		if (*distance > tempDistance) {
+			*distance = tempDistance;
 			*intersection = result;
 			*material = *objects[i]->getMaterial();
 		}
