@@ -9,7 +9,7 @@ private:
 	float width, height;
 public:
 	Plane(glm::vec3 position, glm::vec3 direction, float width, float height, Material* material);
-	glm::vec3 intersection(Ray r) {
+	glm::vec3 intersection(Ray r, float* distance) {
 		/*position;
 		r.getOrigin() + r.getDirection();
 		direction*/
@@ -28,10 +28,11 @@ public:
 		//if (position.x <= result.x && result.x <= position.x + width &&
 		//	position.z <= result.z && result.z <= position.z + height ){ //&&
 			///position.z >= result.z && max.x <= result.z) {
-		
-				return result;
+			*distance = (r.getOrigin() - result).length();
+			return result;
 		}
 		else {
+			*distance = INFINITE;
 			return glm::vec3();
 		}
 

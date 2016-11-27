@@ -10,5 +10,5 @@ protected:
 public:
 	Object(glm::vec3 position, glm::vec3 direction, Material* material);
 	Material* getMaterial();
-	virtual glm::vec3 intersection(Ray r) = 0;
+	virtual glm::vec3 intersection(Ray r, float* distance) = 0;
 };

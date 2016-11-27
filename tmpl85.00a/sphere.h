@@ -10,7 +10,7 @@ private:
 public:
 	Sphere(glm::vec3 position, float radius, Material* material);
 	// implement
-	glm::vec3 intersection(Ray r) {
+	glm::vec3 intersection(Ray r, float* distance) {
 		return glm::vec3();
 	}
 };
