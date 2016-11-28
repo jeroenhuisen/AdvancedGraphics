@@ -7,3 +7,7 @@ Light::Light(glm::vec3 position, glm::vec3 direction, float lightIntensity, Tmpl
 
 
 }
+
+Tmpl8::Pixel Light::getColor() {
+	return color;
+}

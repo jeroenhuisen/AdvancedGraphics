@@ -10,4 +10,6 @@ protected:
 public:
 	Light(glm::vec3 position, glm::vec3 direction, float lightIntensity, Tmpl8::Pixel color, float attenuationConstant, float attenuationLinear, float attenuationQuadratic);
 	virtual float calculateStrength(float distance) = 0;
+
+	Tmpl8::Pixel getColor();
 };

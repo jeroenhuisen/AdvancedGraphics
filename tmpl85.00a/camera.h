@@ -1,6 +1,7 @@
 #pragma once
 #include "template.h"
 #include "placeable.h"
+#include "mat90.h"
 
 class Camera : public Placeable {
 private:

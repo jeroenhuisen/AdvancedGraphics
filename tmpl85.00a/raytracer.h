@@ -10,7 +10,7 @@ class Raytracer {
 private:
 	Scene* scene;
 	Camera* camera;
-	Tmpl8::Pixel trace(Ray r);
+	Tmpl8::Pixel trace(Ray r, int counter);
 	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
 	float directIllumination(glm::vec3 intersection, glm::vec3 normal, float distance);
 public:

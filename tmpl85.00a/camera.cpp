@@ -7,25 +7,7 @@ Camera::Camera(int width, int height, float horizontalFOV, glm::vec3 position, g
 
 	screenDistance = width2 / tanf(horizontalFOV * PI / 360);
 	glm::vec3 center = direction * screenDistance + position;
-	mat3x3 zAxisLocal90C(0.0f, 1.0f, 0.0f,
-						-1.0f, 0.0f,0.0f,
-						0.0f, 0.0f, 1.0f);
-	mat3x3 zAxisLocal90(0.0f, -1.0f, 0.0f,
-						1.0f, 0.0f, 0.0f,
-						0.0f, 0.0f, 1.0f);
-
-	/*mat3x3 yAxisLocal90C(0.0f, 0.0f, -1.0f,
-						0.0f, 1.0f, 0.0f,
-						1.0f, 0.0f, 0.0f);
-	mat3x3 yAxisLocal90(0.0f, 0.0f, 1.0f,
-						0.0f, 1.0f, 0.0f,
-						-1.0f, 0.0f, 0.0f);*/
-	mat3x3 xAxisLocal90C(1.0f, 0.0f, 0.0f,
-						0.0f, 0.0f, 1.0f,
-						0.0f, -1.0f, 0.0f);
-	mat3x3 xAxisLocal90(1.0f, 0.0f, 0.0f,
-						0.0f, 0.0f, -1.0f,
-						0.0f, 1.0f, 0.0f);
+	
 	p0 = center + zAxisLocal90C * direction * width2; //only with also height so
 	p0 += xAxisLocal90 * direction * height2; // height done
 	p1 = center + zAxisLocal90 * direction * width2; //- since + didn t work but yeah... should be another rotation thing?
