@@ -47,7 +47,7 @@ glm::vec3 Plane::intersection(Ray r, float* distance) {
 		//if (position.x <= result.x && result.x <= position.x + width &&
 		//	position.z <= result.z && result.z <= position.z + height ){ //&&
 		///position.z >= result.z && max.x <= result.z) {
-		*distance = (r.getOrigin() - result).length(); //doesnt work
+		*distance = glm::length(r.getOrigin() - result);// from camera most of the time... not light so yea.. doesnt work
 		return result;
 	}
 	else {
