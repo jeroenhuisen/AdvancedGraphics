@@ -36,14 +36,14 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
 	
 	if (material.getColor() != 0) {
-		float mul = directIllumination(intersection, normal, distance);
+		float mul = directIllumination(intersection, normal);
 		//if (mat == MIRROR)
 		//return material.getColor() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
 		
 		//Tmpl8::Pixel test = Tmpl8::Pixel((material.getColor() & 0xFF0000) * mul + (material.getColor()&0x00FF00) * mul + (material.getColor()&0x0000FF) * mul);
 		//Tmpl8::Pixel test2 = material.getColor();// *mul;
 		unsigned long r = (material.getColor() & 0xFF0000) * mul;
-		unsigned long ra = r & 0xFF0000; //maybe round?
+		unsigned long ra = r & 0xFF0000; //maybe round? wait if bigger than it will be black and not locked :( so time to fix that
 		unsigned long g = (material.getColor() & 0x00FF00) * mul;
 		unsigned long ga = g & 0x00FF00;
 		unsigned long b = (material.getColor() & 0x0000FF)* mul;
@@ -63,12 +63,13 @@ void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* n
 	scene->nearestIntersection(r, intersection, normal, material, distance);
 }
 
-float Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, float distance) {
+float Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
 	// Color of the lights are fully ignored at the moment...
 	Ray r = Ray(intersection, normal);
 	std::vector<Light*> lights = scene->getLights();
 	for (int i = 0; i < lights.size(); i++) {
 		// wrong implementation
+		float distance = glm::length(lights[i]->getPosition() - intersection);
 		return lights[i]->calculateStrength(distance);
 	}
 	//return 0xFFFFFF;

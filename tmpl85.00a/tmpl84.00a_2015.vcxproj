@@ -227,6 +227,7 @@
     <ClCompile Include="camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="color.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="mat90.cpp" />
@@ -256,6 +257,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="mat90.h" />
