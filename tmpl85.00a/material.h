@@ -1,12 +1,14 @@
 #pragma once
 #include "template.h"
+#include "color.h"
 
 
 class Material {
 private:
-	Tmpl8::Pixel color;
+	//Color color;
 	 // just for now
 public:
-	Material(Tmpl8::Pixel color);
-	Tmpl8::Pixel getColor() { return color; };
+	Color color;
+	Material(Color color);
+	Color getColor() { return color; };
 };

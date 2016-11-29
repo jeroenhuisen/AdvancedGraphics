@@ -2,7 +2,7 @@
 
 #include "pointlight.h"
 
-PointLight::PointLight(glm::vec3 position, float lightIntensity, Tmpl8::Pixel color, float attenuationConstant, float attenuationLinear, float attenuationQuadratic) :
+PointLight::PointLight(glm::vec3 position, float lightIntensity, Color color, float attenuationConstant, float attenuationLinear, float attenuationQuadratic) :
 	Light(position, glm::vec3(0, 0, 0), lightIntensity, color, attenuationConstant, attenuationLinear, attenuationQuadratic) {
 
 }

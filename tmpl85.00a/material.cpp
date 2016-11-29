@@ -2,7 +2,7 @@
 
 #include "material.h"
 
-Material::Material(Tmpl8::Pixel color) : 
+Material::Material(Color color) : 
 	color(color) {
 
 }

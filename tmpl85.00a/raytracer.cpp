@@ -31,24 +31,32 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 	//I, N, mat = nearestIntersection(scene, r);
 	glm::vec3 intersection;
 	glm::vec3 normal;
-	Material material(0x000000);
+	Material material(Color(0,0,0));
 	float distance = INFINITE;
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
 	
-	if (material.getColor() != 0) {
+	if (material.getColor().r != 0 || material.getColor().g != 0 || material.getColor().b != 0) {
 		float mul = directIllumination(intersection, normal);
 		//if (mat == MIRROR)
 		//return material.getColor() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
 		
 		//Tmpl8::Pixel test = Tmpl8::Pixel((material.getColor() & 0xFF0000) * mul + (material.getColor()&0x00FF00) * mul + (material.getColor()&0x0000FF) * mul);
 		//Tmpl8::Pixel test2 = material.getColor();// *mul;
-		unsigned long r = (material.getColor() & 0xFF0000) * mul;
+		/*unsigned long r = (material.getColor() & 0xFF0000) * mul;
 		unsigned long ra = r & 0xFF0000; //maybe round? wait if bigger than it will be black and not locked :( so time to fix that
 		unsigned long g = (material.getColor() & 0x00FF00) * mul;
 		unsigned long ga = g & 0x00FF00;
 		unsigned long b = (material.getColor() & 0x0000FF)* mul;
 		unsigned long ba = b & 0x0000FF;
 		unsigned long rgb = ra + ga + ba;
+		return rgb;*/
+		//material.getColor().r *= mul;
+		//material.getColor().g *= mul;
+		//material.getColor().b *= mul;
+		material.color.r *= mul;
+		material.color.g *= mul;
+		material.color.b *= mul;
+		unsigned long rgb = material.getColor().getRGB();
 		return rgb;
 	}
 	
