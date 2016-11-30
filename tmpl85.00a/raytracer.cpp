@@ -1,5 +1,6 @@
-#include "raytracer.h"
 #include "template.h"
+
+#include "raytracer.h"
 
 Raytracer::Raytracer(Scene* scene, Camera* camera): 
 	scene(scene), camera(camera) {
@@ -44,10 +45,10 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 			//return material.getColor() * material.getReflectioness() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
 		}
 		else {
-			float mul = directIllumination(intersection, normal);	
-			material.color.r *= mul;
-			material.color.g *= mul;
-			material.color.b *= mul;
+			Color mul = directIllumination(intersection, normal);	
+			material.color.r *= mul.r;
+			material.color.g *= mul.g;
+			material.color.b *= mul.b;
 			unsigned long rgb = material.getColor().getRGB();
 			return rgb;
 		}
@@ -80,15 +81,36 @@ void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* n
 	scene->nearestIntersection(r, intersection, normal, material, distance);
 }
 
-float Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
+Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
+	//normal is used to determine which light is more important?
+
 	// Color of the lights are fully ignored at the moment...
-	Ray r = Ray(intersection, normal);
+	Color c(0, 0, 0);
+	//Ray r = Ray(intersection, normal);
 	std::vector<Light*> lights = scene->getLights();
 	for (int i = 0; i < lights.size(); i++) {
 		// wrong implementation
-		float distance = glm::length(lights[i]->getPosition() - intersection);
-		return lights[i]->calculateStrength(distance);
+		glm::vec3 direction = lights[i]->getPosition() - intersection;//maybe normalize it.
+		//direction = glm::normalize(direction);
+		if (canReachLight(intersection, direction)) {
+			float distance = glm::length(direction);
+			Color light = lights[i]->getColor();
+			light.to1();
+			c +=  light * lights[i]->calculateStrength(distance);
+		}
 	}
+	return c;
 	//return 0xFFFFFF;
 }
 
+bool Raytracer::canReachLight(vec3 origin, vec3 direction) {
+	float distance = INFINITE;
+	Ray r(origin, direction);
+	for (int i = 0; i < scene->getObjects().size(); i++) {
+		scene->getObjects()[i]->intersection(r, &distance);
+		if (distance != INFINITE && distance != 0) {
+			return false;
+		}
+	}
+	return true;
+}
