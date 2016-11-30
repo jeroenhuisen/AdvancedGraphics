@@ -34,6 +34,8 @@ extern "C"
 #include "wglext.h"
 #include "fcntl.h"
 
+#define NOT_IMPLEMENTED_YET -1
+
 using namespace Tmpl8;				// to use template classes
 using namespace glm;				// to use glm vector stuff
 using namespace std;				// to use stl vectors

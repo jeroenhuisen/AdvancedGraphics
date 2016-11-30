@@ -36,7 +36,21 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
 	
 	if (material.getColor().r != 0 || material.getColor().g != 0 || material.getColor().b != 0) {
-		float mul = directIllumination(intersection, normal);
+		if (material.getReflectioness() > 0) {
+			exit( NOT_IMPLEMENTED_YET);
+		}
+		else if (material.getReflectioness() == 1) {
+			exit(NOT_IMPLEMENTED_YET);
+			//return material.getColor() * material.getReflectioness() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
+		}
+		else {
+			float mul = directIllumination(intersection, normal);	
+			material.color.r *= mul;
+			material.color.g *= mul;
+			material.color.b *= mul;
+			unsigned long rgb = material.getColor().getRGB();
+			return rgb;
+		}
 		//if (mat == MIRROR)
 		//return material.getColor() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
 		
@@ -53,11 +67,6 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 		//material.getColor().r *= mul;
 		//material.getColor().g *= mul;
 		//material.getColor().b *= mul;
-		material.color.r *= mul;
-		material.color.g *= mul;
-		material.color.b *= mul;
-		unsigned long rgb = material.getColor().getRGB();
-		return rgb;
 	}
 	
 		
