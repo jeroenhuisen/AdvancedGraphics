@@ -22,12 +22,12 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int scr
 void Raytracer::tracePixel(Tmpl8::Pixel* pixel, int x, int y) {
 	// do stuff
 	Ray r = Ray(camera->getPosition(), camera->getPixelDirection(x, y));
-	*pixel = trace(r,0);
+	*pixel = trace(r,0).getRGB();
 }
 
-Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
+Color Raytracer::trace(Ray r, int counter) {
 	if (counter >= 10) {
-		return 0x000000;
+		return Color(0,0,0);
 	}
 	//I, N, mat = nearestIntersection(scene, r);
 	glm::vec3 intersection;
@@ -38,8 +38,10 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 	
 	if (material.getColor().r != 0 || material.getColor().g != 0 || material.getColor().b != 0) {
 		if (material.getReflectioness() == 1) {
-			Color rgb = material.getColor() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
-			return rgb.getRGB();
+			Color reflection =trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
+			reflection.to1();
+			Color rgb = material.getColor() * reflection;
+			return rgb;
 		}
 		else if (material.getReflectioness() > 0) {
 			exit( NOT_IMPLEMENTED_YET);
@@ -49,8 +51,8 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 			material.color.r *= mul.r;
 			material.color.g *= mul.g;
 			material.color.b *= mul.b;
-			unsigned long rgb = material.getColor().getRGB();
-			return rgb;
+			//unsigned long rgb = material.getColor().getRGB();
+			return material.getColor();
 		}
 		//if (mat == MIRROR)
 		//return material.getColor() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
@@ -71,7 +73,7 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 	}
 	
 		
-	return 0x000000;
+	return Color(0,0,0);
 	//return material.getColor() * directIllumination(intersection, normal, distance);
 
 }

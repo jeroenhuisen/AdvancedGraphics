@@ -34,7 +34,7 @@ void Game::Init()
 	scene.addLight(pointLightSmall3);
 								//scene.addObject(plane);
 	scene.addObject(plane1);
-	scene.addObject(sphere);
+	//scene.addObject(sphere);
 
 	Material* gray = new Material(Color(0xD3, 0xD3, 0xD3));
 	Plane * boxBottom = new Plane(glm::vec3(0, 1100, 400), glm::vec3(0, 0, 1), 1000, 1000, gray);
@@ -50,8 +50,8 @@ void Game::Init()
 
 
 	Material* mirror = new Material(Color(0xFF, 0xFF, 0xFF), 1);
-	Sphere* mirrorSphere = new Sphere(glm::vec3(10.0f, 1500.0f, 10.0f), 1000.0f, mirror);
-	//scene.addObject(mirrorSphere);
+	Sphere* mirrorSphere = new Sphere(glm::vec3(10.0f, 1500.0f, 10.0f), 100.0f, mirror);
+	scene.addObject(mirrorSphere);
 }
 
 // -----------------------------------------------------------
