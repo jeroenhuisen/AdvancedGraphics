@@ -104,15 +104,9 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
 }
 
 bool Raytracer::canReachLight(vec3 origin, vec3 direction, float distanceResult) {
-	float distance = INFINITE;
+
 	Ray r(origin, direction);
-	vector<Object *> objects = scene->getObjects();
-	for (int i = 0; i < objects.size(); i++) {
-		objects[i]->intersection(r, &distance);
-		float floatError = 0.01; //otherwise black lines where it shouldnt be
-		if (distance <= distanceResult && distance >= 0 + floatError) {
-			return false;
-		}
-	}
-	return true;
+	//vector<Object *> objects = scene->getObjects();
+	return scene->isThereAIntersection(r,distanceResult);
+	
 }

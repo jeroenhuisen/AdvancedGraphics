@@ -38,3 +38,15 @@ void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* norma
 		//std::cout << objects[i]->getPosition().x << std::endl;
 	}
 }
+
+bool Scene::isThereAIntersection(Ray r, float distanceResult){
+	float distance = INFINITE;
+	for (int i = 0; i < objects.size(); i++) {
+		objects[i]->intersection(r, &distance);
+		float floatError = 0.01; //otherwise black lines where it shouldnt be
+		if (distance <= distanceResult && distance >= 0 + floatError) {
+			return false;
+		}
+	}
+	return true;
+}

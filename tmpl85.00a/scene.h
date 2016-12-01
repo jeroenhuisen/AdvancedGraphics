@@ -22,4 +22,5 @@ public:
 	std::vector<Object*> getObjects();
 	std::vector<Light*> getLights();
 	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
+	bool isThereAIntersection(Ray r, float distanceResult);
 };
