@@ -2,7 +2,7 @@
 
 // doing this in the init doesnt work :)
 Game::Game() :
-	camera(SCRWIDTH, SCRHEIGHT, 60, vec3(0,0,0), vec3(0, 1.0, 0.0f)), scene(&camera), tracer(&scene, &camera) {
+	camera(SCRWIDTH, SCRHEIGHT, 60, vec3(1,0,0), vec3(0, 1.0, 0.0f)), scene(&camera), tracer(&scene, &camera) {
 
 }
 
@@ -17,16 +17,25 @@ void Game::Init()
 
 
 	Material* red = new Material(Color(0xFF,0,0));
-	Material* green = new Material(Color(0,0xFF,0));
+	Material* green = new Material(Color(0,0x1F,0));
 	Material* redish = new Material(Color(0x1F, 0, 0));
 	Sphere* sphere = new Sphere(glm::vec3(10.0f, 10.0f, 10.0f), 2.0f, red);
 	Plane* plane = new Plane(glm::vec3(0, 1108, 0), glm::vec3(0, 1, 0), 100, 100, redish);
-	Plane* plane1 = new Plane(glm::vec3(500, 1108, 300),  glm::vec3(0.1, 0.4, 0.5), 100, 100, red);
-	PointLight* pointLight = new PointLight(glm::vec3(0, 0, 0), 10000, Color(0xFF,0xFF,0xFF), 1.0f, 0.007f, 0.002f);
-	PointLight* pointLightSmall = new PointLight(glm::vec3(0, 1100, 0), 1000, Color(0xFF,0xFF,0xFF), 1.0f, 0.7, 0.5f); //distance is 8 on closes point I/(1.0+0.7*8+0.5*8^2)
-	scene.addLight(pointLightSmall);
-	scene.addObject(plane);
+	Plane* plane1 = new Plane(glm::vec3(500, 1108, 400),  glm::vec3(0, 0, 1), 100, 100, red);
+	PointLight* pointLight = new PointLight(glm::vec3(0, 0, 0), 5000, Color(0xFF,0xFF,0xFF), 1.0f, 0.007f, 0.002f);
+	PointLight* pointLightSmall = new PointLight(glm::vec3(70, 1100, 0), 1000, Color(0xFF,0xFF,0xFF), 1.0f, 0.2f, 0.05f); //distance is 8 on closes point I/(1.0+0.7*8+0.5*8^2)
+	scene.addLight(pointLight);
+	//scene.addObject(plane);
 	scene.addObject(plane1);
+
+	Material* gray = new Material(Color(0xD3, 0xD3, 0xD3));
+	Plane * boxBottom = new Plane(glm::vec3(0, 1100, 400), glm::vec3(0, 0, 1), 1000, 1000, gray);
+	Plane * boxBack = new Plane(glm::vec3(0, 2000, 0), glm::vec3(0, 1, 0), 500, 500, green);
+	Plane * boxLeft = new Plane(glm::vec3(600, 1100, 0), glm::vec3(0, 0, 1), 1000, 1000, gray);
+	Plane * boxRight = new Plane(glm::vec3(-600, 1100, 0), glm::vec3(0, 0, 1), 1000, 1000, gray);
+	scene.addObject(boxBack);
+	//scene.addObject(boxLeft);
+	//scene.addObject(boxBottom);
 	//scene.addObject(sphere);
 	//sceneBuilder(&scene);
 }

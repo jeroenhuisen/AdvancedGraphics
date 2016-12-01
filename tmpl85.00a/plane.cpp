@@ -14,6 +14,11 @@ glm::vec3 Plane::intersection(Ray r, float* distance) {
 	// probably most ineffecient way
 	float value = glm::dot(position - r.getOrigin(), direction) / glm::dot(r.getDirection(), direction);
 
+	if (value <= 0) {
+		*distance = INFINITE;
+		return glm::vec3();
+	}
+
 	// Doesnt check the width and height....
 	//return r.getDirection() * value + r.getOrigin();
 	glm::vec3 result = r.getDirection() * value + r.getOrigin();
@@ -41,15 +46,15 @@ glm::vec3 Plane::intersection(Ray r, float* distance) {
 		max.z = min.z;
 		min.z = temp;
 	}
-	if( min.x <= result.x && result.x <= max.x &&
+	/*if( min.x <= result.x && result.x <= max.x &&
 		min.y <= result.y && result.y <= max.y &&
-		min.z <= result.z && result.z <= max.z){
+		min.z <= result.z && result.z <= max.z){*/
 		//if (position.x <= result.x && result.x <= position.x + width &&
 		//	position.z <= result.z && result.z <= position.z + height ){ //&&
 		///position.z >= result.z && max.x <= result.z) {
 		*distance = glm::length(r.getOrigin() - result);// used for determining the distance I guess
 		return result;
-	}
+	/*}
 	else {
 		*distance = INFINITE;
 		return glm::vec3();

@@ -91,9 +91,9 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
 	for (int i = 0; i < lights.size(); i++) {
 		// wrong implementation
 		glm::vec3 direction = lights[i]->getPosition() - intersection;//maybe normalize it.
-		//direction = glm::normalize(direction);
-		if (canReachLight(intersection, direction)) {
-			float distance = glm::length(direction);
+		float distance = glm::length(direction);
+		direction = glm::normalize(direction);
+		if (canReachLight(intersection, direction, distance)) {
 			Color light = lights[i]->getColor();
 			light.to1();
 			c +=  light * lights[i]->calculateStrength(distance);
@@ -103,12 +103,13 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
 	//return 0xFFFFFF;
 }
 
-bool Raytracer::canReachLight(vec3 origin, vec3 direction) {
+bool Raytracer::canReachLight(vec3 origin, vec3 direction, float distanceResult) {
 	float distance = INFINITE;
 	Ray r(origin, direction);
 	for (int i = 0; i < scene->getObjects().size(); i++) {
 		scene->getObjects()[i]->intersection(r, &distance);
-		if (distance != INFINITE && distance != 0) {
+		float floatError = 0.01; //otherwise black lines where it shouldnt be
+		if (distance <= distanceResult && distance >= 0 + floatError) {
 			return false;
 		}
 	}

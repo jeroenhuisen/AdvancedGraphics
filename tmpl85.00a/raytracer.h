@@ -13,7 +13,7 @@ private:
 	Tmpl8::Pixel trace(Ray r, int counter);
 	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
 	Color directIllumination(glm::vec3 intersection, glm::vec3 normal);
-	bool canReachLight(glm::vec3 position, glm::vec3 direction);
+	bool canReachLight(glm::vec3 position, glm::vec3 direction, float distanceResult);
 public:
 	Raytracer(Scene* scene, Camera* camera);
 	void traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int screenHeight);
