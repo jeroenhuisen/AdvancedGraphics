@@ -54,7 +54,7 @@ glm::vec3 Plane::intersection(Ray r, float* distance) {
 		///position.z >= result.z && max.x <= result.z) {
 		*distance = glm::length(r.getOrigin() - result);// used for determining the distance I guess
 		return result;
-	/*}
+/*	}
 	else {
 		*distance = INFINITE;
 		return glm::vec3();

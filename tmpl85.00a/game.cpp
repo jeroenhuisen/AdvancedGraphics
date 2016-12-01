@@ -25,16 +25,18 @@ void Game::Init()
 	PointLight* pointLight = new PointLight(glm::vec3(0, 0, 0), 5000, Color(0xFF,0xFF,0xFF), 1.0f, 0.007f, 0.002f);
 	PointLight* pointLightSmall = new PointLight(glm::vec3(70, 1100, 0), 1000, Color(0xFF,0xFF,0xFF), 1.0f, 0.2f, 0.05f); //distance is 8 on closes point I/(1.0+0.7*8+0.5*8^2)
 	scene.addLight(pointLight);
-	//scene.addObject(plane);
+	scene.addLight(pointLightSmall);
+//	scene.addObject(plane);
 	scene.addObject(plane1);
 
 	Material* gray = new Material(Color(0xD3, 0xD3, 0xD3));
 	Plane * boxBottom = new Plane(glm::vec3(0, 1100, 400), glm::vec3(0, 0, 1), 1000, 1000, gray);
 	Plane * boxBack = new Plane(glm::vec3(0, 2000, 0), glm::vec3(0, 1, 0), 500, 500, green);
-	Plane * boxLeft = new Plane(glm::vec3(600, 1100, 0), glm::vec3(0, 0, 1), 1000, 1000, gray);
-	Plane * boxRight = new Plane(glm::vec3(-600, 1100, 0), glm::vec3(0, 0, 1), 1000, 1000, gray);
+	Plane * boxLeft = new Plane(glm::vec3(600, 1100, 0), glm::vec3(1, 0, 0), 1000, 1000, gray);
+	Plane * boxRight = new Plane(glm::vec3(-600, 1100, 0), glm::vec3(1, 0, 0), 1000, 1000, gray);
 	scene.addObject(boxBack);
-	//scene.addObject(boxLeft);
+	scene.addObject(boxLeft);
+	scene.addObject(boxRight);
 	//scene.addObject(boxBottom);
 	//scene.addObject(sphere);
 	//sceneBuilder(&scene);
