@@ -29,13 +29,16 @@ void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* norma
 		float tempDistance = INFINITE;
 		glm::vec3 result = objects[i]->intersection(r, &tempDistance);
 		//std::cout << "x: " << result.x << "y: " << result.y << "z: " << result.z << std::endl;
-		if (*distance > tempDistance) {
+		if (*distance > tempDistance && tempDistance > 0) {
 			*distance = tempDistance;
-			*intersection = result;
+			*normal = result;
 			*material = *objects[i]->getMaterial();
 		}
 		
 		//std::cout << objects[i]->getPosition().x << std::endl;
+	}
+	if (*distance != INFINITE) {
+		*intersection = r.getOrigin() + *distance * r.getDirection();
 	}
 }
 

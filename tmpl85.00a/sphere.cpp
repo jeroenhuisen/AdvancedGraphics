@@ -2,7 +2,7 @@
 #include "sphere.h"
 
 Sphere::Sphere(glm::vec3 position, float radius, Material* material) :
-	Object(position, vec3(0, 0, 0), material), radius(radius) {
+	Object(position, vec3(0, 0, 0), material), radius(radius*radius) {
 
 }
 
@@ -14,6 +14,7 @@ glm::vec3 Sphere::intersection(Ray r, float* distance) {
 	if ((p2 > radius) && (t > 0)) {
 		return glm::vec3();
 	}
-	*distance = glm::length(c) - radius;
-	return r.getOrigin() + *distance * glm::normalize(c);
+	*distance = t - glm::sqrt(radius - p2);//glm::length(c) - radius;
+	
+	return glm::normalize(r.getOrigin() + *distance * r.getDirection() - c);//normal
 }

@@ -7,20 +7,20 @@ Plane::Plane(vec3 position, vec3 direction, float width, float height, Material*
 }
 
 glm::vec3 Plane::intersection(Ray r, float* distance) {
-	/*position;
-	r.getOrigin() + r.getDirection();
-	direction*/
+	*distance = glm::dot(position - r.getOrigin(), direction) / glm::dot(r.getDirection(), direction);
+	return direction;
+}
 
 	// probably most ineffecient way
-	float value = glm::dot(position - r.getOrigin(), direction) / glm::dot(r.getDirection(), direction);
+	/*float value = glm::dot(position - r.getOrigin(), direction) / glm::dot(r.getDirection(), direction);
 
 	if (value <= 0) {
 		*distance = INFINITE;
 		return glm::vec3();
-	}
+	}*/
 
 	// Doesnt check the width and height....
-	glm::vec3 result = r.getDirection() * value + r.getOrigin();
+	//glm::vec3 result = r.getDirection() * value + r.getOrigin();
 
 	/*float width2 = width / 2;
 	float height2 = height / 2;
@@ -48,17 +48,12 @@ glm::vec3 Plane::intersection(Ray r, float* distance) {
 		//if (position.x <= result.x && result.x <= position.x + width &&
 		//	position.z <= result.z && result.z <= position.z + height ){ //&&
 		///position.z >= result.z && max.x <= result.z) {
-		*distance = glm::length(r.getOrigin() - result);// used for determining the distance I guess
-		return result;
+		// *distance = glm::length(r.getOrigin() - result);// used for determining the distance I guess
+		//return result;
 	/*}
 	else {
 		*distance = INFINITE;
 		return glm::vec3();
 	}
 
-
-	/*if (glm::dot(result - position, direction) == 0) {
-	return result;
-	}*/
-
-}
+}*/

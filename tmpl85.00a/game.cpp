@@ -19,7 +19,7 @@ void Game::Init()
 	Material* red = new Material(Color(0xFF,0,0));
 	Material* green = new Material(Color(0,0xFF,0));
 	Material* redish = new Material(Color(0x1F, 0, 0));
-	Sphere* sphere = new Sphere(glm::vec3(10.0f, 1100.0f, 10.0f), 500.0f, red);
+	Sphere* sphere = new Sphere(glm::vec3(10.0f, 1100.0f, 10.0f), 100.0f, red);
 	Plane* plane = new Plane(glm::vec3(0, 1108, 0), glm::vec3(0, 1, 0), 100, 100, redish);
 	Plane* plane1 = new Plane(glm::vec3(500, 1108, 400),  glm::vec3(0, 0, 1), 100, 100, red);
 	PointLight* pointLight = new PointLight(glm::vec3(0, 0, 0), 5000, Color(0xFF,0xFF,0xFF), 1.0f, 0.007f, 0.002f);
@@ -51,7 +51,7 @@ void Game::Init()
 
 	Material* mirror = new Material(Color(0xFF, 0xFF, 0xFF), 1);
 	Sphere* mirrorSphere = new Sphere(glm::vec3(10.0f, 1500.0f, 10.0f), 1000.0f, mirror);
-	scene.addObject(mirrorSphere);
+	//scene.addObject(mirrorSphere);
 }
 
 // -----------------------------------------------------------
