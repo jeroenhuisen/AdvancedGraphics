@@ -8,12 +8,12 @@ Sphere::Sphere(glm::vec3 position, float radius, Material* material) :
 
 glm::vec3 Sphere::intersection(Ray r, float* distance) {
 	glm::vec3 c = position - r.getOrigin();
-	float t = glm::dot(c, glm::normalize(r.getDirection()));
-	vec3 q = c - t * glm::normalize(r.getDirection());
+	float t = glm::dot(c, r.getDirection());
+	vec3 q = c - t * r.getDirection();
 	float p2 = glm::dot(q, q);
 	if ((p2 > radius) && (t > 0)) {
 		return glm::vec3();
 	}
 	*distance = glm::length(c) - radius;
-	return r.getOrigin() + *distance * c;
+	return r.getOrigin() + *distance * glm::normalize(c);
 }

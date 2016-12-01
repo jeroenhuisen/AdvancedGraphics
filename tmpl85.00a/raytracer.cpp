@@ -37,12 +37,12 @@ Tmpl8::Pixel Raytracer::trace(Ray r, int counter) {
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
 	
 	if (material.getColor().r != 0 || material.getColor().g != 0 || material.getColor().b != 0) {
-		if (material.getReflectioness() > 0) {
-			exit( NOT_IMPLEMENTED_YET);
+		if (material.getReflectioness() == 1) {
+			Color rgb = material.getColor() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
+			return rgb.getRGB();
 		}
-		else if (material.getReflectioness() == 1) {
-			exit(NOT_IMPLEMENTED_YET);
-			//return material.getColor() * material.getReflectioness() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
+		else if (material.getReflectioness() > 0) {
+			exit( NOT_IMPLEMENTED_YET);
 		}
 		else {
 			Color mul = directIllumination(intersection, normal);	
