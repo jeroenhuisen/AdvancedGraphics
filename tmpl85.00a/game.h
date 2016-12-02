@@ -1,7 +1,7 @@
 #pragma once
 
-#define SCRWIDTH	 1280
-#define SCRHEIGHT	 800
+#define SCRWIDTH	1280// 1280
+#define SCRHEIGHT	800// 800
 
 #include "raytracer.h"
 #include "camera.h"

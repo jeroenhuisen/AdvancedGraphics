@@ -44,7 +44,13 @@ Color Raytracer::trace(Ray r, int counter) {
 			return rgb;
 		}
 		else if (material.getReflectioness() > 0) {
+			Color reflection = trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
+			Color diffuse = directIllumination(intersection, normal);
+			reflection.to1();
+			Color numbers = (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
+			return material.getColor() * (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
 			exit( NOT_IMPLEMENTED_YET);
+
 		}
 		else {
 			Color mul = directIllumination(intersection, normal);	
