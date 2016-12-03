@@ -37,45 +37,31 @@ Color Raytracer::trace(Ray r, int counter) {
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
 	
 	if (material.getColor().r != 0 || material.getColor().g != 0 || material.getColor().b != 0) {
+		float angle = 0;
 		if (material.getReflectioness() == 1) {
-			Color reflection =trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
-			reflection.to1();
-			Color rgb = material.getColor() * reflection;
-			return rgb;
+			//glm::vec3 reflect = r.getDirection() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
+			Color reflection =trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
+			//Color reflection = trace(Ray(intersection, reflect), ++counter);
+			//reflection.to1();
+			//Color rgb = material.getColor() * reflection;
+			//return rgb;
+			return reflection;
 		}
 		else if (material.getReflectioness() > 0) {
 			Color reflection = trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
-			Color diffuse = directIllumination(intersection, normal);
+			Color diffuse = directIllumination(intersection, normal, &angle);
 			reflection.to1();
 			Color numbers = (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
-			return material.getColor() * (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
+			//return material.getColor() * (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
 			exit( NOT_IMPLEMENTED_YET);
 
 		}
 		else {
-			Color mul = directIllumination(intersection, normal);	
-			material.color.r *= mul.r;
-			material.color.g *= mul.g;
-			material.color.b *= mul.b;
+			Color mul = directIllumination(intersection, normal, &angle);	
 			//unsigned long rgb = material.getColor().getRGB();
-			return material.getColor();
+			//Color spec(255 * material.getGlossiness() * pow(angle,8), 255 * material.getGlossiness() * pow(angle, 8), 255 * material.getGlossiness() * pow(angle, 8));
+			return material.getColor() * mul;// +spec;
 		}
-		//if (mat == MIRROR)
-		//return material.getColor() * trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
-		
-		//Tmpl8::Pixel test = Tmpl8::Pixel((material.getColor() & 0xFF0000) * mul + (material.getColor()&0x00FF00) * mul + (material.getColor()&0x0000FF) * mul);
-		//Tmpl8::Pixel test2 = material.getColor();// *mul;
-		/*unsigned long r = (material.getColor() & 0xFF0000) * mul;
-		unsigned long ra = r & 0xFF0000; //maybe round? wait if bigger than it will be black and not locked :( so time to fix that
-		unsigned long g = (material.getColor() & 0x00FF00) * mul;
-		unsigned long ga = g & 0x00FF00;
-		unsigned long b = (material.getColor() & 0x0000FF)* mul;
-		unsigned long ba = b & 0x0000FF;
-		unsigned long rgb = ra + ga + ba;
-		return rgb;*/
-		//material.getColor().r *= mul;
-		//material.getColor().g *= mul;
-		//material.getColor().b *= mul;
 	}
 	
 		
@@ -89,7 +75,7 @@ void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* n
 	scene->nearestIntersection(r, intersection, normal, material, distance);
 }
 
-Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
+Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, float* angle) {
 	//normal is used to determine which light is more important?
 
 	// Color of the lights are fully ignored at the moment...
@@ -101,20 +87,28 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal) {
 		glm::vec3 direction = lights[i]->getPosition() - intersection;//maybe normalize it.
 		float distance = glm::length(direction);
 		direction = glm::normalize(direction);
-		if (canReachLight(intersection, direction, distance)) {
+		if (canReachLight(intersection, direction, normal, distance)) {
 			Color light = lights[i]->getColor();
 			light.to1();
-			c +=  light * lights[i]->calculateStrength(distance);
+			*angle = glm::max(0.0f, glm::dot(normal, direction));
+			c += light * lights[i]->calculateStrength(distance) * *angle;
+			//
 		}
 	}
 	return c;
 	//return 0xFFFFFF;
 }
 
-bool Raytracer::canReachLight(vec3 origin, vec3 direction, float distanceResult) {
+bool Raytracer::canReachLight(vec3 origin, vec3 direction, vec3 doeEensNormaal, float distanceResult) {
 
-	Ray r(origin, direction);
+	Ray r(origin + doeEensNormaal * 0.1f, direction);
 	//vector<Object *> objects = scene->getObjects();
 	return scene->isThereAIntersection(r,distanceResult);
 	
 }
+
+/*void Raytracer::calculateGlossiness(Color* c, float glossiness, glm::vec3 normal, Ray r) {
+	//angle between normal and the ray deterimines the glossiness / white color (well color of the light
+	float angle = glm::length(r.getDirection() - normal);//lower than 1 (most of the time), since it is normilazed 
+	*c*= angle*glossiness;
+}*/

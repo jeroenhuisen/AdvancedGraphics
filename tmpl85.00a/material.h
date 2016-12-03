@@ -8,10 +8,11 @@ private:
 	//Color color;
 	 // just for now
 	float reflectioness;
-	float fresnellValueStuff;//fix that I guess
+	float glossiness;
 public:
 	Color color;
-	Material(Color color, float reflectioness = 0);
+	Material(Color color, float reflectioness = 0, float glossiness = 0);
 	Color getColor() { return color; };
 	float getReflectioness();
+	float getGlossiness();
 };

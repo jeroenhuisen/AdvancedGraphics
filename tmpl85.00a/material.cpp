@@ -2,15 +2,29 @@
 
 #include "material.h"
 
-Material::Material(Color color, float reflectioness) : 
-	color(color), reflectioness(reflectioness) {
+Material::Material(Color color, float reflectioness, float glossiness) : 
+	color(color), reflectioness(reflectioness), glossiness(glossiness) {
 	//->reflectioness = reflectioness;
 	if (this->reflectioness > 1) {
 		this->reflectioness = 1;
+	}
+	else if (this->reflectioness < 0){
+		this->reflectioness = 0;
+	}
+
+	if (this->glossiness > 1) {
+		this->glossiness = 1;
+	}
+	else if (this->glossiness < 0) {
+		this->glossiness = 0;
 	}
 }
 
 //Values between 0 and 1
 float Material::getReflectioness() {
 	return reflectioness;
+}
+
+float Material::getGlossiness() {
+	return glossiness;
 }

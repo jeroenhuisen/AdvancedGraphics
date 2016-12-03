@@ -2,6 +2,7 @@
 #include "template.h"
 #include "placeable.h"
 #include "mat90.h"
+#include "ray.h"
 
 class Camera : public Placeable {
 private:
