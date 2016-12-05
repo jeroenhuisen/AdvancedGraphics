@@ -13,6 +13,9 @@
 #include "triangle.h"
 //#include "sceneBuilder.cpp"
 
+#include "movementController.h"
+#include "buttonHandler.h"
+
 namespace Tmpl8 {
 
 class Surface;
@@ -28,14 +31,16 @@ public:
 	void MouseUp( int _Button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseDown( int _Button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseMove( int _X, int _Y ) { /* implement if you want to detect mouse movement */ }
-	void KeyUp( int a_Key ) { /* implement if you want to handle keys */ }
-	void KeyDown( int a_Key ) { /* implement if you want to handle keys */ }
+	void KeyUp(int a_Key);
+	void KeyDown(int a_Key);
 private:
 	Surface* screen;
 
 	Camera camera;
 	Scene scene;
 	Raytracer tracer;
+	MovementController movementController;
+	ButtonHandler buttonHandler;
 };
 
 }; // namespace Tmpl8

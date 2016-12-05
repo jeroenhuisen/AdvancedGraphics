@@ -40,7 +40,7 @@ Color Raytracer::trace(Ray r, int counter) {
 		float angle = 0;
 		if (material.getReflectioness() == 1) {
 			//glm::vec3 reflect = r.getDirection() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
-			Color reflection =trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
+			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
 			//Color reflection = trace(Ray(intersection, reflect), ++counter);
 			//reflection.to1();
 			//Color rgb = material.getColor() * reflection;
@@ -48,7 +48,7 @@ Color Raytracer::trace(Ray r, int counter) {
 			return reflection;
 		}
 		else if (material.getReflectioness() > 0) {
-			Color reflection = trace(Ray(intersection, reflect(r.getDirection(), normal)), ++counter);
+			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
 			Color diffuse = directIllumination(intersection, normal, &angle);
 			reflection.to1();
 			Color numbers = (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
@@ -84,14 +84,14 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, fl
 	std::vector<Light*> lights = scene->getLights();
 	for (int i = 0; i < lights.size(); i++) {
 		// wrong implementation
-		glm::vec3 direction = lights[i]->getPosition() - intersection;//maybe normalize it.
+		glm::vec3 direction = lights[i]->getPosition() - intersection;
 		float distance = glm::length(direction);
 		direction = glm::normalize(direction);
 		if (canReachLight(intersection, direction, normal, distance)) {
 			Color light = lights[i]->getColor();
 			light.to1();
 			*angle = glm::max(0.0f, glm::dot(normal, direction));
-			c += light * lights[i]->calculateStrength(distance) * *angle;
+			c += light * lights[i]->calculateStrength(distance);// **angle;
 			//
 		}
 	}
