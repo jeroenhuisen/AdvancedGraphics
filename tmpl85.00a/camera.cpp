@@ -38,7 +38,7 @@ glm::vec3 Camera::getPixelDirection(int x, int y) {
 }
 
 void Camera::changePosition(vec3 changePosition) {
-	position += (changePosition * direction);
+	position += changePosition;
 }
 
 

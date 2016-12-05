@@ -80,7 +80,7 @@ void Game::Tick( float dt )
 	screen->Print( "hello world", 2, 2, 0xffffff );
 	buttonHandler.updateKeys();
 	//screen->Line( 2, 10, 50, 10, 0xff0000 );
-	//std::cout << dt << std::endl;
+	std::cout << dt << std::endl;
 }
 
 

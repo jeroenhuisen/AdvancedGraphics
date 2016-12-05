@@ -6,6 +6,7 @@ class MovementController {
 private:
 	Camera* camera;
 	glm::vec3 movement;
+	float movementSpeed = 100;
 
 public:
 	MovementController(Camera * camera);

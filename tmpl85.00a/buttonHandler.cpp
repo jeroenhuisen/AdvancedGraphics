@@ -18,23 +18,23 @@ void ButtonHandler::removeButton(int button) {
 void ButtonHandler::updateKeys() {
 	for (int button : buttons) {
 		switch (button) {
-			case 26:  // w forward
+			case SDL_SCANCODE_W:  // w forward
 				movement->forward();
 				break;
 
-			case 27: // s backwards
+			case SDL_SCANCODE_S: // s backwards
 				movement->back();
 				break;
-			case 23:  //a
+			case SDL_SCANCODE_A:  //a
 				movement->left();
 				break;
-			case 24: //d
+			case SDL_SCANCODE_D: //d
 				movement->right();
 				break;
-			case 6565: //q
+			case SDL_SCANCODE_Q: //q
 				movement->up();
 				break;
-			case 54: //e
+			case SDL_SCANCODE_E: //e
 				movement->down();
 				break;		
 		}
