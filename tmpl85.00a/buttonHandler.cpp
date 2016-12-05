@@ -21,7 +21,6 @@ void ButtonHandler::updateKeys() {
 			case SDL_SCANCODE_W:  // w forward
 				movement->forward();
 				break;
-
 			case SDL_SCANCODE_S: // s backwards
 				movement->back();
 				break;
@@ -37,6 +36,18 @@ void ButtonHandler::updateKeys() {
 			case SDL_SCANCODE_E: //e
 				movement->down();
 				break;		
+			case SDL_SCANCODE_UP: //arrow up
+				movement->cameraUp();
+				break;
+			case SDL_SCANCODE_DOWN:
+				movement->cameraDown();
+				break;
+			case SDL_SCANCODE_LEFT:
+				movement->cameraLeft();
+				break;
+			case SDL_SCANCODE_RIGHT:
+				movement->cameraRight();
+				break;
 		}
 	}
 	movement->update(); //use update so only camera movement only gets calculated once instead of multiple times small optimisation

@@ -9,8 +9,10 @@ MovementController::MovementController(Camera* camera) :
 
 void MovementController::update() {
 	camera->changePosition(movement);
+	camera->changeDirection(direction);
 	camera->moveCamera();
 	movement = glm::vec3(0, 0, 0);
+	direction = glm::vec3(0, 0, 0);
 }
 
 void MovementController::forward() {
@@ -31,4 +33,19 @@ void MovementController::up() {
 void MovementController::down() {
 	movement += glm::vec3(0, 0, movementSpeed);
 }
+
+void MovementController::cameraUp() {
+	direction += glm::vec3(0, 0, -directionSpeed);
+}
+void MovementController::cameraDown() {
+	direction += glm::vec3(0, 0, directionSpeed);
+}
+void MovementController::cameraLeft() {
+	direction += glm::vec3(-directionSpeed, 0, 0);
+}
+void MovementController::cameraRight() {
+	direction += glm::vec3(directionSpeed, 0, 0);
+}
+
+
 

@@ -5,8 +5,9 @@
 class MovementController {
 private:
 	Camera* camera;
-	glm::vec3 movement;
+	glm::vec3 movement, direction;
 	float movementSpeed = 100;
+	float directionSpeed = 0.05;
 
 public:
 	MovementController(Camera * camera);
@@ -19,4 +20,8 @@ public:
 	void down();
 	void update();
 	
+	void cameraUp();
+	void cameraDown();
+	void cameraLeft();
+	void cameraRight();
 };
