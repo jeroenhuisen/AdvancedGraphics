@@ -50,6 +50,6 @@ void ButtonHandler::updateKeys() {
 				break;
 		}
 	}
-	movement->update(); //use update so only camera movement only gets calculated once instead of multiple times small optimisation
+	//movement->update(); //use update so only camera movement only gets calculated once instead of multiple times small optimisation
 
 }

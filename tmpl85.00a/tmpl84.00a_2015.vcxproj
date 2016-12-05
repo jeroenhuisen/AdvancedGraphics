@@ -231,6 +231,7 @@
     </ClCompile>
     <ClCompile Include="color.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="guiBuilder.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="mat90.cpp" />
     <ClCompile Include="material.cpp" />
@@ -239,7 +240,6 @@
     <ClCompile Include="placeable.cpp" />
     <ClCompile Include="plane.cpp" />
     <ClCompile Include="pointlight.cpp" />
-    <ClCompile Include="primitive.cpp" />
     <ClCompile Include="ray.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -264,6 +264,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="guiBuilder.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="mat90.h" />
     <ClInclude Include="material.h" />
@@ -272,7 +273,6 @@
     <ClInclude Include="placeable.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="pointlight.h" />
-    <ClInclude Include="primitive.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="raytracer.h" />
     <ClInclude Include="scene.h" />

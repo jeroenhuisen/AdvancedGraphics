@@ -15,6 +15,13 @@ void MovementController::update() {
 	direction = glm::vec3(0, 0, 0);
 }
 
+// movement distance depends on the time passed making it FPS independent but jumps with this tracer
+void MovementController::update(float dt) {
+	movement *= dt;
+	direction *= dt;
+	update();
+}
+
 void MovementController::forward() {
 	movement += glm::vec3(0, movementSpeed, 0);
 }

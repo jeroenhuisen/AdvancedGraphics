@@ -16,6 +16,7 @@
 #include "movementController.h"
 #include "buttonHandler.h"
 
+#include "guiBuilder.h"
 namespace Tmpl8 {
 
 class Surface;
@@ -41,6 +42,8 @@ private:
 	Raytracer tracer;
 	MovementController movementController;
 	ButtonHandler buttonHandler;
+
+	GUIBuilder guiBuilder;
 };
 
 }; // namespace Tmpl8
