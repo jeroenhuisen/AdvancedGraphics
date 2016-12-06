@@ -14,7 +14,7 @@
 #include "plane.h"
 #include "pointlight.h"
 #include "triangle.h"
-//#include "sceneBuilder.cpp"
+#include "sceneBuilder.h"
 
 #include "movementController.h"
 #include "buttonHandler.h"
