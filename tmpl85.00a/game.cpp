@@ -37,10 +37,10 @@ void Game::Init()
 	PointLight* pointLightSmall2 = new PointLight(glm::vec3(-30, 1000, -250), 1000, Color(0x00, 0xFF, 0x00), 1.0f, 0.2f, 0.05f);
 	PointLight* pointLightSmall3 = new PointLight(glm::vec3(-265, 1000, 0), 1000, Color(0x00, 0xFF, 0xFF), 1.0f, 0.2f, 0.05f);
 	scene.addLight(pointLight);
-	scene.addLight(pointLightSmall);
-	scene.addLight(pointLightSmall1);
-	scene.addLight(pointLightSmall2);
-	scene.addLight(pointLightSmall3);
+	//scene.addLight(pointLightSmall);
+	//scene.addLight(pointLightSmall1);
+	//scene.addLight(pointLightSmall2);
+	//scene.addLight(pointLightSmall3);
 								//scene.addObject(plane);
 	//scene.addObject(plane1);
 	scene.addObject(triangle);

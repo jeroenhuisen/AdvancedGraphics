@@ -7,7 +7,7 @@ private:
 	Camera* camera;
 	glm::vec3 movement, direction;
 	float movementSpeed = 100;
-	float directionSpeed = 0.5;
+	float directionSpeed = 0.1;
 
 public:
 	MovementController(Camera * camera);
