@@ -17,6 +17,7 @@ private:
 
 public:
 	Scene(Camera* c);
+	~Scene();
 	void addObject(Object* obj);
 	void addLight(Light* light);
 	std::vector<Object*> getObjects();

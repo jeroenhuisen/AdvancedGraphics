@@ -7,6 +7,18 @@ Scene::Scene(Camera* c) :
 
 }
 
+Scene::~Scene() {
+	for (std::vector< Object* >::iterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		delete (*it);
+	}
+	for (std::vector< Light* >::iterator it = lights.begin(); it != lights.end(); ++it)
+	{
+		delete (*it);
+	}
+	lights.clear();
+}
+
 void Scene::addObject(Object* obj) {
 	objects.push_back(obj);
 }

@@ -61,7 +61,8 @@ void sceneBuilder(Scene* scene) {
 	Sphere* mirrorSphere = new Sphere(glm::vec3(10.0f, 1100.0f, 200.0f), 100.0f, mirror);
 	scene->addObject(mirrorSphere);
 
-	/*std::vector<Triangle*> triangles = objectLoader.loadObject("box.obj");
+	/*ObjectLoader objectLoader;
+	std::vector<Triangle*> triangles = objectLoader.loadObject("box.obj");
 	for (Triangle* t : triangles) {
 	scene.addObject(t);
 	}*/

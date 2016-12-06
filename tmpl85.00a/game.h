@@ -52,7 +52,6 @@ private:
 	ButtonHandler buttonHandler;
 
 	GUIBuilder guiBuilder;
-	ObjectLoader objectLoader;
 };
 
 }; // namespace Tmpl8

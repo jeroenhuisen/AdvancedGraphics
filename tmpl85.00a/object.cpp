@@ -7,6 +7,10 @@ Object::Object(glm::vec3 position, glm::vec3 direction, Material* material):
 
 }
 
+Object::~Object() {
+	delete material;
+}
+
 Material* Object::getMaterial() {
 	return material;
 }
