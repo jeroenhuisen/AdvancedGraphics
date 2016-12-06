@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
+#include "triangle.h"
+#include <vector>
 class ObjectLoader {
 public:
-	void loadObject(std::string filename);
+	std::vector<Triangle*> loadObject(std::string filename);
 };
