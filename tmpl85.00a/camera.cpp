@@ -55,9 +55,6 @@ void Camera::changePosition(vec3 changePosition) {
 
 
 void Camera::changeDirection(vec3 rotationDirection) {
-	transformMat[0][3] = 23;
-	rotationDirection.x = 0.1;
-	rotationDirection.z = 0.1;
 	glm::mat4x4 r;
 	if (rotationDirection.x != 0) {
 		// so its z we think because Ermis doesnt like barrelrolls ;( I cri everitiem

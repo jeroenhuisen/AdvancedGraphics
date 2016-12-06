@@ -14,10 +14,10 @@ void GUIBuilder::draw() {
 	screen->Print("the arrow keys are used to control the camera direction", 2, 18, white);
 	
 	screen->Print("position:", 2, 30, white);
-//	drawVector(camera->getPosition(), 2, 38);
+	drawVector(camera->getPosition(), 2, 38);
 
 	screen->Print("direction:", 2, 68, white);
-//	drawVector(camera->getDirection(), 2, 76);
+	drawVector(camera->getDirection(), 2, 76);
 
 }
 
