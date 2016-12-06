@@ -16,9 +16,7 @@ glm::vec3 Sphere::intersection(Ray r, float* distance) {
 	if ((p2 > radius) && (t > 0)) {
 		return glm::vec3();
 	}
-	*distance = t - glm::sqrt(radius - p2);//glm::length(c) - radius;
+	*distance = t - glm::sqrt(radius - p2);
 	
-	return glm::normalize(r.getOrigin() + *distance * dir - position);//normal
-	/*glm::vec3 bs = r.getOrigin() - position;
-	return glm::normalize(bs);*/
+	return glm::normalize(r.getOrigin() + *distance * dir - position);//normal (intersection - position)
 }

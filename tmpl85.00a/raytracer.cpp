@@ -43,24 +43,26 @@ Color Raytracer::trace(Ray r, int counter) {
 			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
 			//Color reflection = trace(Ray(intersection, reflect), ++counter);
 			//reflection.to1();
-			//Color rgb = material.getColor() * reflection;
-			//return rgb;
-			return reflection;
+			Color test = material.getColor();
+			test.to1();
+			Color rgb = test * reflection;
+			return rgb;
+			//return reflection;
 		}
 		else if (material.getReflectioness() > 0) {
 			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
 			Color diffuse = directIllumination(intersection, normal, &angle);
 			reflection.to1();
 			Color numbers = (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
-			//return material.getColor() * (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
-			exit( NOT_IMPLEMENTED_YET);
+			return material.getColor() * (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
+			//exit( NOT_IMPLEMENTED_YET);
 
 		}
 		else {
 			Color mul = directIllumination(intersection, normal, &angle);	
 			//unsigned long rgb = material.getColor().getRGB();
 			//Color spec(255 * material.getGlossiness() * pow(angle,8), 255 * material.getGlossiness() * pow(angle, 8), 255 * material.getGlossiness() * pow(angle, 8));
-			return material.getColor() * mul;// +spec;
+			return material.getColor() * mul;
 		}
 	}
 	
@@ -91,7 +93,7 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, fl
 			Color light = lights[i]->getColor();
 			light.to1();
 			*angle = glm::max(0.0f, glm::dot(normal, direction));
-			c += light * lights[i]->calculateStrength(distance);// **angle;
+			c += light * lights[i]->calculateStrength(distance) * *angle ;
 			//
 		}
 	}
