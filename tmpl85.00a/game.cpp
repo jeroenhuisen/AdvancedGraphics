@@ -1,5 +1,6 @@
 #include "template.h"
 
+#define TINYOBJLOADER_IMPLEMENTATION
 #include "tinyobjloader-master\tiny_obj_loader.h"
 
 // doing this in the init doesnt work :)
@@ -71,15 +72,14 @@ void Game::Init()
 	scene.addObject(mirrorSphere);
 
 
-/*	std::string inputfile = "object.obj";
+	std::string inputfile = "object.obj";
 
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
 
 	std::string err;
-	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, inputfile.c_str(),
-		NULL, true);
+	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, inputfile.c_str(), NULL, true);
 
 	if (!err.empty()) { // `err` may contain warning message.
 		std::cerr << err << std::endl;
@@ -90,7 +90,7 @@ void Game::Init()
 	}
 
 	std::cout << "# of shapes    : " << shapes.size() << std::endl;
-	std::cout << "# of materials : " << materials.size() << std::endl;*/
+	std::cout << "# of materials : " << materials.size() << std::endl;
 }
 
 // -----------------------------------------------------------
