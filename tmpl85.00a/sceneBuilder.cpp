@@ -64,8 +64,8 @@ void sceneBuilder(Scene* scene) {
 	scene->addObject(mirrorSphere);
 
 	ObjectLoader objectLoader;
-	std::vector<Triangle*> triangles = objectLoader.loadObject("box.obj");
+/*	std::vector<Triangle*> triangles = objectLoader.loadObject("box.obj");
 	for (Triangle* t : triangles) {
 		scene->addObject(t);
-	}
+	}*/
 }
