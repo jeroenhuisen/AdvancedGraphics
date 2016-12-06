@@ -2,7 +2,7 @@
 
 // doing this in the init doesnt work :)
 Game::Game() :
-	camera(SCRWIDTH, SCRHEIGHT, 60, vec3(0,100,0), vec3(0, 1.0, 0.0f)), scene(&camera), tracer(&scene, &camera), movementController(&camera), buttonHandler(&movementController), guiBuilder(screen, &camera) {//screen isnt init yet
+	camera(SCRWIDTH, SCRHEIGHT, 60, vec3(0,100,200), vec3(0, 1.0, 0.0f)), scene(&camera), tracer(&scene, &camera), movementController(&camera), buttonHandler(&movementController), guiBuilder(screen, &camera) {//screen isnt init yet
 
 }
 
