@@ -237,6 +237,7 @@
     <ClCompile Include="material.cpp" />
     <ClCompile Include="movementController.cpp" />
     <ClCompile Include="object.cpp" />
+    <ClCompile Include="objectLoader.cpp" />
     <ClCompile Include="placeable.cpp" />
     <ClCompile Include="plane.cpp" />
     <ClCompile Include="pointlight.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="material.h" />
     <ClInclude Include="movementController.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="objectLoader.h" />
     <ClInclude Include="placeable.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="pointlight.h" />

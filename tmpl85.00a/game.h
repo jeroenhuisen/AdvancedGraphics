@@ -21,6 +21,8 @@
 
 #include "guiBuilder.h"
 
+#include "objectLoader.h"
+
 
 
 namespace Tmpl8 {
@@ -50,6 +52,7 @@ private:
 	ButtonHandler buttonHandler;
 
 	GUIBuilder guiBuilder;
+	ObjectLoader objectLoader;
 };
 
 }; // namespace Tmpl8

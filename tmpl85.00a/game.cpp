@@ -1,8 +1,5 @@
 #include "template.h"
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "tinyobjloader-master\tiny_obj_loader.h"
-
 // doing this in the init doesnt work :)
 Game::Game() :
 	camera(SCRWIDTH, SCRHEIGHT, 60, vec3(0,100,200), vec3(0, 1.0, 0.0f)), scene(&camera), tracer(&scene, &camera), movementController(&camera), buttonHandler(&movementController), guiBuilder(screen, &camera) {//screen isnt init yet
@@ -71,26 +68,7 @@ void Game::Init()
 	Sphere* mirrorSphere = new Sphere(glm::vec3(10.0f, 1100.0f, 200.0f), 100.0f, mirror);
 	scene.addObject(mirrorSphere);
 
-
-	std::string inputfile = "object.obj";
-
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
-
-	std::string err;
-	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, inputfile.c_str(), NULL, true);
-
-	if (!err.empty()) { // `err` may contain warning message.
-		std::cerr << err << std::endl;
-	}
-
-	if (!ret) {
-		exit(1);
-	}
-
-	std::cout << "# of shapes    : " << shapes.size() << std::endl;
-	std::cout << "# of materials : " << materials.size() << std::endl;
+	objectLoader.loadObject("object.obj");
 }
 
 // -----------------------------------------------------------
