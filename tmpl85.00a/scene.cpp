@@ -8,13 +8,13 @@ Scene::Scene(Camera* c) :
 }
 
 Scene::~Scene() {
-	for (std::vector< Object* >::iterator it = objects.begin(); it != objects.end(); ++it)
+	for (std::vector< Object* >::iterator i = objects.begin(); i != objects.end(); ++i)
 	{
-		delete (*it);
+		delete *i;
 	}
-	for (std::vector< Light* >::iterator it = lights.begin(); it != lights.end(); ++it)
+	for (std::vector< Light* >::iterator i = lights.begin(); i != lights.end(); ++i)
 	{
-		delete (*it);
+		delete *i;
 	}
 	lights.clear();
 }

@@ -27,12 +27,14 @@ void sceneBuilder(Scene* scene) {
 	PointLight* pointLightSmall = new PointLight(glm::vec3(70, 1000, 0), 1000, Color(0xFF, 0x00, 0x00), 1.0f, 0.2f, 0.05f);
 	PointLight* pointLightSmall1 = new PointLight(glm::vec3(200, 1000, 0), 1000, Color(0xFF, 0x00, 0x00), 1.0f, 0.2f, 0.05f);
 	PointLight* pointLightSmall2 = new PointLight(glm::vec3(-30, 1000, -250), 1000, Color(0x00, 0xFF, 0x00), 1.0f, 0.2f, 0.05f);
-	PointLight* pointLightSmall3 = new PointLight(glm::vec3(-265, 1000, 0), 1000, Color(0x00, 0xFF, 0xFF), 1.0f, 0.2f, 0.05f);
+	PointLight* pointLightSmall3 = new PointLight(glm::vec3(-500, 1000, 0), 1000, Color(0x00, 0xFF, 0xFF), 1.0f, 0.2f, 0.05f);
+	PointLight* pointLightSmall4 = new PointLight(glm::vec3(-500, 1500, 0), 1000, Color(0x00, 0xFF, 0xFF), 1.0f, 1.0f, 0.05f);
 	scene->addLight(pointLight);
 	//scene->addLight(pointLightSmall);
 	scene->addLight(pointLightSmall1);
 	scene->addLight(pointLightSmall2);
 	scene->addLight(pointLightSmall3);
+	scene->addLight(pointLightSmall4);
 	//scene->addObject(plane);
 	//scene->addObject(plane1);
 	scene->addObject(triangle);
@@ -61,12 +63,9 @@ void sceneBuilder(Scene* scene) {
 	Sphere* mirrorSphere = new Sphere(glm::vec3(10.0f, 1100.0f, 200.0f), 100.0f, mirror);
 	scene->addObject(mirrorSphere);
 
-	/*ObjectLoader objectLoader;
+	ObjectLoader objectLoader;
 	std::vector<Triangle*> triangles = objectLoader.loadObject("box.obj");
 	for (Triangle* t : triangles) {
-	scene.addObject(t);
-	}*/
-	/*for (int i = 0; i < 12; i++) {
-	scene.addObject(triangles[0]);
-	}*/
+		scene->addObject(t);
+	}
 }
