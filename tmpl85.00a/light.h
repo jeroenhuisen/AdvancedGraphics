@@ -8,7 +8,7 @@ protected:
 	float attenuationConstant, attenuationLinear, attenuationQuadratic;
 	Color color;
 public:
-	Light(glm::vec3 position, glm::vec3 direction, float lightIntensity, Color color, float attenuationConstant, float attenuationLinear, float attenuationQuadratic);
+	Light(const glm::vec3 position, const glm::vec3 direction, const float lightIntensity, const Color color, const float attenuationConstant, const float attenuationLinear, const float attenuationQuadratic);
 	virtual float calculateStrength(float distance) = 0;
 
 	Color getColor();

@@ -16,7 +16,7 @@ void MovementController::update() {
 }
 
 // movement distance depends on the time passed making it FPS independent but jumps with this tracer
-void MovementController::update(float dt) {
+void MovementController::update(const float dt) {
 	movement *= dt;
 	direction *= dt;
 	update();

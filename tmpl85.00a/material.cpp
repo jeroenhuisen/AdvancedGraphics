@@ -2,7 +2,7 @@
 
 #include "material.h"
 
-Material::Material(Color color, float reflectioness, float glossiness) : 
+Material::Material(const Color color, const float reflectioness, const float glossiness) : 
 	color(color), reflectioness(reflectioness), glossiness(glossiness) {
 	//->reflectioness = reflectioness;
 	if (this->reflectioness > 1) {

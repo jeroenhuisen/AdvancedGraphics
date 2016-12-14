@@ -27,7 +27,7 @@ Camera::Camera(int width, int height, float horizontalFOV, glm::vec3 position, g
 	//quite inefficient since multiple matrix multiplications and stuff while some geometry might also work? can atleast be combined 3 matrix for 3 points should be enough...
 }
 
-glm::vec3 Camera::getPixelDirection(int x, int y) {
+glm::vec3 Camera::getPixelDirection(const int x, const int y) {
 	// x-width2 is the pixel distance
 	//x - width2;
 	//y - height2;
@@ -41,11 +41,14 @@ glm::vec3 Camera::getPixelDirection(int x, int y) {
 	return d;
 }
 
-void Camera::changePosition(vec3 changePosition) {
+void Camera::changePosition(const vec3 changePosition) {
 	glm::mat4x4 t; // identiy matrix
 	t[0][3] = changePosition.x;
 	t[1][3] = changePosition.y;
 	t[2][3] = changePosition.z;
+	/*t[3][0] = changePosition.x;
+	t[3][1] = changePosition.y;
+	t[3][2] = changePosition.z;*/
 	transformMat = t*transformMat;
 	glm::vec4 temp = startDirection * transformMat + startPosition;
 	position.x = temp.x;
@@ -54,19 +57,21 @@ void Camera::changePosition(vec3 changePosition) {
 }
 
 
-void Camera::changeDirection(vec3 rotationDirection) {
+void Camera::changeDirection(const vec3 rotationDirection) {
 	glm::mat4x4 r;
 	if (rotationDirection.x != 0) {
 		// so its z we think because Ermis doesnt like barrelrolls ;( I cri everitiem
 		float cosX = cos(-rotationDirection.x);
 		float sinX = sin(-rotationDirection.x);
 		r *= mat4x4(cosX, sinX, 0,0, -sinX, cosX, 0,0, 0,0,1,0, 0,0,0,1);
+		//r *= mat4x4(cosX, -sinX, 0, 0,  sinX, cosX, 0, 0,   0, 0, 1, 0,   0, 0, 0, 1);
 	}
 	if (rotationDirection.z != 0) {
 		// so its z we think because Ermis doesnt like barrelrolls ;( I cri everitiem
 		float cosZ = cos(rotationDirection.z);
 		float sinZ = sin(rotationDirection.z);
-		r *= mat4x4(1, 0, 0, 0, 0, cosZ, sinZ, 0, 0, -sinZ, cosZ, 0, 0, 0, 0, 1);
+		r *= mat4x4(1, 0, 0, 0, 0, cosZ, sinZ, 0, 0, -sinZ, cosZ, 1, 0, 0, 0, 1);  //shouldnt here be a one?
+		//r *= mat4x4(1, cosZ, -sinZ, 0, 0, sinZ, cosZ, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	}
 	transformMat *= r;
 	glm::vec4 temp = transformMat * startDirection;

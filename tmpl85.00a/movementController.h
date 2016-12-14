@@ -26,5 +26,5 @@ public:
 
 
 	void update();
-	void update(float dt);
+	void update(const float dt);
 };

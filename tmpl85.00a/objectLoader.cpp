@@ -6,7 +6,7 @@
 #include "tinyobjloader-master\tiny_obj_loader.h"
 
 
-vector<Triangle*> ObjectLoader::loadObject(std::string filename) {
+vector<Triangle*> ObjectLoader::loadObject(const std::string filename) {
 	Material* pink = new Material(Color(0xFF, 0, 0xFF));
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;

@@ -4,6 +4,6 @@
 
 class PointLight : public Light {
 public:
-	PointLight(glm::vec3 position, float lightIntensity, Color color, float attenuationConstant, float attenuationLinear, float attenuationQuadratic);
-	float calculateStrength(float distance);
+	PointLight(const glm::vec3 position, const float lightIntensity, const Color color, const float attenuationConstant, const float attenuationLinear, const float attenuationQuadratic);
+	float calculateStrength(const float distance);
 };

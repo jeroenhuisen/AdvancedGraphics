@@ -11,7 +11,7 @@ private:
 	float glossiness;
 public:
 	Color color;
-	Material(Color color, float reflectioness = 0, float glossiness = 0);
+	Material(const Color color, const float reflectioness = 0, const float glossiness = 0);
 	Color getColor() { return color; };
 	float getReflectioness();
 	float getGlossiness();

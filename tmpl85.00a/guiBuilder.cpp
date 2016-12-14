@@ -3,7 +3,7 @@
 #include "guiBuilder.h"
 #include <string>
 
-GUIBuilder::GUIBuilder(Tmpl8::Surface* screen, Camera* camera) :
+GUIBuilder::GUIBuilder(Tmpl8::Surface* screen, const Camera* camera) :
 	screen(screen), camera(camera) {
 
 }
@@ -14,14 +14,14 @@ void GUIBuilder::draw() {
 	screen->Print("the arrow keys are used to control the camera direction", 2, 18, white);
 	
 	screen->Print("position:", 2, 30, white);
-	drawVector(camera->getPosition(), 2, 38);
+	drawVector(camera->position, 2, 38);
 
 	screen->Print("direction:", 2, 68, white);
-	drawVector(camera->getDirection(), 2, 76);
+	drawVector(camera->direction, 2, 76);
 
 }
 
-void GUIBuilder::drawVector(glm::vec3 vector, int x, int y) {
+void GUIBuilder::drawVector(const glm::vec3 vector, int x, int y) {
 	char a[10];
 	sprintf(a, "%f", vector.x);
 	screen->Print("x:", x, y, white);

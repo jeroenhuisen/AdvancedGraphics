@@ -19,9 +19,9 @@ public:
 	Scene(Camera* c);
 	~Scene();
 	void addObject(Object* obj);
-	void addLight(Light* light);
+	void addLight( Light* light);
 	std::vector<Object*> getObjects();
 	std::vector<Light*> getLights();
-	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
-	bool isThereAIntersection(Ray r, float distanceResult);
+	void nearestIntersection(const Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
+	bool isThereAIntersection(const Ray r, const float distanceResult);
 };
