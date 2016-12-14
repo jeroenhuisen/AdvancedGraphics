@@ -11,5 +11,5 @@ public:
 	Object(const glm::vec3 position, const glm::vec3 direction, Material* material);
 	~Object();
 	Material* getMaterial();
-	virtual glm::vec3 intersection(Ray r, float* distance) = 0;
+	virtual glm::vec3 intersection(const Ray r, float* distance) = 0;
 };

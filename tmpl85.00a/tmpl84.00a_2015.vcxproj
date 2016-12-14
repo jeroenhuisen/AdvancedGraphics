@@ -232,6 +232,7 @@
     <ClCompile Include="color.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="guiBuilder.cpp" />
+    <ClCompile Include="importObject.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="mat90.cpp" />
     <ClCompile Include="material.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="guiBuilder.h" />
+    <ClInclude Include="ImportObject.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="mat90.h" />
     <ClInclude Include="material.h" />
