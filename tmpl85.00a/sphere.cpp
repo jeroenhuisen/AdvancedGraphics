@@ -1,12 +1,12 @@
 #include "template.h"
 #include "sphere.h"
 
-Sphere::Sphere(glm::vec3 position, float radius, Material* material) :
+Sphere::Sphere(const glm::vec3 position, const float radius, Material* material) :
 	Object(position, vec3(0, 0, 0), material), radius(radius*radius) {
 
 }
 
-glm::vec3 Sphere::intersection(Ray r, float* distance) {
+glm::vec3 Sphere::intersection(const Ray r, float* distance) {
 	glm::vec3 c = position - r.origin;
 	glm::vec3 dir = r.direction;
 	float t = glm::dot(c, dir);

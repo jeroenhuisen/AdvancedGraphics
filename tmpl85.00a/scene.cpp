@@ -35,7 +35,7 @@ std::vector<Light*> Scene::getLights() {
 	return lights;
 }
 
-void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+void Scene::nearestIntersection(const Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 	*distance = INFINITE;
 	for (int i = 0; i < objects.size(); i++) {
 		float tempDistance = INFINITE;
@@ -54,7 +54,7 @@ void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* norma
 	}
 }
 
-bool Scene::isThereAIntersection(Ray r, float distanceResult){
+bool Scene::isThereAIntersection(const Ray r, float distanceResult){
 	float distance = INFINITE;
 	for (int i = 0; i < objects.size(); i++) {
 		objects[i]->intersection(r, &distance);

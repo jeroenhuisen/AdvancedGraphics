@@ -4,5 +4,5 @@
 #include <vector>
 class ObjectLoader {
 public:
-	std::vector<Triangle*> loadObject(std::string filename);
+	std::vector<Triangle*> loadObject(const std::string filename);
 };

@@ -3,7 +3,7 @@
 #include "guiBuilder.h"
 #include <string>
 
-GUIBuilder::GUIBuilder(Tmpl8::Surface* screen, Camera* camera) :
+GUIBuilder::GUIBuilder(Tmpl8::Surface* screen, const Camera* camera) :
 	screen(screen), camera(camera) {
 
 }

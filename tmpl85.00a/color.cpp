@@ -2,7 +2,7 @@
 #include "color.h"
 
 
-Color::Color(float r, float g, float b): r(r), g(g), b(b)  {
+Color::Color(const float r, const float g, const float b): r(r), g(g), b(b)  {
 
 }
 

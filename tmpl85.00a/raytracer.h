@@ -17,6 +17,6 @@ private:
 	bool canReachLight(glm::vec3 position, glm::vec3 direction, glm::vec3 normal, float distanceResult);
 public:
 	Raytracer(Scene* scene, Camera* camera);
-	void traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int screenHeight);
-	void tracePixel(Tmpl8::Pixel* pixel, int x, int y);
+	void traceScreen(Tmpl8::Pixel* screenBuffer, const int screenWidth, const int screenHeight);
+	void tracePixel(Tmpl8::Pixel* pixel, const int x, const int y);
 };

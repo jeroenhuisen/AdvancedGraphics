@@ -2,12 +2,12 @@
 #include "triangle.h"
 
 
-Triangle::Triangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, Material* material) :
+Triangle::Triangle(const glm::vec3 v1, const glm::vec3 v2, const glm::vec3 v3, Material* material) :
 	Object(v1, glm::normalize(glm::cross((v2-v1),(v3-v1))), material), v1(v1), v2(v2), v3(v3){
 
 }
 
-glm::vec3 Triangle::intersection(Ray r, float* distance) {
+glm::vec3 Triangle::intersection(const Ray r, float* distance) {
 	glm::vec3 e1 = v2 - v1;
 	glm::vec3 e2 = v3 - v1;
 	glm::vec3 P = glm::cross(r.direction, e2);

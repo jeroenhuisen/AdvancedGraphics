@@ -8,7 +8,7 @@ public:
 	float g;
 	float b;
 
-	Color(float r, float g, float b);
+	Color(const float r, const float g, const float b);
 	Tmpl8::Pixel getRGB();
 
 	void to1();

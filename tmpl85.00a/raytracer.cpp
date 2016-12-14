@@ -7,7 +7,7 @@ Raytracer::Raytracer(Scene* scene, Camera* camera):
 
 }
 
-void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int screenHeight) {
+void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, const int screenWidth, const int screenHeight) {
 	//Tmpl8::Pixel color = 0x000000;
 	//boolean test = true;
 	//int testCounter = 0;
@@ -19,7 +19,7 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int scr
 	}
 }
 
-void Raytracer::tracePixel(Tmpl8::Pixel* pixel, int x, int y) {
+void Raytracer::tracePixel(Tmpl8::Pixel* pixel, const int x, const int y) {
 	// do stuff
 	Ray r = Ray(camera->position, camera->getPixelDirection(x, y));
 	*pixel = trace(r,0).getRGB();

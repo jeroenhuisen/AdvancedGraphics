@@ -1,7 +1,7 @@
 #include "ray.h"
 #include "template.h"
 
-Ray::Ray(vec3 origin, vec3 direction) :
+Ray::Ray(const vec3 origin, const vec3 direction) :
 	origin(origin), direction(glm::normalize(direction)) {
 }
 /*

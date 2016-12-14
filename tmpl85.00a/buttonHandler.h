@@ -9,7 +9,7 @@ private:
 	MovementController* movement;
 public:
 	ButtonHandler(MovementController* movement);
-	void addButton(int button);
-	void removeButton(int button);
+	void addButton(const int button);
+	void removeButton(const int button);
 	void updateKeys();
 };

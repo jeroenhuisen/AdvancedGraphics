@@ -7,11 +7,11 @@ movement(movement){
 
 }
 
-void ButtonHandler::addButton(int button) {
+void ButtonHandler::addButton(const int button) {
 	buttons.insert(button);
 }
 
-void ButtonHandler::removeButton(int button) {
+void ButtonHandler::removeButton(const int button) {
 	buttons.erase(button);
 }
 
