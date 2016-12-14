@@ -46,6 +46,9 @@ void Camera::changePosition(vec3 changePosition) {
 	t[0][3] = changePosition.x;
 	t[1][3] = changePosition.y;
 	t[2][3] = changePosition.z;
+	/*t[3][0] = changePosition.x;
+	t[3][1] = changePosition.y;
+	t[3][2] = changePosition.z;*/
 	transformMat = t*transformMat;
 	glm::vec4 temp = startDirection * transformMat + startPosition;
 	position.x = temp.x;
@@ -61,12 +64,14 @@ void Camera::changeDirection(vec3 rotationDirection) {
 		float cosX = cos(-rotationDirection.x);
 		float sinX = sin(-rotationDirection.x);
 		r *= mat4x4(cosX, sinX, 0,0, -sinX, cosX, 0,0, 0,0,1,0, 0,0,0,1);
+		//r *= mat4x4(cosX, -sinX, 0, 0,  sinX, cosX, 0, 0,   0, 0, 1, 0,   0, 0, 0, 1);
 	}
 	if (rotationDirection.z != 0) {
 		// so its z we think because Ermis doesnt like barrelrolls ;( I cri everitiem
 		float cosZ = cos(rotationDirection.z);
 		float sinZ = sin(rotationDirection.z);
-		r *= mat4x4(1, 0, 0, 0, 0, cosZ, sinZ, 0, 0, -sinZ, cosZ, 0, 0, 0, 0, 1);
+		r *= mat4x4(1, 0, 0, 0, 0, cosZ, sinZ, 0, 0, -sinZ, cosZ, 1, 0, 0, 0, 1);  //shouldnt here be a one?
+		//r *= mat4x4(1, cosZ, -sinZ, 0, 0, sinZ, cosZ, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 	}
 	transformMat *= r;
 	glm::vec4 temp = transformMat * startDirection;
