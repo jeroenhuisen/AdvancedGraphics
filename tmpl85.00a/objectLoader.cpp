@@ -56,6 +56,7 @@ vector<Triangle*> ObjectLoader::loadObject(const std::string filename) {
 			v2.z = attrib.vertices[3 * f1 + 2];
 			v3.z = attrib.vertices[3 * f2 + 2];
 
+			Triangle* t;
 			if (attrib.normals.size() > 0) {
 				int n0 = idx0.normal_index;
 				int n1 = idx0.normal_index;
@@ -64,9 +65,12 @@ vector<Triangle*> ObjectLoader::loadObject(const std::string filename) {
 				glm::vec3 normal2 = glm::vec3(attrib.normals[3 * n1], attrib.normals[3 * n1 + 1], attrib.normals[3 * n1 + 2]);
 				glm::vec3 normal3 = glm::vec3(attrib.normals[3 * n2], attrib.normals[3 * n2 + 1], attrib.normals[3 * n2 + 2]);
 				//std::cout << "x: " << x << " y: " << y << " z: " << z << std::endl;
+				t = new Triangle(v1, v2, v3, normal1, normal2, normal3, pink);
 			}
-
-			Triangle* t = new Triangle(v1, v2, v3, normal1, normal2, normal3, pink);
+			else {
+				t = new Triangle(v1, v2, v3, pink);
+			}
+			
 			meshes.push_back(t);
 		}
 	}

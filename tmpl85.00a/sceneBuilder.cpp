@@ -47,7 +47,7 @@ void sceneBuilder(Scene* scene) {
 
 	Material* gray = new Material(Color(0xD3, 0xD3, 0xD3));
 	Plane * boxBottom = new Plane(glm::vec3(0, 1100, 400), glm::vec3(0, 0, -1), gray);
-	Plane * boxBack = new Plane(glm::vec3(0, 2000, 0), glm::vec3(0, -1, 0), pink);
+	Plane * boxBack = new Plane(glm::vec3(0, 2000, 0), glm::vec3(0, -1, 0), mirror);
 	Plane * boxFront = new Plane(glm::vec3(0, -200, 0), glm::vec3(0, 1, 0), pink);
 	Plane * boxLeft = new Plane(glm::vec3(-600, 1100, 0), glm::vec3(1, 0, 0), gray);
 	Plane * boxRight = new Plane(glm::vec3(600, 1100, 0), glm::vec3(-1, 0, 0), gray);
@@ -64,8 +64,8 @@ void sceneBuilder(Scene* scene) {
 	//scene->addObject(mirrorSphere);
 
 	ObjectLoader objectLoader;
-	std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
-	ImportObject* test = new ImportObject(glm::vec3(0, 1000, 0), glm::vec3(0, -1, 0), red, triangles);
+	std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/object.obj");
+	ImportObject* test = new ImportObject(glm::vec3(250, 1000, 0), glm::vec3(0, -1, 0), red, triangles);
 	/*for (Triangle* t : triangles) {
 		scene->addObject(t);
 	}*/
