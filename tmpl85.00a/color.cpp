@@ -16,7 +16,8 @@ Tmpl8::Pixel Color::getRGB() {
 	if (b > 255) {
 		b = 255;
 	}
-	return floorf(r) * 0x10000 + floorf(g) * 0x100 + floorf(b);
+	//return floorf(r) * 0x10000 + floorf(g) * 0x100 + floorf(b);
+	return (unsigned long) r * 0x10000 + (unsigned long) g * 0x100 + (unsigned long)b;
 }
 
 // assuming it was 255 no check

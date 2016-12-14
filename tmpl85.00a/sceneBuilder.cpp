@@ -31,23 +31,23 @@ void sceneBuilder(Scene* scene) {
 	PointLight* pointLightSmall4 = new PointLight(glm::vec3(-500, 1500, 0), 1000, Color(0x00, 0xFF, 0xFF), 1.0f, 1.0f, 0.05f);
 	scene->addLight(pointLight);
 	//scene->addLight(pointLightSmall);
-	scene->addLight(pointLightSmall1);
+	/*scene->addLight(pointLightSmall1);
 	scene->addLight(pointLightSmall2);
 	scene->addLight(pointLightSmall3);
-	scene->addLight(pointLightSmall4);
+	scene->addLight(pointLightSmall4);*/
 	//scene->addObject(plane);
 	//scene->addObject(plane1);
 	scene->addObject(triangle);
-	scene->addObject(sphereR);
+//	scene->addObject(sphereR);
 	//scene->addObject(sphereG);
-	scene->addObject(sphereB);
+//	scene->addObject(sphereB);
 
 
 
 
 	Material* gray = new Material(Color(0xD3, 0xD3, 0xD3));
 	Plane * boxBottom = new Plane(glm::vec3(0, 1100, 400), glm::vec3(0, 0, -1), 1000, 1000, gray);
-	Plane * boxBack = new Plane(glm::vec3(0, 2000, 0), glm::vec3(0, -1, 0), 500, 500, mirror);
+	Plane * boxBack = new Plane(glm::vec3(0, 2000, 0), glm::vec3(0, -1, 0), 500, 500, pink);
 	Plane * boxFront = new Plane(glm::vec3(0, -200, 0), glm::vec3(0, 1, 0), 500, 500, pink);
 	Plane * boxLeft = new Plane(glm::vec3(-600, 1100, 0), glm::vec3(1, 0, 0), 1000, 1000, gray);
 	Plane * boxRight = new Plane(glm::vec3(600, 1100, 0), glm::vec3(-1, 0, 0), 1000, 1000, gray);
@@ -61,7 +61,7 @@ void sceneBuilder(Scene* scene) {
 	//scene->addObject(sphere);
 
 	Sphere* mirrorSphere = new Sphere(glm::vec3(10.0f, 1100.0f, 200.0f), 100.0f, mirror);
-	scene->addObject(mirrorSphere);
+	//scene->addObject(mirrorSphere);
 
 	ObjectLoader objectLoader;
 /*	std::vector<Triangle*> triangles = objectLoader.loadObject("box.obj");
