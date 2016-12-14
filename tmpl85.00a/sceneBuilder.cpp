@@ -64,8 +64,10 @@ void sceneBuilder(Scene* scene) {
 	//scene->addObject(mirrorSphere);
 
 	ObjectLoader objectLoader;
-	std::vector<Triangle*> triangles = objectLoader.loadObject("object.obj");
-	for (Triangle* t : triangles) {
+	std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
+	ImportObject* test = new ImportObject(glm::vec3(0, 1000, 0), glm::vec3(0, -1, 0), red, triangles);
+	/*for (Triangle* t : triangles) {
 		scene->addObject(t);
-	}
+	}*/
+	scene->addObject(test);
 }
