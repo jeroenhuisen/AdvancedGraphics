@@ -50,7 +50,7 @@ void Scene::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* norma
 		//std::cout << objects[i]->getPosition().x << std::endl;
 	}
 	if (*distance != INFINITE) {
-		*intersection = r.getOrigin() + *distance * r.getDirection();
+		*intersection = r.origin + *distance * r.direction;
 	}
 }
 

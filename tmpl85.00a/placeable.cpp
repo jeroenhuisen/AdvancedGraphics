@@ -7,10 +7,10 @@ Placeable::Placeable(glm::vec3 pos, glm::vec3 dir) :
 
 }
 
-glm::vec3 Placeable::getPosition() {
+/*glm::vec3 Placeable::getPosition() {
 	return position;
 }
 
 glm::vec3 Placeable::getDirection() {
 	return direction;
-}
+}*/

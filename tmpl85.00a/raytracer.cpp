@@ -21,7 +21,7 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, int screenWidth, int scr
 
 void Raytracer::tracePixel(Tmpl8::Pixel* pixel, int x, int y) {
 	// do stuff
-	Ray r = Ray(camera->getPosition(), camera->getPixelDirection(x, y));
+	Ray r = Ray(camera->position, camera->getPixelDirection(x, y));
 	*pixel = trace(r,0).getRGB();
 }
 
@@ -40,7 +40,7 @@ Color Raytracer::trace(Ray r, int counter) {
 		float angle = 0;
 		if (material.getReflectioness() == 1) {
 			//glm::vec3 reflect = r.getDirection() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
-			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
+			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.direction, normal), glm::reflect(r.direction, normal)), ++counter);
 			//Color reflection = trace(Ray(intersection, reflect), ++counter);
 			//reflection.to1();
 			Color test = material.getColor();
@@ -50,7 +50,7 @@ Color Raytracer::trace(Ray r, int counter) {
 			//return reflection;
 		}
 		else if (material.getReflectioness() > 0) {
-			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.getDirection(), normal), glm::reflect(r.getDirection(), normal)), ++counter);
+			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.direction, normal), glm::reflect(r.direction, normal)), ++counter);
 			Color diffuse = directIllumination(intersection, normal, &angle);
 			reflection.to1();
 			Color numbers = (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
@@ -86,7 +86,7 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, fl
 	std::vector<Light*> lights = scene->getLights();
 	for (int i = 0; i < lights.size(); i++) {
 		// wrong implementation
-		glm::vec3 direction = lights[i]->getPosition() - intersection;
+		glm::vec3 direction = lights[i]->position - intersection;
 		float distance = glm::length(direction);
 		direction = glm::normalize(direction);
 		if (canReachLight(intersection, direction, normal, distance)) {
@@ -101,7 +101,7 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, fl
 	//return 0xFFFFFF;
 }
 
-bool Raytracer::canReachLight(vec3 origin, vec3 direction, vec3 doeEensNormaal, float distanceResult) {
+bool Raytracer::canReachLight(const vec3 origin, const vec3 direction, const vec3 doeEensNormaal, const float distanceResult) {
 
 	Ray r(origin + doeEensNormaal * 0.1f, direction);
 	//vector<Object *> objects = scene->getObjects();

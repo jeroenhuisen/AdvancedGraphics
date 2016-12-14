@@ -7,8 +7,8 @@ Sphere::Sphere(glm::vec3 position, float radius, Material* material) :
 }
 
 glm::vec3 Sphere::intersection(Ray r, float* distance) {
-	glm::vec3 c = position - r.getOrigin();
-	glm::vec3 dir = r.getDirection();
+	glm::vec3 c = position - r.origin;
+	glm::vec3 dir = r.direction;
 	float t = glm::dot(c, dir);
 	vec3 q = c - t * dir;
 
@@ -18,5 +18,5 @@ glm::vec3 Sphere::intersection(Ray r, float* distance) {
 	}
 	*distance = t - glm::sqrt(radius - p2);
 	
-	return glm::normalize(r.getOrigin() + *distance * dir - position);//normal (intersection - position)
+	return glm::normalize(r.origin + *distance * dir - position);//normal (intersection - position)
 }

@@ -7,7 +7,7 @@ Plane::Plane(vec3 position, vec3 direction, float width, float height, Material*
 }
 
 glm::vec3 Plane::intersection(Ray r, float* distance) {
-	*distance = glm::dot(position - r.getOrigin(), direction) / glm::dot(r.getDirection(), direction);
+	*distance = glm::dot(position - r.origin, direction) / glm::dot(r.direction, direction);
 	return direction;
 }
 
