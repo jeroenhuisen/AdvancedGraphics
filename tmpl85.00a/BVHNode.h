@@ -28,10 +28,10 @@ public:
 	AABB bounds;	
 	BVHNode* left;
 	BVHNode* right;
-	bool isLeaf;
-	int count;
+	bool isLeaf = true;
+	int first, count;
 
 	BVHNode() {}
-	void subdivide();
+	void subdivide(BVHNode* pool);
 	void partition();
 };

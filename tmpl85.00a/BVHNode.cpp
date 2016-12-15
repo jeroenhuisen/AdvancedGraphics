@@ -1,17 +1,23 @@
 #include "template.h"
 #include "BVHNode.h"
 
-void BVHNode::subdivide() {
-	if (count < 3) return;
-	left = new BVHNode();
-	right = new BVHNode();
+void BVHNode::subdivide(BVHNode* pool) {
+	if (count < 3)	return;
+
+	left = pool++;
+	right = pool++;
 	partition();
 
-	left->subdivide();
-	right->subdivide();
+	left->subdivide(pool);
+	right->subdivide(pool);
 	isLeaf = false;
 }
 
 void BVHNode::partition() {
 	//idk
+	left->first = first;
+	int middle = count * 0.5;
+	left->count = middle;
+	right->first = first + middle;
+	right->count = count - middle;
 }

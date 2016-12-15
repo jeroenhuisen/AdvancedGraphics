@@ -1,21 +1,24 @@
 #include "template.h"
 #include "ImportObject.h"
 
-ImportObject::ImportObject(const glm::vec3 position, const glm::vec3 direction, Material* material, std::vector<Triangle*> triangles) :
-	Object(position, direction, material), triangles(triangles) {
+ImportObject::ImportObject(const glm::vec3 position, const glm::vec3 direction, Material* material, Triangle* triangles, int amountOfTriangles) :
+	Object(position, direction, material), triangles(triangles), amount(amountOfTriangles) {
 
-	for (Triangle* triangle : this->triangles) {
-		triangle->v1 += position;
-		triangle->v2 += position;
-		triangle->v3 += position;
-	}
+	move(position);
 }
 
+void ImportObject::move(const glm::vec3 newPos) {
+	for (Triangle* tPtr = triangles; tPtr < triangles+amount; tPtr++){
+		tPtr->v1 += newPos;
+		tPtr->v2 += newPos;
+		tPtr->v3 += newPos;
+	}
+}
 glm::vec3 ImportObject::intersection(const Ray r, float* distance) {
 	glm::vec3 intersection;
-	for (Triangle* triangle : triangles) {
+	for (Triangle* tPtr = triangles; tPtr < triangles + amount; tPtr++) {
 		float temp = *distance;
-		glm::vec3 tempIn = triangle->intersection(r, distance);
+		glm::vec3 tempIn = tPtr->intersection(r, distance);
 		if (temp > *distance) {
 			intersection = tempIn;
 		}

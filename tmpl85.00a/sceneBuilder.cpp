@@ -37,7 +37,7 @@ void sceneBuilder(Scene* scene) {
 	scene->addLight(pointLightSmall4);*/
 	//scene->addObject(plane);
 	//scene->addObject(plane1);
-	scene->addObject(triangle);
+	//scene->addObject(triangle);
 //	scene->addObject(sphereR);
 	//scene->addObject(sphereG);
 //	scene->addObject(sphereB);
@@ -64,10 +64,22 @@ void sceneBuilder(Scene* scene) {
 	//scene->addObject(mirrorSphere);
 
 	ObjectLoader objectLoader;
-	std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
-	ImportObject* test = new ImportObject(glm::vec3(250, 1000, 0), glm::vec3(0, -1, 0), red, triangles);
+	//std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
+
+	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/box.obj");
+	obj->move(glm::vec3(250, 1000, 0));
+	obj->material = red;
+
+	BVH testBVH;
+	testBVH.constructBVH(obj->triangles, obj->amount);
+	scene->addObject(obj);
+
+	//ImportObject* test = new ImportObject(glm::vec3(250, 1000, 0), glm::vec3(0, -1, 0), red, obj->triangles, obj->amount);
 	/*for (Triangle* t : triangles) {
+		t->material = red;
 		scene->addObject(t);
 	}*/
-	scene->addObject(test);
+	//scene->addObject(test);
+
+
 }

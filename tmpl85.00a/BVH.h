@@ -7,8 +7,10 @@
 class BVH {
 private:
 	BVHNode* root;
+	BVHNode* pool;
 	unsigned int* indices;
+
 public:
-	void constructBVH(Primitive* objects, int N);
-	AABB calculateBounds(Primitive* objects, int first, int count);
+	void constructBVH(Triangle* objects, int N);
+	AABB calculateBounds(Triangle* objects, int first, int count);
 };
