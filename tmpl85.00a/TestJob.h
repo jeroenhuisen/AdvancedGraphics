@@ -1,5 +1,5 @@
 #pragma once
-#include "threads.h"
+/*#include "threads.h"
 #include "raytracer.h"
 
 class TestJob : public Tmpl8::Job {
@@ -11,4 +11,4 @@ public:
 		r->tracePixel(pixel, x, y);
 	}
 	void Main();
-};
+};*/
