@@ -66,20 +66,26 @@ void sceneBuilder(Scene* scene) {
 	ObjectLoader objectLoader;
 	//std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
 
-	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/box.obj");
-	obj->move(glm::vec3(250, 1000, 0));
-	obj->material = red;
+	int objSize = 0;
+	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/object.obj", &objSize);
+	ImportObject* a = obj;
+	for (int i = 0; i < objSize; i++) {
+		a->move(glm::vec3(250, 1000, 0));
+		a->material = red;
+		scene->addObject(a);
+		a++;
+	}
 
 	BVH testBVH;
 	testBVH.constructBVH(obj->triangles, obj->amount);
-	scene->addObject(obj);
+	//scene->addObject(obj);
 
 	//ImportObject* test = new ImportObject(glm::vec3(250, 1000, 0), glm::vec3(0, -1, 0), red, obj->triangles, obj->amount);
 	/*for (Triangle* t : triangles) {
 		t->material = red;
 		scene->addObject(t);
 	}*/
-	//scene->addObject(test);
+
 
 
 }

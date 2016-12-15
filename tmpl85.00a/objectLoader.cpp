@@ -80,7 +80,7 @@ vector<Triangle*> ObjectLoader::loadObject(const std::string filename) {
 
 
 
-ImportObject* ObjectLoader::loadObjectImportObject(const std::string filename) {
+ImportObject* ObjectLoader::loadObjectImportObject(const std::string filename, int* objSize) {
 	Material* pink = new Material(Color(0xFF, 0, 0xFF));
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
@@ -103,6 +103,7 @@ ImportObject* ObjectLoader::loadObjectImportObject(const std::string filename) {
 
 	ImportObject* objects = new ImportObject[shapes.size()];
 	ImportObject* objPtr = objects;
+	*objSize = shapes.size();
 	for (tinyobj::shape_t shape : shapes) {
 		int size = shape.mesh.indices.size() / 3;
 		Triangle* triangles = new Triangle[size];
