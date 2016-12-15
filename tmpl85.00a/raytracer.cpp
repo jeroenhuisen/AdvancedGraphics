@@ -4,17 +4,32 @@
 
 Raytracer::Raytracer(Scene* scene, Camera* camera): 
 	scene(scene), camera(camera) {
-
+	jm = JobManager::GetJobManager();
+	t1 = new TestJob(this);
+	t2 = new TestJob(this);
+	t3 = new TestJob(this);
+	t4 = new TestJob(this);
+	jm->AddJob2(t1);
+	jm->AddJob2(t2);
+	jm->AddJob2(t3);
+	jm->AddJob2(t4);
 }
 
 void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, const int screenWidth, const int screenHeight) {
 	//Tmpl8::Pixel color = 0x000000;
 	//boolean test = true;
 	//int testCounter = 0;
+	Thread t;
+	t.run();
 	for (int y = 0; y < screenHeight; y++) {
-		for (int x = 0; x < screenWidth; x++) {
-			screenBuffer++; //hoping that this is how the buffer is alligned
-			tracePixel(screenBuffer, x, y);
+		for (int x = 0; x < screenWidth/4; x+=4) {
+			screenBuffer+=4; //hoping that this is how the buffer is alligned
+			t1->tracePixel(screenBuffer, x, y);
+			t2->tracePixel(screenBuffer+1, x+1, y);
+			t3->tracePixel(screenBuffer+2, x+2, y);
+			t4->tracePixel(screenBuffer+3, x+3, y);
+			//tracePixel(screenBuffer, x, y);
+			screenBuffer += 4; //hoping that this is how the buffer is alligned
 		}
 	}
 }

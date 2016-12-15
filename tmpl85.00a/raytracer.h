@@ -6,11 +6,16 @@
 #include "scene.h"
 #include "material.h"
 #include "color.h"
+#include "threads.h"
+#include "TestJob.h"
+
 
 class Raytracer {
 private:
 	Scene* scene;
 	Camera* camera;
+	TestJob* t1, *t2, *t3, *t4;
+	Tmpl8::JobManager* jm;
 	Color trace(Ray r, int counter);
 	void nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
 	Color directIllumination(glm::vec3 intersection, glm::vec3 normal, float* angle);
