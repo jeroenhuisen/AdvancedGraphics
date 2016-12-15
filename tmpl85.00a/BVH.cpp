@@ -2,7 +2,7 @@
 
 #include "BVH.h"
 
-void BVH::constructBVH(Object* objects, int N) {
+void BVH::constructBVH(Primitive* objects, int N) {
 	// create index array
 	indices = new unsigned int[N];
 	for (int i = 0; i < N; i++) indices[i] = i;
@@ -15,7 +15,7 @@ void BVH::constructBVH(Object* objects, int N) {
 	root->subdivide();
 }
 
-AABB BVH::calculateBounds(Object* objects, int first, int count) {
+AABB BVH::calculateBounds(Primitive* objects, int first, int count) {
 	AABB box = AABB(glm::vec3(INFINITE, INFINITE, INFINITE), glm::vec3(-INFINITE, -INFINITE, -INFINITE));
 	for (int i = first; i < count; i++) {
 		AABB temp = objects[i].getBounds();

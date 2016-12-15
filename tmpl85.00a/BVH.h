@@ -1,6 +1,6 @@
 #pragma once
 
-#include "object.h"
+#include "primitive.h"
 #include "BVHNode.h"
 #include "AABB.h"
 
@@ -9,6 +9,6 @@ private:
 	BVHNode* root;
 	unsigned int* indices;
 public:
-	void constructBVH(Object* objects, int N);
-	AABB calculateBounds(Object* objects, int first, int count);
+	void constructBVH(Primitive* objects, int N);
+	AABB calculateBounds(Primitive* objects, int first, int count);
 };

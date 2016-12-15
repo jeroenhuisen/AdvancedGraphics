@@ -1,10 +1,10 @@
 #pragma once
 #include "template.h"
 
-#include "object.h"
+#include "primitive.h"
 
 
-class Sphere : public Object{
+class Sphere : public Primitive{
 private:
 	float radius;
 public:

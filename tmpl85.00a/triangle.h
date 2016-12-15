@@ -1,9 +1,9 @@
 #pragma once
 #include "template.h"
-#include "object.h"
+#include "primitive.h"
 
 
-class Triangle : public Object {
+class Triangle : public Primitive {
 private:
 	
 	const float EPSILON = 0.000001;

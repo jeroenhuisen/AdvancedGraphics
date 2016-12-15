@@ -13,5 +13,4 @@ public:
 	~Object();
 	Material* getMaterial();
 	virtual glm::vec3 intersection(const Ray r, float* distance) = 0;
-	virtual AABB getBounds() = 0;
 };

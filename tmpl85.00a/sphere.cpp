@@ -2,7 +2,7 @@
 #include "sphere.h"
 
 Sphere::Sphere(const glm::vec3 position, const float radius, Material* material) :
-	Object(position, vec3(0, 0, 0), material), radius(radius*radius) {
+	Primitive(position, vec3(0, 0, 0), material), radius(radius*radius) {
 
 }
 
