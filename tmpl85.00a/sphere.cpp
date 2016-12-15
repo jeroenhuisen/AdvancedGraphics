@@ -20,3 +20,8 @@ glm::vec3 Sphere::intersection(const Ray r, float* distance) {
 	
 	return glm::normalize(r.origin + *distance * dir - position);//normal (intersection - position)
 }
+
+AABB Sphere::getBounds() {
+	float rad = radius*0.5;
+	return AABB(position - rad, position + rad);//glm::vec3(position.x - rad, position.y - rad, position))
+}

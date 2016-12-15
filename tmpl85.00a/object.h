@@ -3,6 +3,7 @@
 #include "ray.h"
 #include "placeable.h"
 #include "material.h"
+#include "AABB.h"
 
 class Object : public Placeable{
 protected:
@@ -12,4 +13,5 @@ public:
 	~Object();
 	Material* getMaterial();
 	virtual glm::vec3 intersection(const Ray r, float* distance) = 0;
+	virtual AABB getBounds() = 0;
 };

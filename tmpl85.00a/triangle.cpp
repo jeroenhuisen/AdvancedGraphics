@@ -37,3 +37,57 @@ glm::vec3 Triangle::intersection(const Ray r, float* distance) {
 	}
 	return direction; // Normalised normal of the triangle
 }
+
+AABB Triangle::getBounds() {
+	/*float xMin = min(v1.x, v2.x);
+	xMin = min(xMin, v3.x);
+	float yMin = min(v1.y, v2.y);
+	yMin = min(yMin, v3.y);
+	float zMin = min(v1.z, v2.z);
+	zMin = min(zMin, v3.z);*/
+
+	float xMin = v1.x, yMin = v1.y, zMin = v1.z;
+	float xMax = v1.x, yMax = v1.y, zMax = v1.z;
+	
+	if (v2.x > xMin) {
+		xMax = v2.x;
+	}
+	else { // == aswell for no real reason
+		xMin = v2.x;
+	}
+	if (v2.y > yMin) {
+		yMax = v2.y;
+	}
+	else { // == aswell for no real reason
+		yMin = v2.y;
+	}
+	if (v2.z > zMin) {
+		zMax = v2.z;
+	}
+	else { // == aswell for no real reason
+		zMin = v2.z;
+	}
+
+
+	if (v3.x > xMin) {
+		xMax = v3.x;
+	}
+	else { // == aswell for no real reason
+		xMin = v3.x;
+	}
+	if (v3.y > yMin) {
+		yMax = v3.y;
+	}
+	else { // == aswell for no real reason
+		yMin = v3.y;
+	}
+	if (v3.z > zMin) {
+		zMax = v3.z;
+	}
+	else { // == aswell for no real reason
+		zMin = v3.z;
+	}
+
+	 
+	return AABB(glm::vec3(xMin, yMin, zMin), glm::vec3(xMax, yMax, zMax));
+}
