@@ -67,7 +67,7 @@ void sceneBuilder(Scene* scene) {
 	//std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
 
 	int objSize = 0;
-	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/object.obj", &objSize);
+	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/windmill.obj", &objSize);
 	ImportObject* a = obj;
 	for (int i = 0; i < objSize; i++) {
 		a->move(glm::vec3(250, 1000, 0));

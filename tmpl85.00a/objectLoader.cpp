@@ -106,10 +106,10 @@ ImportObject* ObjectLoader::loadObjectImportObject(const std::string filename, i
 	*objSize = shapes.size();
 	for (tinyobj::shape_t shape : shapes) {
 		int size = shape.mesh.indices.size() / 3;
+		std::cout << "# of indices: " << size << std::endl;
 		Triangle* triangles = new Triangle[size];
 		Triangle* trianglePtr = triangles;
 		for (size_t f = 0; f < shape.mesh.indices.size() / 3; f++) {
-			//std::cout << "# of indices: " << shape.mesh.indices.size() << std::endl;
 			tinyobj::index_t idx0 = shape.mesh.indices[3 * f + 0];
 			tinyobj::index_t idx1 = shape.mesh.indices[3 * f + 1];
 			tinyobj::index_t idx2 = shape.mesh.indices[3 * f + 2];

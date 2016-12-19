@@ -13,4 +13,5 @@ private:
 public:
 	void constructBVH(Triangle* objects, int N);
 	AABB calculateBounds(Triangle* objects, int first, int count);
+	AABB calculateBoundsNode(BVHNode* node);
 };

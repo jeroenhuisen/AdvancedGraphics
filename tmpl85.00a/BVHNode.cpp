@@ -18,6 +18,7 @@ void BVHNode::partition() {
 	left->first = first;
 	int middle = count * 0.5;
 	left->count = middle;
+	left->bounds = BVH::calculateBoundsNode(this);
 	right->first = first + middle;
 	right->count = count - middle;
 }
