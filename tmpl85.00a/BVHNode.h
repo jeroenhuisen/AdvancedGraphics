@@ -1,6 +1,6 @@
 #pragma once
 #include "AABB.h"
-#include "ray.h"
+#include "BVH.h"
 
 /*struct BVHNode
 {
@@ -32,6 +32,6 @@ public:
 	int first, count;
 
 	BVHNode() {}
-	void subdivide(BVHNode* pool);
-	void partition();
+	void subdivide(BVHNode* pool, BVH* bvh);
+	void partition(BVH* bvh);
 };

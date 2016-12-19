@@ -9,6 +9,7 @@ private:
 	BVHNode* root;
 	BVHNode* pool;
 	unsigned int* indices;
+	Triangle* objects;
 
 public:
 	void constructBVH(Triangle* objects, int N);

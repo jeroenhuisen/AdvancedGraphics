@@ -5,16 +5,19 @@
 void BVH::constructBVH(Triangle* objects, int N) {
 	// create index array
 	indices = new unsigned int[N];
-	for (int i = 0; i < N; i++) indices[i] = i;
+	for (int i = 0; i < N; i++) indices[i] = i;//ISNT USED YET>
 	// allocate BVH root node
 	pool = new BVHNode[N * 2 - 1];
 	root = pool++;
+
+	// objects stored
+	this->objects = objects;
 
 	// subdivide root node
 	//root->first = 0;
 	root->count = N;
 	root->bounds = calculateBounds(objects, 0, root->count);
-	root->subdivide(pool);
+	root->subdivide(pool, this);
 }
 
 AABB BVH::calculateBounds(Triangle* objects, int first, int count) {
@@ -34,8 +37,9 @@ AABB BVH::calculateBounds(Triangle* objects, int first, int count) {
 
 AABB BVH::calculateBoundsNode(BVHNode* node) {
 	AABB box = AABB(glm::vec3(INFINITE, INFINITE, INFINITE), glm::vec3(-INFINITE, -INFINITE, -INFINITE));
-	for (Triangle* tPtr = objects + node->first; tPtr < objects + node->first + node->count; tPtr++) {
-		AABB temp = tPtr->getBounds();
+	for (int indice = node->first; indice < node->first + node->count; indice++) {
+		
+		AABB temp = (objects + indice)->getBounds();
 		box.leftBottom.x = min(temp.leftBottom.x, box.leftBottom.x);
 		box.leftBottom.y = min(temp.leftBottom.y, box.leftBottom.y);
 		box.leftBottom.z = min(temp.leftBottom.z, box.leftBottom.z);
