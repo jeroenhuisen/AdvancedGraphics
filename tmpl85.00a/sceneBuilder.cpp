@@ -67,7 +67,7 @@ void sceneBuilder(Scene* scene) {
 	//std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
 
 	int objSize = 0;
-	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/windmill.obj", &objSize);
+	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/bunny.obj", &objSize);
 	ImportObject* a = obj;
 	for (int i = 0; i < objSize; i++) {
 		a->move(glm::vec3(250, 1000, 0));
@@ -78,6 +78,7 @@ void sceneBuilder(Scene* scene) {
 
 	BVH testBVH;
 	testBVH.constructBVH(obj->triangles, obj->amount);
+	std::cout << "BVH has been build" << std::endl;
 	//scene->addObject(obj);
 
 	//ImportObject* test = new ImportObject(glm::vec3(250, 1000, 0), glm::vec3(0, -1, 0), red, obj->triangles, obj->amount);

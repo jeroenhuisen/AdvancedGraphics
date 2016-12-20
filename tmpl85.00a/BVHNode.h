@@ -1,6 +1,6 @@
 #pragma once
 #include "AABB.h"
-#include "BVH.h"
+#include "Triangle.h"
 
 /*struct BVHNode
 {
@@ -31,7 +31,8 @@ public:
 	bool isLeaf = true;
 	int first, count;
 
-	BVHNode() {}
-	void subdivide(BVHNode* pool, BVH* bvh);
-	void partition(BVH* bvh);
+	BVHNode() {  }
+	void subdivide(BVHNode* pool, Triangle* objects);
+	void partition(Triangle* objects);
+	AABB calculateBoundsNode(BVHNode* node, Triangle* objects);
 };
