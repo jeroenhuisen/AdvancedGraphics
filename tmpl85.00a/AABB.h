@@ -8,4 +8,5 @@ public:
 
 	AABB() {}
 	AABB(const glm::vec3 leftBottom, const glm::vec3 rightTop);
+	float surfaceArea();
 };
