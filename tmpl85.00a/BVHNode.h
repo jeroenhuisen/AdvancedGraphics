@@ -23,6 +23,8 @@
 	}
 }*/
 
+extern class BVH;
+
 class BVHNode {
 public:
 	AABB bounds;	
@@ -32,7 +34,7 @@ public:
 	int first, count;
 
 	BVHNode() {  }
-	void subdivide(BVHNode* pool, Triangle* objects);
-	void partition(Triangle* objects);
+	void subdivide(BVH* bvh);
+	void partition(BVH* bvh);
 	AABB calculateBoundsNode(BVHNode* node, Triangle* objects);
 };

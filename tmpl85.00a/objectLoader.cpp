@@ -137,6 +137,7 @@ ImportObject* ObjectLoader::loadObjectImportObject(const std::string filename, i
 			trianglePtr->v1 = v1;
 			trianglePtr->v2 = v2;
 			trianglePtr->v3 = v3;
+			trianglePtr->centroid = (v1 + v2 + v3) / 3.0f;
 
 			if (attrib.normals.size() > 0) {
 				int n0 = idx0.normal_index;

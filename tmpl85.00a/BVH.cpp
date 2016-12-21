@@ -16,11 +16,11 @@ void BVH::constructBVH(Triangle* objects, int N) {
 	// subdivide root node
 	root->first = 0;
 	root->count = N;
-	root->bounds = calculateBounds(objects, 0, root->count);
-	root->subdivide(pool, objects);
+	root->bounds = root->calculateBoundsNode(root, objects);//calculateBounds(objects, 0, root->count);
+	root->subdivide(this);
 }
 
-AABB BVH::calculateBounds(Triangle* objects, int first, int count) {
+/*AABB BVH::calculateBounds(Triangle* objects, int first, int count) {
 	AABB box = AABB(glm::vec3(INFINITE, INFINITE, INFINITE), glm::vec3(-INFINITE, -INFINITE, -INFINITE));
 	for (Triangle* tPtr = objects; tPtr < objects + count; tPtr++) {
 		AABB temp = tPtr->getBounds();
@@ -33,7 +33,7 @@ AABB BVH::calculateBounds(Triangle* objects, int first, int count) {
 		box.rightTop.z = max(temp.rightTop.z, box.rightTop.z);
 	}
 	return box;
-}
+}*/
 
 Triangle* BVH::getTriangleByIndice(unsigned int indiceIndex) {
 	return (objects + indices[indiceIndex]);

@@ -1,20 +1,31 @@
 #include "template.h"
 #include "BVHNode.h"
 
-void BVHNode::subdivide(BVHNode* pool, Triangle* objects) {
+void BVHNode::subdivide(BVH* bvh) {
 	if (count < 3)	return;
 
-	left = pool++;
-	right = pool++;
-	partition(objects);
+	left = bvh->pool++;
+	right = bvh->pool++;
+	partition(bvh);
 
-	left->subdivide(pool, objects);
-	right->subdivide(pool, objects);
+	left->subdivide(bvh);
+	right->subdivide(bvh);
 	isLeaf = false;
 
 }
 
-void BVHNode::partition(Triangle* objects) {
+void maxBound(AABB* aabb, const AABB* check) {
+	aabb->leftBottom.x = min(check->leftBottom.x, aabb->leftBottom.x);
+	aabb->leftBottom.y = min(check->leftBottom.y, aabb->leftBottom.y);
+	aabb->leftBottom.z = min(check->leftBottom.z, aabb->leftBottom.z);
+
+	aabb->rightTop.x = max(check->rightTop.x, aabb->rightTop.x);
+	aabb->rightTop.y = max(check->rightTop.y, aabb->rightTop.y);
+	aabb->rightTop.z = max(check->rightTop.z, aabb->rightTop.z);
+}
+
+
+void BVHNode::partition(BVH* bvh) {
 	//idk
 	/*left->first = first;
 	int middle = count * 0.5;
@@ -30,13 +41,14 @@ void BVHNode::partition(Triangle* objects) {
 	bool xAxis = false;
 
 	for (int i = first; i < first + count; i++) {
-		Triangle* t = getTriangleByIndice(i);
+		Triangle* t = bvh->getTriangleByIndice(i);
 		glm::vec3 centroid = t->centroid;
 		int xCounter = 0;
 		float xsurfaceAreaLeft = t->getBounds().surfaceArea();
 		float xsurfaceAreaRight = 0;
+
 		for (int y = first; y < first + count; y++) {
-			Triangle* temp = getTriangleByIndice(i);
+			Triangle* temp = bvh->getTriangleByIndice(y);
 			//xsplit
 			if (temp->centroid.x <= centroid.x) {
 				//left
@@ -66,48 +78,52 @@ void BVHNode::partition(Triangle* objects) {
 		//int indicesMiddle = first + bestLeftCount - 1;
 		//setIndice(bestIndice, indicesMiddle);
 		//left->first = bestIndice;
-		int leftIndice = first;
-		int rightIndice = first + count-1;
+		int leftIndice = 0;// first;
+		int rightIndice = count - 1; // first + count - 1;
 		//for swapping
 		//int* indices = getIndices();
 		AABB aabbLeft, aabbRight;
+		unsigned int* backup = new unsigned int[count];
+		for (int i = 0; i < count; i++) {
+			backup[i] = bvh->indices[first+i];
+		}
+		
 		for (int i = first; i < first + count; i++) {
 			//if (i != bestIndice) {
-				Triangle* temp = getTriangleByIndice(i);
+				Triangle* temp = bvh->getTriangleByIndice(i);
 				//xsplit
 				if (temp->centroid.x <= bestCentroid.x) {
 					//left
 					//swapping is an issue
-					setIndice(leftIndice, i);
+					//bvh->setIndice(leftIndice, i);
+					backup[leftIndice] = i;
 					leftIndice++;
 					maxBound(&aabbLeft, &temp->getBounds());
 				}
 				else {
 					//right
-					setIndice(rightIndice, i);
+					//bvh->setIndice(rightIndice, i);
+					backup[rightIndice] = i;
 					rightIndice--;
 					maxBound(&aabbRight, &temp->getBounds());
 				}
 			//}
 		}
+		//overwrite values;
+		for (int i = 0; i < count; i++) {
+			bvh->indices[first + i] = backup[i];
+		}
+		//not sure if required since local variable but yea 
+		delete[] backup;
+
 		left->first = first;
 		left->count = bestLeftCount;
 		left->bounds = aabbLeft;
-		right->first = rightIndice; //first+count-bestLeftCount;
+		right->first = first+rightIndice+1; //first+count-bestLeftCount;
 		right->count = count - bestLeftCount;
-		left->bounds = aabbRight;
+		right->bounds = aabbRight;
 	}
 }
-void maxBound(AABB* aabb, const AABB* check) {
-	aabb->leftBottom.x = min(check->leftBottom.x, aabb->leftBottom.x);
-	aabb->leftBottom.y = min(check->leftBottom.y, aabb->leftBottom.y);
-	aabb->leftBottom.z = min(check->leftBottom.z, aabb->leftBottom.z);
-
-	aabb->rightTop.x = max(check->rightTop.x, aabb->rightTop.x);
-	aabb->rightTop.y = max(check->rightTop.y, aabb->rightTop.y);
-	aabb->rightTop.z = max(check->rightTop.z, aabb->rightTop.z);
-}
-
 
 AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle* objects) {
 	AABB box = AABB(glm::vec3(INFINITE, INFINITE, INFINITE), glm::vec3(-INFINITE, -INFINITE, -INFINITE));
