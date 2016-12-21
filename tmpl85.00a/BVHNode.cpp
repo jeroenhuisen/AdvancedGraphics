@@ -30,13 +30,13 @@ void BVHNode::partition(Triangle* objects) {
 	bool xAxis = false;
 
 	for (int i = first; i < first + count; i++) {
-		Triangle* t = getTriangle(i);
+		Triangle* t = getTriangleByIndice(i);
 		glm::vec3 centroid = t->centroid;
 		int xCounter = 0;
 		float xsurfaceAreaLeft = t->getBounds().surfaceArea();
 		float xsurfaceAreaRight = 0;
 		for (int y = first; y < first + count; y++) {
-			Triangle* temp = getTriangle(i);
+			Triangle* temp = getTriangleByIndice(i);
 			//xsplit
 			if (temp->centroid.x <= centroid.x) {
 				//left
@@ -61,6 +61,7 @@ void BVHNode::partition(Triangle* objects) {
 		//y and z aswell
 	}
 	//Recalculate for some reason well mostly because it needs to change and I am lazy
+	//might actually interesting to keep it like this since bounds will only be calculated once than
 	if (xAxis) {
 		//int indicesMiddle = first + bestLeftCount - 1;
 		//setIndice(bestIndice, indicesMiddle);
@@ -72,20 +73,20 @@ void BVHNode::partition(Triangle* objects) {
 		AABB aabbLeft, aabbRight;
 		for (int i = first; i < first + count; i++) {
 			//if (i != bestIndice) {
-				Triangle* temp = getTriangle(i);
+				Triangle* temp = getTriangleByIndice(i);
 				//xsplit
 				if (temp->centroid.x <= bestCentroid.x) {
 					//left
 					//swapping is an issue
 					setIndice(leftIndice, i);
 					leftIndice++;
-					maxBound(aabbLeft, temp->getBounds());
+					maxBound(&aabbLeft, &temp->getBounds());
 				}
 				else {
 					//right
 					setIndice(rightIndice, i);
 					rightIndice--;
-					maxBound(aabbRight, temp->getBounds());
+					maxBound(&aabbRight, &temp->getBounds());
 				}
 			//}
 		}
@@ -97,6 +98,16 @@ void BVHNode::partition(Triangle* objects) {
 		left->bounds = aabbRight;
 	}
 }
+void maxBound(AABB* aabb, const AABB* check) {
+	aabb->leftBottom.x = min(check->leftBottom.x, aabb->leftBottom.x);
+	aabb->leftBottom.y = min(check->leftBottom.y, aabb->leftBottom.y);
+	aabb->leftBottom.z = min(check->leftBottom.z, aabb->leftBottom.z);
+
+	aabb->rightTop.x = max(check->rightTop.x, aabb->rightTop.x);
+	aabb->rightTop.y = max(check->rightTop.y, aabb->rightTop.y);
+	aabb->rightTop.z = max(check->rightTop.z, aabb->rightTop.z);
+}
+
 
 AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle* objects) {
 	AABB box = AABB(glm::vec3(INFINITE, INFINITE, INFINITE), glm::vec3(-INFINITE, -INFINITE, -INFINITE));

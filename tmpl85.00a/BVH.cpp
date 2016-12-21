@@ -34,3 +34,11 @@ AABB BVH::calculateBounds(Triangle* objects, int first, int count) {
 	}
 	return box;
 }
+
+Triangle* BVH::getTriangleByIndice(unsigned int indiceIndex) {
+	return (objects + indices[indiceIndex]);
+}
+
+void BVH::setIndice(unsigned int index, unsigned int value) {
+	indices[index] = value;
+}
