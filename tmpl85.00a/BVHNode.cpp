@@ -39,14 +39,21 @@ void BVHNode::partition(BVH* bvh) {
 	glm::vec3 bestCentroid;
 	int bestLeftCount = -1;
 	bool xAxis = false;
+	bool yAxis = false;
+	bool zAxis = false;
 
 	for (int i = first; i < first + count; i++) {
 		Triangle* t = bvh->getTriangleByIndice(i);
 		glm::vec3 centroid = t->centroid;
 		int xCounter = 0;
+		int yCounter = 0;
+		int zCounter = 0;
 		float xsurfaceAreaLeft = t->getBounds().surfaceArea();
 		float xsurfaceAreaRight = 0;
-
+		float ysurfaceAreaLeft = t->getBounds().surfaceArea();
+		float ysurfaceAreaRight = 0;
+		float zsurfaceAreaLeft = t->getBounds().surfaceArea();
+		float zsurfaceAreaRight = 0;
 		for (int y = first; y < first + count; y++) {
 			Triangle* temp = bvh->getTriangleByIndice(y);
 			//xsplit
@@ -60,61 +67,107 @@ void BVHNode::partition(BVH* bvh) {
 				xsurfaceAreaRight += temp->getBounds().surfaceArea();
 			}
 			//ysplit
+			if (temp->centroid.y <= centroid.y) {
+				//left
+				yCounter++;
+				ysurfaceAreaLeft += temp->getBounds().surfaceArea();
+			}
+			else {
+				//right
+				ysurfaceAreaRight += temp->getBounds().surfaceArea();
+			}
 			//zsplit
+			if (temp->centroid.z <= centroid.z) {
+				//left
+				zCounter++;
+				zsurfaceAreaLeft += temp->getBounds().surfaceArea();
+			}
+			else {
+				//right
+				zsurfaceAreaRight += temp->getBounds().surfaceArea();
+			}
 		}
 		float xDifference = abs(xsurfaceAreaLeft - xsurfaceAreaRight);
+		float yDifference = abs(ysurfaceAreaLeft - ysurfaceAreaRight);
+		float zDifference = abs(zsurfaceAreaLeft - zsurfaceAreaRight);
 		if (xDifference < lowestDifference) {
 			lowestDifference = xDifference;
 			bestCentroid = centroid;
 			bestLeftCount = xCounter;
 			xAxis = true;
-			//y false and z false
+			yAxis = false;
+			zAxis = false;//y false and z false
+		}
+		if (yDifference < lowestDifference) {
+			lowestDifference = yDifference;
+			bestCentroid = centroid;
+			bestLeftCount = yCounter;
+			xAxis = false;
+			yAxis = true;
+			zAxis = false;
+		}
+		if (zDifference < lowestDifference) {
+			lowestDifference = zDifference;
+			bestCentroid = centroid;
+			bestLeftCount = zCounter;
+			xAxis = false;
+			yAxis = false;
+			zAxis = true;
 		}
 		//y and z aswell
 	}
 	//Recalculate for some reason well mostly because it needs to change and I am lazy
 	//might actually interesting to keep it like this since bounds will only be calculated once than
-	if (xAxis) {
-		//int indicesMiddle = first + bestLeftCount - 1;
-		//setIndice(bestIndice, indicesMiddle);
-		//left->first = bestIndice;
-		int leftIndice = 0;// first;
-		int rightIndice = count - 1; // first + count - 1;
-		//for swapping
-		//int* indices = getIndices();
-		AABB aabbLeft, aabbRight;
-		unsigned int* backup = new unsigned int[count];
-		for (int i = 0; i < count; i++) {
-			backup[i] = bvh->indices[first+i];
+	//int indicesMiddle = first + bestLeftCount - 1;
+	//setIndice(bestIndice, indicesMiddle);
+	//left->first = bestIndice;
+	int leftIndice = 0;// first;
+	int rightIndice = count - 1; // first + count - 1;
+								 //for swapping
+								 //int* indices = getIndices();
+	AABB aabbLeft, aabbRight;
+	unsigned int* backup = new unsigned int[count];
+	for (int i = 0; i < count; i++) {
+		backup[i] = bvh->indices[first + i];
+	}
+
+	for (int i = first; i < first + count; i++) {
+		//if (i != bestIndice) {
+		Triangle* temp = bvh->getTriangleByIndice(i);
+		//xsplit
+		bool left = false;
+		if (xAxis) {
+			left = temp->centroid.x <= bestCentroid.x;
 		}
-		
-		for (int i = first; i < first + count; i++) {
-			//if (i != bestIndice) {
-				Triangle* temp = bvh->getTriangleByIndice(i);
-				//xsplit
-				if (temp->centroid.x <= bestCentroid.x) {
-					//left
-					//swapping is an issue
-					//bvh->setIndice(leftIndice, i);
-					backup[leftIndice] = i;
-					leftIndice++;
-					maxBound(&aabbLeft, &temp->getBounds());
-				}
-				else {
-					//right
-					//bvh->setIndice(rightIndice, i);
-					backup[rightIndice] = i;
-					rightIndice--;
-					maxBound(&aabbRight, &temp->getBounds());
-				}
-			//}
+		if (yAxis) {
+			left = temp->centroid.y <= bestCentroid.y;
 		}
-		//overwrite values;
-		for (int i = 0; i < count; i++) {
-			bvh->indices[first + i] = backup[i];
+		if (zAxis) {
+			left = temp->centroid.z <= bestCentroid.z;
 		}
-		//not sure if required since local variable but yea 
-		delete[] backup;
+		if (left) {
+			//left
+			//swapping is an issue
+			//bvh->setIndice(leftIndice, i);
+			backup[leftIndice] = i;
+			leftIndice++;
+			maxBound(&aabbLeft, &temp->getBounds());
+		}
+		else {
+			//right
+			//bvh->setIndice(rightIndice, i);
+			backup[rightIndice] = i;
+			rightIndice--;
+			maxBound(&aabbRight, &temp->getBounds());
+		}
+		//}
+	}
+	//overwrite values;
+	for (int i = 0; i < count; i++) {
+		bvh->indices[first + i] = backup[i];
+	}
+	//not sure if required since local variable but yea 
+	delete[] backup;
 
 		left->first = first;
 		left->count = bestLeftCount;
@@ -122,7 +175,6 @@ void BVHNode::partition(BVH* bvh) {
 		right->first = first+rightIndice+1; //first+count-bestLeftCount;
 		right->count = count - bestLeftCount;
 		right->bounds = aabbRight;
-	}
 }
 
 AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle* objects) {

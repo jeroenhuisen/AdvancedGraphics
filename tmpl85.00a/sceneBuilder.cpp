@@ -80,7 +80,7 @@ void sceneBuilder(Scene* scene) {
 	timer.init();
 	BVH testBVH;
 	testBVH.constructBVH(obj->triangles, obj->amount);
-	std::cout << "BVH has been build in: " << timer.elapsed() << " seconds" << std::endl;
+	std::cout << "BVH has been build in: " << timer.elapsed() << " mili?seconds" << std::endl;
 	//scene->addObject(obj);
 
 	//ImportObject* test = new ImportObject(glm::vec3(250, 1000, 0), glm::vec3(0, -1, 0), red, obj->triangles, obj->amount);
