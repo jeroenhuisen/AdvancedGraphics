@@ -177,11 +177,11 @@ void BVHNode::partition(BVH* bvh) {
 		right->bounds = aabbRight;
 }
 
-AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle* objects) {
+AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
 	AABB box = AABB(glm::vec3(INFINITE, INFINITE, INFINITE), glm::vec3(-INFINITE, -INFINITE, -INFINITE));
 	for (int indice = node->first; indice < node->first + node->count; indice++) {
 
-		AABB temp = (objects + indice)->getBounds();
+		AABB temp = (*(objects + indice))->getBounds();
 		box.leftBottom.x = min(temp.leftBottom.x, box.leftBottom.x);
 		box.leftBottom.y = min(temp.leftBottom.y, box.leftBottom.y);
 		box.leftBottom.z = min(temp.leftBottom.z, box.leftBottom.z);

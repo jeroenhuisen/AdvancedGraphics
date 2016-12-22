@@ -65,3 +65,8 @@ bool Scene::isThereAIntersection(const Ray r, float distanceResult){
 	}
 	return true;
 }
+
+
+void Scene::addBVH(BVH* bvh) {
+	this->bvh = bvh;
+}

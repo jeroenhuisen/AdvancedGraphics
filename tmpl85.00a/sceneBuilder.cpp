@@ -69,17 +69,31 @@ void sceneBuilder(Scene* scene) {
 	int objSize = 0;
 	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/windmill.obj", &objSize);
 	ImportObject* a = obj;
+	int amountOfTriangles = 0;
 	for (int i = 0; i < objSize; i++) {
 		a->move(glm::vec3(250, 1000, 0));
 		a->material = red;
 		scene->addObject(a);
+		amountOfTriangles += a->amount;
 		a++;
 	}
+	Triangle** triangles = new Triangle*[amountOfTriangles];
+	a = obj;
+	int triangleIndex = 0;
 
+	for (int i = 0; i < objSize; i++) {
+		for (int j = 0; j < a->amount; j++) {
+			triangles[triangleIndex] = (a->triangles + j);
+			triangleIndex++;
+		}
+		a++;
+	}
+	assert(triangleIndex == amountOfTriangles);
 	Tmpl8::timer timer;
 	timer.init();
-	BVH testBVH;
-	testBVH.constructBVH(obj->triangles, obj->amount);
+	BVH* testBVH = new BVH;
+	testBVH->constructBVH(triangles, amountOfTriangles);
+	scene->addBVH(testBVH);
 	std::cout << "BVH has been build in: " << timer.elapsed() << " mili?seconds" << std::endl;
 	//scene->addObject(obj);
 

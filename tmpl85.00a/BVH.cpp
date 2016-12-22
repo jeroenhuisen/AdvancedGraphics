@@ -2,7 +2,7 @@
 
 #include "BVH.h"
 
-void BVH::constructBVH(Triangle* objects, int N) {
+void BVH::constructBVH(Triangle** objects, int N) {
 	// create index array
 	indices = new unsigned int[N];
 	for (int i = 0; i < N; i++) indices[i] = i;//ISNT USED YET>
@@ -36,7 +36,7 @@ void BVH::constructBVH(Triangle* objects, int N) {
 }*/
 
 Triangle* BVH::getTriangleByIndice(unsigned int indiceIndex) {
-	return (objects + indices[indiceIndex]);
+	return *(objects + indices[indiceIndex]);
 }
 
 void BVH::setIndice(unsigned int index, unsigned int value) {

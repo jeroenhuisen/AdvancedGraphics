@@ -36,5 +36,5 @@ public:
 	BVHNode() {  }
 	void subdivide(BVH* bvh);
 	void partition(BVH* bvh);
-	AABB calculateBoundsNode(BVHNode* node, Triangle* objects);
+	AABB calculateBoundsNode(BVHNode* node, Triangle** objects);
 };

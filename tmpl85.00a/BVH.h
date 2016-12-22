@@ -10,11 +10,11 @@ public:
 	BVHNode* root;
 	BVHNode* pool;
 	unsigned int* indices;
-	Triangle* objects;
+	Triangle** objects;
 
 //public:
-	void constructBVH(Triangle* objects, int N);
-	AABB calculateBounds(Triangle* objects, int first, int count);
+	void constructBVH(Triangle** objects, int N);
+	AABB calculateBounds(Triangle** objects, int first, int count);
 	//AABB calculateBoundsNode(BVHNode* node);
 
 	Triangle* getTriangleByIndice(unsigned int indiceIndex);
