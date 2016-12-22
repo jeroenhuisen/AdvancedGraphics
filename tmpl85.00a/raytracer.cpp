@@ -31,7 +31,7 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, const int screenWidth, c
 void Raytracer::tracePixel(Tmpl8::Pixel* pixel, const int x, const int y) {
 	// do stuff
 	Ray r = Ray(camera->position, camera->getPixelDirection(x, y));
-	*pixel = trace(r,0).getRGB();
+	*pixel = (trace(r,0) + Color(0,r.bvhHit*10, 0)).getRGB();
 }
 
 Color Raytracer::trace(Ray r, int counter) {
@@ -83,7 +83,12 @@ Color Raytracer::trace(Ray r, int counter) {
 
 void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 	// going for the slowest approach
+#define SLOW_NO_BVH 0
+#if SLOW_NO_BVH
 	scene->nearestIntersection(r, intersection, normal, material, distance);
+#else
+	scene->nearestIntersectionBVH(r, intersection, normal, material, distance);
+#endif
 }
 
 Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, float* angle) {

@@ -1,15 +1,17 @@
 #include "template.h"
 #include "BVHNode.h"
 
-void BVHNode::subdivide(BVH* bvh) {
-	if (count < 3)	return;
+void BVHNode::subdivide(BVH* bvh, BVHNode* pool) {
+	if (count < 3) {
+		return;
+	}
 
-	left = bvh->pool++;
-	right = bvh->pool++;
+	left = pool++;
+	right = pool++;
 	partition(bvh);
 
-	left->subdivide(bvh);
-	right->subdivide(bvh);
+	left->subdivide(bvh, pool);
+	right->subdivide(bvh, pool);
 	isLeaf = false;
 
 }
@@ -169,12 +171,12 @@ void BVHNode::partition(BVH* bvh) {
 	//not sure if required since local variable but yea 
 	delete[] backup;
 
-		left->first = first;
-		left->count = bestLeftCount;
-		left->bounds = aabbLeft;
-		right->first = first+rightIndice+1; //first+count-bestLeftCount;
-		right->count = count - bestLeftCount;
-		right->bounds = aabbRight;
+	left->first = first;
+	left->count = bestLeftCount;
+	left->bounds = aabbLeft;
+	right->first = first+rightIndice+1; //first+count-bestLeftCount;
+	right->count = count - bestLeftCount;
+	right->bounds = aabbRight;
 }
 
 AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
@@ -191,4 +193,35 @@ AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
 		box.rightTop.z = max(temp.rightTop.z, box.rightTop.z);
 	}
 	return box;
+}
+
+void BVHNode::traverse(const Ray r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+	if (!bounds.intersects(r)) {
+		return;
+	}
+	if (isLeaf) {//isLeaf
+		intersectTriangles(r, bvh, intersection, normal, material, distance);
+	}
+	else {
+		bvh->pool[pointert++].traverse(r, pointert, bvh, intersection, normal, material, distance);
+		bvh->pool[pointert++].traverse( r, pointert, bvh, intersection, normal, material, distance );
+	}
+}
+
+void BVHNode::intersectTriangles(const Ray r, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+	float tempDistance = INFINITY;
+	//*distance = INFINITY;
+	for (int i = first; i < first + count; i++) {
+		Triangle* triangle = bvh->getTriangleByIndice(i);
+		glm::vec3 temp = triangle->intersection(r, &tempDistance); //is normal always changed?
+		//intersection needs to be calculated
+		// material needs to be given
+		if(tempDistance < *distance){
+			*normal = temp;
+			*distance = tempDistance;
+			*material = *triangle->material;
+
+		}
+		
+	}
 }

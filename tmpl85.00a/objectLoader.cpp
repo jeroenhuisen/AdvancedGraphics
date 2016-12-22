@@ -138,6 +138,7 @@ ImportObject* ObjectLoader::loadObjectImportObject(const std::string filename, i
 			trianglePtr->v2 = v2;
 			trianglePtr->v3 = v3;
 			trianglePtr->centroid = (v1 + v2 + v3) / 3.0f;
+			trianglePtr->material = pink;
 
 			if (attrib.normals.size() > 0) {
 				int n0 = idx0.normal_index;

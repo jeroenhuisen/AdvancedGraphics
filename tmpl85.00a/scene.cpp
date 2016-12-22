@@ -54,6 +54,19 @@ void Scene::nearestIntersection(const Ray r, glm::vec3* intersection, glm::vec3*
 	}
 }
 
+void Scene::nearestIntersectionBVH(const Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+/*	if (!bvh->root->bounds.intersects(r)) {
+		return;
+	}
+	if()*/
+	*distance = INFINITE;
+	bvh->root->traverse(r, 0, bvh, intersection, normal, material, distance);
+	if (*distance != INFINITE) {
+		*intersection = r.origin + *distance * r.direction;
+	}
+	
+}
+
 bool Scene::isThereAIntersection(const Ray r, float distanceResult){
 	float distance = INFINITE;
 	for (int i = 0; i < objects.size(); i++) {
