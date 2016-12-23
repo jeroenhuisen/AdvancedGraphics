@@ -31,11 +31,11 @@ void Game::HandleInput( float dt )
 void Game::Tick( float dt )
 {
 	screen->Clear( 0 );
+	buttonHandler.updateKeys();
+	//	movementController.update(dt);
+	movementController.update();
 	tracer.traceScreen(screen->GetBuffer(), SCRWIDTH, SCRHEIGHT);
 	guiBuilder.draw();
-	buttonHandler.updateKeys();
-//	movementController.update(dt);
-	movementController.update();
 	//screen->Line( 2, 10, 50, 10, 0xff0000 );
 	std::cout << dt << std::endl;
 }

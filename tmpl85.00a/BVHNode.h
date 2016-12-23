@@ -28,6 +28,7 @@ extern class BVH;
 class BVHNode {
 protected:
 	void intersectTriangles(const Ray r, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
+	void intersectTriangles(const Ray r, BVH* bvh, float* distance);
 public:
 	AABB bounds;	
 	BVHNode* left;
@@ -39,5 +40,6 @@ public:
 	void subdivide(BVH* bvh, BVHNode* pool);
 	void partition(BVH* bvh);
 	AABB calculateBoundsNode(BVHNode* node, Triangle** objects);
-	void traverse(const Ray r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
+	void traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
+	void traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance);
 };

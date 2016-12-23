@@ -151,14 +151,14 @@ void BVHNode::partition(BVH* bvh) {
 			//left
 			//swapping is an issue
 			//bvh->setIndice(leftIndice, i);
-			backup[leftIndice] = i;
+			backup[leftIndice] = bvh->indices[i];
 			leftIndice++;
 			maxBound(&aabbLeft, &temp->getBounds());
 		}
 		else {
 			//right
 			//bvh->setIndice(rightIndice, i);
-			backup[rightIndice] = i;
+			backup[rightIndice] = bvh->indices[i];
 			rightIndice--;
 			maxBound(&aabbRight, &temp->getBounds());
 		}
@@ -195,16 +195,28 @@ AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
 	return box;
 }
 
-void BVHNode::traverse(const Ray r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 	if (!bounds.intersects(r)) {
 		return;
 	}
 	if (isLeaf) {//isLeaf
-		intersectTriangles(r, bvh, intersection, normal, material, distance);
+		intersectTriangles(*r, bvh, intersection, normal, material, distance);
 	}
 	else {
 		bvh->pool[pointert++].traverse(r, pointert, bvh, intersection, normal, material, distance);
 		bvh->pool[pointert++].traverse( r, pointert, bvh, intersection, normal, material, distance );
+	}
+}
+
+void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance) {
+	if (!bounds.intersects(r)) {
+		return;
+	}
+	if (isLeaf) {//isLeaf
+		intersectTriangles(*r, bvh, distance);
+	}
+	else {
+		bvh->pool[pointert++].traverse(r, pointert, bvh, distance);
 	}
 }
 
@@ -213,9 +225,7 @@ void BVHNode::intersectTriangles(const Ray r, BVH* bvh, glm::vec3* intersection,
 	//*distance = INFINITY;
 	for (int i = first; i < first + count; i++) {
 		Triangle* triangle = bvh->getTriangleByIndice(i);
-		glm::vec3 temp = triangle->intersection(r, &tempDistance); //is normal always changed?
-		//intersection needs to be calculated
-		// material needs to be given
+		glm::vec3 temp = triangle->intersection(r, &tempDistance);
 		if(tempDistance < *distance){
 			*normal = temp;
 			*distance = tempDistance;
@@ -223,5 +233,17 @@ void BVHNode::intersectTriangles(const Ray r, BVH* bvh, glm::vec3* intersection,
 
 		}
 		
+	}
+}
+
+void BVHNode::intersectTriangles(const Ray r, BVH* bvh, float* distance) {
+	float tempDistance = INFINITY;
+	//*distance = INFINITY;
+	for (int i = first; i < first + count; i++) {
+		Triangle* triangle = bvh->getTriangleByIndice(i);
+		glm::vec3 temp = triangle->intersection(r, &tempDistance);
+		if (tempDistance < *distance) {
+			*distance = tempDistance;
+		}
 	}
 }

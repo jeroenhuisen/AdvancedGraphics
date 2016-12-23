@@ -31,10 +31,12 @@ void Raytracer::traceScreen(Tmpl8::Pixel* screenBuffer, const int screenWidth, c
 void Raytracer::tracePixel(Tmpl8::Pixel* pixel, const int x, const int y) {
 	// do stuff
 	Ray r = Ray(camera->position, camera->getPixelDirection(x, y));
-	*pixel = (trace(r,0) + Color(0,r.bvhHit*10, 0)).getRGB();
+	Color test =  trace(&r, 0);
+	//*pixel = (test + Color(0,r.bvhHit*10, 0)).getRGB();
+	*pixel = test.getRGB();
 }
 
-Color Raytracer::trace(Ray r, int counter) {
+Color Raytracer::trace(Ray* r, int counter) {
 	if (counter >= 10) {
 		return Color(0,0,0);
 	}
@@ -44,12 +46,14 @@ Color Raytracer::trace(Ray r, int counter) {
 	Material material(Color(0,0,0));
 	float distance = INFINITE;
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
+
+	//return material.color; //without illumination
 	
 	if (material.getColor().r != 0 || material.getColor().g != 0 || material.getColor().b != 0) {
 		float angle = 0;
 		if (material.getReflectioness() == 1) {
 			//glm::vec3 reflect = r.getDirection() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
-			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.direction, normal), glm::reflect(r.direction, normal)), ++counter);
+			Color reflection = trace(&Ray(intersection + 0.1f * glm::reflect(r->direction, normal), glm::reflect(r->direction, normal)), ++counter);
 			//Color reflection = trace(Ray(intersection, reflect), ++counter);
 			//reflection.to1();
 			Color test = material.getColor();
@@ -59,7 +63,7 @@ Color Raytracer::trace(Ray r, int counter) {
 			//return reflection;
 		}
 		else if (material.getReflectioness() > 0) {
-			Color reflection = trace(Ray(intersection + 0.1f * glm::reflect(r.direction, normal), glm::reflect(r.direction, normal)), ++counter);
+			Color reflection = trace(&Ray(intersection + 0.1f * glm::reflect(r->direction, normal), glm::reflect(r->direction, normal)), ++counter);
 			Color diffuse = directIllumination(intersection, normal, &angle);
 			reflection.to1();
 			Color numbers = (diffuse * (1 - material.getReflectioness()) + reflection * material.getReflectioness());
@@ -81,7 +85,7 @@ Color Raytracer::trace(Ray r, int counter) {
 
 }
 
-void Raytracer::nearestIntersection(Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+void Raytracer::nearestIntersection(Ray* r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 	// going for the slowest approach
 #define SLOW_NO_BVH 0
 #if SLOW_NO_BVH
@@ -119,7 +123,11 @@ bool Raytracer::canReachLight(const vec3 origin, const vec3 direction, const vec
 
 	Ray r(origin + doeEensNormaal * 0.1f, direction);
 	//vector<Object *> objects = scene->getObjects();
+#if SLOW_NO_BVH
 	return scene->isThereAIntersection(r,distanceResult);
+#else
+	return scene->isThereAIntersectionBVH(r, distanceResult);
+#endif
 	
 }
 

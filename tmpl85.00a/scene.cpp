@@ -54,7 +54,7 @@ void Scene::nearestIntersection(const Ray r, glm::vec3* intersection, glm::vec3*
 	}
 }
 
-void Scene::nearestIntersectionBVH(const Ray r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
+void Scene::nearestIntersectionBVH(Ray* r, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 /*	if (!bvh->root->bounds.intersects(r)) {
 		return;
 	}
@@ -62,7 +62,7 @@ void Scene::nearestIntersectionBVH(const Ray r, glm::vec3* intersection, glm::ve
 	*distance = INFINITE;
 	bvh->root->traverse(r, 0, bvh, intersection, normal, material, distance);
 	if (*distance != INFINITE) {
-		*intersection = r.origin + *distance * r.direction;
+		*intersection = r->origin + *distance * r->direction;
 	}
 	
 }
@@ -71,6 +71,7 @@ bool Scene::isThereAIntersection(const Ray r, float distanceResult){
 	float distance = INFINITE;
 	for (int i = 0; i < objects.size(); i++) {
 		objects[i]->intersection(r, &distance);
+		
 		float floatError = 0.01; //otherwise black lines where it shouldnt be
 		if (distance <= distanceResult && distance >= 0 + floatError) {
 			return false;
@@ -79,6 +80,17 @@ bool Scene::isThereAIntersection(const Ray r, float distanceResult){
 	return true;
 }
 
+bool Scene::isThereAIntersectionBVH(Ray r, float distanceResult) {
+	float distance = INFINITE;
+	for (int i = 0; i < objects.size(); i++) {
+		bvh->root->traverse(&r, 0, bvh, &distance);
+		float floatError = 0.01; //otherwise black lines where it shouldnt be
+		if (distance <= distanceResult && distance >= 0 + floatError) {
+			return false;
+		}
+	}
+	return true;
+}
 
 void Scene::addBVH(BVH* bvh) {
 	this->bvh = bvh;
