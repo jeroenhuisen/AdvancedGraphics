@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef STUPIDLINKER
-#define STUPIDLINKER
-
 #define SCRWIDTH	1280// 1280
 #define SCRHEIGHT	800// 800
 
@@ -55,5 +52,3 @@ private:
 };
 
 }; // namespace Tmpl8
-
-#endif

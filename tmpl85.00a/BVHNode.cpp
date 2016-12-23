@@ -5,9 +5,6 @@ void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex) {
 	if (count <= 3) {
 		return;
 	}
-	if (*poolIndex > 8800) {
-		std::cout << "poolIndex is highhh";
-	}
 	left = &bvh->pool[(*poolIndex)++];
 	right = &bvh->pool[(*poolIndex)++];
 	partition(bvh);
@@ -52,11 +49,16 @@ void BVHNode::partition(BVH* bvh) {
 		int xCounter = 0;
 		int yCounter = 0;
 		int zCounter = 0;
-		float xsurfaceAreaLeft = t->getBounds().surfaceArea();
+		//float xsurfaceAreaLeft = t->getBounds().surfaceArea();
+		float xsurfaceAreaLeft = 0;
 		float xsurfaceAreaRight = 0;
-		float ysurfaceAreaLeft = t->getBounds().surfaceArea();
+
+		//float ysurfaceAreaLeft = t->getBounds().surfaceArea();
+		float ysurfaceAreaLeft = 0;
 		float ysurfaceAreaRight = 0;
-		float zsurfaceAreaLeft = t->getBounds().surfaceArea();
+
+		//float zsurfaceAreaLeft = t->getBounds().surfaceArea();
+		float zsurfaceAreaLeft = 0;
 		float zsurfaceAreaRight = 0;
 		for (int y = first; y < first + count; y++) {
 			Triangle* temp = bvh->getTriangleByIndice(y);
@@ -235,7 +237,6 @@ void BVHNode::intersectTriangles(const Ray r, BVH* bvh, glm::vec3* intersection,
 			*normal = temp;
 			*distance = tempDistance;
 			*material = *triangle->material;
-
 		}
 		
 	}

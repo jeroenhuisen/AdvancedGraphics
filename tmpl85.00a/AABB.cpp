@@ -6,6 +6,7 @@ AABB::AABB(const glm::vec3 leftBottom, const glm::vec3 rightTop):
 
 }
 
+//@warning volume instead of surface
 float AABB::surfaceArea() {
 	glm::vec3 result = rightTop - leftBottom;
 	//0 is kind of an issue 
