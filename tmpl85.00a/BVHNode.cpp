@@ -1,17 +1,19 @@
 #include "template.h"
 #include "BVHNode.h"
 
-void BVHNode::subdivide(BVH* bvh, BVHNode* pool) {
-	if (count < 3) {
+void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex) {
+	if (count <= 3) {
 		return;
 	}
-
-	left = pool++;
-	right = pool++;
+	if (*poolIndex > 8800) {
+		std::cout << "poolIndex is highhh";
+	}
+	left = &bvh->pool[(*poolIndex)++];
+	right = &bvh->pool[(*poolIndex)++];
 	partition(bvh);
 
-	left->subdivide(bvh, pool);
-	right->subdivide(bvh, pool);
+	left->subdivide(bvh, poolIndex);
+	right->subdivide(bvh, poolIndex);
 	isLeaf = false;
 
 }
@@ -203,8 +205,10 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* inter
 		intersectTriangles(*r, bvh, intersection, normal, material, distance);
 	}
 	else {
-		bvh->pool[pointert++].traverse(r, pointert, bvh, intersection, normal, material, distance);
-		bvh->pool[pointert++].traverse( r, pointert, bvh, intersection, normal, material, distance );
+		//bvh->pool[pointert++].traverse(r, pointert, bvh, intersection, normal, material, distance);
+		left->traverse(r, pointert, bvh, intersection, normal, material, distance);
+		right->traverse(r, pointert, bvh, intersection, normal, material, distance);
+		//bvh->pool[pointert++].traverse( r, pointert, bvh, intersection, normal, material, distance );
 	}
 }
 
@@ -216,6 +220,7 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance)
 		intersectTriangles(*r, bvh, distance);
 	}
 	else {
+		bvh->pool[pointert++].traverse(r, pointert, bvh, distance);
 		bvh->pool[pointert++].traverse(r, pointert, bvh, distance);
 	}
 }
@@ -241,7 +246,7 @@ void BVHNode::intersectTriangles(const Ray r, BVH* bvh, float* distance) {
 	//*distance = INFINITY;
 	for (int i = first; i < first + count; i++) {
 		Triangle* triangle = bvh->getTriangleByIndice(i);
-		glm::vec3 temp = triangle->intersection(r, &tempDistance);
+		triangle->intersection(r, &tempDistance);
 		if (tempDistance < *distance) {
 			*distance = tempDistance;
 		}

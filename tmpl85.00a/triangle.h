@@ -17,5 +17,8 @@ public:
 	glm::vec3 v1, v2, v3;
 	glm::vec3 centroid;
 
+	void updateBounds();
 	AABB getBounds();
+
+	AABB boundingBox;
 };

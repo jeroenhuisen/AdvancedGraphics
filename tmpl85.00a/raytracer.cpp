@@ -32,8 +32,8 @@ void Raytracer::tracePixel(Tmpl8::Pixel* pixel, const int x, const int y) {
 	// do stuff
 	Ray r = Ray(camera->position, camera->getPixelDirection(x, y));
 	Color test =  trace(&r, 0);
-	//*pixel = (test + Color(0,r.bvhHit*10, 0)).getRGB();
-	*pixel = test.getRGB();
+	*pixel = (test + Color(0,r.bvhHit, 0)).getRGB();
+//	*pixel = test.getRGB();
 }
 
 Color Raytracer::trace(Ray* r, int counter) {

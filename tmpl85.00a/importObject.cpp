@@ -12,6 +12,8 @@ void ImportObject::move(const glm::vec3 newPos) {
 		tPtr->v1 += newPos;
 		tPtr->v2 += newPos;
 		tPtr->v3 += newPos;
+
+		tPtr->updateBounds();
 	}
 }
 glm::vec3 ImportObject::intersection(const Ray r, float* distance) {

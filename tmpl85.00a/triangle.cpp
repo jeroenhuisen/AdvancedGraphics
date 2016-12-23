@@ -41,17 +41,24 @@ glm::vec3 Triangle::intersection(const Ray r, float* distance) {
 	return direction; // Normalised normal of the triangle
 }
 
-AABB Triangle::getBounds() {
-	/*float xMin = min(v1.x, v2.x);
+void Triangle::updateBounds() {
+	float xMin = min(v1.x, v2.x);
 	xMin = min(xMin, v3.x);
 	float yMin = min(v1.y, v2.y);
 	yMin = min(yMin, v3.y);
 	float zMin = min(v1.z, v2.z);
-	zMin = min(zMin, v3.z);*/
+	zMin = min(zMin, v3.z);
 
-	float xMin = v1.x, yMin = v1.y, zMin = v1.z;
+	float xMax = max(v1.x, v2.x);
+	xMax = max(xMax, v3.x);
+	float yMax = max(v1.y, v2.y);
+	yMax = max(yMin, v3.y);
+	float zMax = max(v1.z, v2.z);
+	zMax = max(zMax, v3.z);
+
+	/*float xMin = v1.x, yMin = v1.y, zMin = v1.z;
 	float xMax = v1.x, yMax = v1.y, zMax = v1.z;
-	
+
 	if (v2.x > xMin) {
 		xMax = v2.x;
 	}
@@ -90,7 +97,10 @@ AABB Triangle::getBounds() {
 	else { // == aswell for no real reason
 		zMin = v3.z;
 	}
+	*/
+	boundingBox = AABB(glm::vec3(xMin, yMin, zMin), glm::vec3(xMax, yMax, zMax));
+}
 
-	 
-	return AABB(glm::vec3(xMin, yMin, zMin), glm::vec3(xMax, yMax, zMax));
+AABB Triangle::getBounds() {
+	return boundingBox;
 }
