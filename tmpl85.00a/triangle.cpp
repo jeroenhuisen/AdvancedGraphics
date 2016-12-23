@@ -6,13 +6,13 @@ Triangle::Triangle(const glm::vec3 v1, const glm::vec3 v2, const glm::vec3 v3, M
 	Primitive(v1, glm::normalize(glm::cross((v2-v1),(v3-v1))), material), v1(v1), v2(v2), v3(v3) {
 	glm::vec3 test = (v1 + v2 + v3) / 3.0f;
 	centroid = (v1 + v2 + v3) / 3.0f;
-
+	updateBounds();
 }
 
 Triangle::Triangle(const glm::vec3 v1, const glm::vec3 v2, const glm::vec3 v3, const glm::vec3 n1, const glm::vec3 n2, const glm::vec3 n3, Material* material) :
 	Primitive(v1, glm::normalize(n1 + n2 + n3), material), v1(v1), v2(v2), v3(v3) {
 	centroid = (v1 + v2 + v3) / 3.0f;
-
+	updateBounds();
 }
 
 glm::vec3 Triangle::intersection(const Ray r, float* distance) {

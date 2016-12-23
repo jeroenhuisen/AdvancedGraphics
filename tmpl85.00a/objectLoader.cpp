@@ -154,7 +154,7 @@ ImportObject* ObjectLoader::loadObjectImportObject(const std::string filename, i
 			else {
 				trianglePtr->direction = glm::normalize(glm::cross((v2 - v1), (v3 - v1)));
 			}
-
+			trianglePtr->updateBounds();
 			trianglePtr++;
 		}
 		objPtr->triangles = triangles;
