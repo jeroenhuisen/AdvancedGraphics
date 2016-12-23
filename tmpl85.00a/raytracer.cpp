@@ -32,8 +32,8 @@ void Raytracer::tracePixel(Tmpl8::Pixel* pixel, const int x, const int y) {
 	// do stuff
 	Ray r = Ray(camera->position, camera->getPixelDirection(x, y));
 	Color test =  trace(&r, 0);
-	*pixel = (test + Color(0,r.bvhHit, 0)).getRGB();
-//	*pixel = test.getRGB();
+	//*pixel = (test + Color(0,r.bvhHit, 0)).getRGB();
+	*pixel = test.getRGB();
 }
 
 Color Raytracer::trace(Ray* r, int counter) {
@@ -89,7 +89,7 @@ void Raytracer::nearestIntersection(Ray* r, glm::vec3* intersection, glm::vec3* 
 	// going for the slowest approach
 #define SLOW_NO_BVH 0
 #if SLOW_NO_BVH
-	scene->nearestIntersection(r, intersection, normal, material, distance);
+	scene->nearestIntersection(*r, intersection, normal, material, distance);
 #else
 	scene->nearestIntersectionBVH(r, intersection, normal, material, distance);
 #endif

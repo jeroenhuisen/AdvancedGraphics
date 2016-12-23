@@ -82,13 +82,13 @@ bool Scene::isThereAIntersection(const Ray r, float distanceResult){
 
 bool Scene::isThereAIntersectionBVH(Ray r, float distanceResult) {
 	float distance = INFINITE;
-	for (int i = 0; i < objects.size(); i++) {
+	//for (int i = 0; i < objects.size(); i++) {
 		bvh->root->traverse(&r, 0, bvh, &distance);
 		float floatError = 0.01; //otherwise black lines where it shouldnt be
 		if (distance <= distanceResult && distance >= 0 + floatError) {
 			return false;
 		}
-	}
+	//}
 	return true;
 }
 
