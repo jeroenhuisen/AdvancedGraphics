@@ -7,6 +7,8 @@ class Triangle : public Primitive {
 private:
 	
 	const float EPSILON = 0.000001;
+	glm::vec3 e1, e2;
+	void updateBounds();
 public:
 	// Please change the values this is only here for simplification/testing
 	Triangle() {}
@@ -17,7 +19,7 @@ public:
 	glm::vec3 v1, v2, v3;
 	glm::vec3 centroid;
 
-	void updateBounds();
+	void precalculate();
 	AABB getBounds();
 
 	AABB boundingBox;
