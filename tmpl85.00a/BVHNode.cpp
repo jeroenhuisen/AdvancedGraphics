@@ -5,13 +5,12 @@ void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex) {
 	if (count <= 3) {
 		return;
 	}
-	left = &bvh->pool[(*poolIndex)++];
-	right = &bvh->pool[(*poolIndex)++];
+	left = (*poolIndex)++;
 	partition(bvh);
 
-	left->subdivide(bvh, poolIndex);
-	right->subdivide(bvh, poolIndex);
-	isLeaf = false;
+	(&bvh->pool[(*poolIndex)++])->subdivide(bvh, poolIndex);
+	(&bvh->pool[(*poolIndex)++])->subdivide(bvh, poolIndex);
+	count = 0;
 
 }
 
@@ -131,7 +130,8 @@ void BVHNode::partition(BVH* bvh) {
 	int rightIndice = count - 1; // first + count - 1;
 								 //for swapping
 								 //int* indices = getIndices();
-	AABB aabbLeft, aabbRight;
+	AABB aabbLeft(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
+	AABB aabbRight(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
 	unsigned int* backup = new unsigned int[count];
 	for (int i = 0; i < count; i++) {
 		backup[i] = bvh->indices[first + i];
@@ -174,13 +174,12 @@ void BVHNode::partition(BVH* bvh) {
 	}
 	//not sure if required since local variable but yea 
 	delete[] backup;
-
-	left->first = first;
-	left->count = bestLeftCount;
-	left->bounds = aabbLeft;
-	right->first = first+rightIndice+1; //first+count-bestLeftCount;
-	right->count = count - bestLeftCount;
-	right->bounds = aabbRight;
+	bvh->pool[left].first = first;
+	bvh->pool[left].count = bestLeftCount;
+	bvh->pool[left].bounds = aabbLeft;
+	bvh->pool[left+1].first = first+rightIndice+1; //first+count-bestLeftCount;
+	bvh->pool[left+1].count = count - bestLeftCount;
+	bvh->pool[left+1].bounds = aabbRight;
 }
 
 AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
@@ -203,13 +202,14 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* inter
 	if (!bounds.intersects(r)) {
 		return;
 	}
-	if (isLeaf) {//isLeaf
+	if (count != 0) {//isLeaf
 		intersectTriangles(*r, bvh, intersection, normal, material, distance);
 	}
 	else {
-		//bvh->pool[pointert++].traverse(r, pointert, bvh, intersection, normal, material, distance);
-		left->traverse(r, pointert, bvh, intersection, normal, material, distance);
-		right->traverse(r, pointert, bvh, intersection, normal, material, distance);
+		bvh->pool[left].traverse(r, pointert, bvh, intersection, normal, material, distance);
+		bvh->pool[left+1].traverse(r, pointert, bvh, intersection, normal, material, distance);
+		//left->traverse(r, pointert, bvh, intersection, normal, material, distance);
+		//right->traverse(r, pointert, bvh, intersection, normal, material, distance);
 		//bvh->pool[pointert++].traverse( r, pointert, bvh, intersection, normal, material, distance );
 	}
 }
@@ -218,12 +218,12 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance)
 	if (!bounds.intersects(r)) {
 		return;
 	}
-	if (isLeaf) {//isLeaf
+	if (count != 0) {//isLeaf
 		intersectTriangles(*r, bvh, distance);
 	}
 	else {
-		left->traverse(r, pointert, bvh, distance);
-		right->traverse(r, pointert, bvh, distance);
+		bvh->pool[left].traverse(r, pointert, bvh, distance);
+		bvh->pool[left+1].traverse(r, pointert, bvh, distance);
 	}
 }
 

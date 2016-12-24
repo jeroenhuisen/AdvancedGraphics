@@ -31,9 +31,10 @@ protected:
 	void intersectTriangles(const Ray r, BVH* bvh, float* distance);
 public:
 	AABB bounds;	
-	BVHNode* left;
-	BVHNode* right;
-	bool isLeaf = true;
+	//BVHNode* left;
+	//BVHNode* right;
+	//bool isLeaf = true;
+	int left;
 	int first, count;
 
 	BVHNode() {  }
