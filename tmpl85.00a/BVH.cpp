@@ -37,9 +37,6 @@ void BVH::constructBVH(Triangle** objects, int N) {
 }*/
 
 Triangle* BVH::getTriangleByIndice(unsigned int indiceIndex) {
-	if (indiceIndex < 9) {
-		float test = 0;
-	}
 	return *(objects + indices[indiceIndex]);
 }
 
