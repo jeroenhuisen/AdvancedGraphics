@@ -5,11 +5,12 @@ void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex) {
 	if (count <= 3) {
 		return;
 	}
-	left = (*poolIndex)++;
+	left = *poolIndex;
+	*poolIndex = left + 2;
 	partition(bvh);
 
-	(&bvh->pool[(*poolIndex)++])->subdivide(bvh, poolIndex);
-	(&bvh->pool[(*poolIndex)++])->subdivide(bvh, poolIndex);
+	bvh->pool[left].subdivide(bvh, poolIndex);
+	bvh->pool[left+1].subdivide(bvh, poolIndex);
 	count = 0;
 
 }
