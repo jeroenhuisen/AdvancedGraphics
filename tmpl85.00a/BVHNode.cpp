@@ -222,8 +222,8 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance)
 		intersectTriangles(*r, bvh, distance);
 	}
 	else {
-		bvh->pool[pointert++].traverse(r, pointert, bvh, distance);
-		bvh->pool[pointert++].traverse(r, pointert, bvh, distance);
+		left->traverse(r, pointert, bvh, distance);
+		right->traverse(r, pointert, bvh, distance);
 	}
 }
 
