@@ -1,16 +1,18 @@
 #include "template.h"
 #include "BVHNode.h"
 
-void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex) {
-	if (count <= 3) {
+void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex, int first) {
+	leftFirst = *poolIndex;
+
+
+	if (partition(bvh, first)) {
+		leftFirst = first;
+		(*poolIndex) -= 2;
 		return;
 	}
-	left = *poolIndex;
-	*poolIndex = left + 2;
-	partition(bvh);
-
-	bvh->pool[left].subdivide(bvh, poolIndex);
-	bvh->pool[left+1].subdivide(bvh, poolIndex);
+	*poolIndex = leftFirst + 2;
+	bvh->pool[leftFirst].subdivide(bvh, poolIndex, first);
+	bvh->pool[leftFirst+1].subdivide(bvh, poolIndex, first);
 	count = 0;
 
 }
@@ -26,7 +28,7 @@ void maxBound(AABB* aabb, const AABB* check) {
 }
 
 
-void BVHNode::partition(BVH* bvh) {
+bool BVHNode::partition(BVH* bvh, int first) {
 	//idk
 	/*left->first = first;
 	int middle = count * 0.5;
@@ -42,6 +44,9 @@ void BVHNode::partition(BVH* bvh) {
 	bool xAxis = false;
 	bool yAxis = false;
 	bool zAxis = false;
+
+	float aLeft;
+	float aRight;
 
 	for (int i = first; i < first + count; i++) {
 		Triangle* t = bvh->getTriangleByIndice(i);
@@ -103,6 +108,8 @@ void BVHNode::partition(BVH* bvh) {
 			xAxis = true;
 			yAxis = false;
 			zAxis = false;//y false and z false
+			aLeft = xsurfaceAreaLeft;
+			aRight = xsurfaceAreaRight;
 		}
 		if (yDifference < lowestDifference) {
 			lowestDifference = yDifference;
@@ -111,6 +118,8 @@ void BVHNode::partition(BVH* bvh) {
 			xAxis = false;
 			yAxis = true;
 			zAxis = false;
+			aLeft = ysurfaceAreaLeft;
+			aRight = ysurfaceAreaRight;
 		}
 		if (zDifference < lowestDifference) {
 			lowestDifference = zDifference;
@@ -119,9 +128,19 @@ void BVHNode::partition(BVH* bvh) {
 			xAxis = false;
 			yAxis = false;
 			zAxis = true;
+			aLeft = zsurfaceAreaLeft;
+			aRight = zsurfaceAreaRight;
 		}
 		//y and z aswell
 	}
+
+	//should we split?
+	if ((aLeft * bestLeftCount + aRight * (count - bestLeftCount)) >= bounds.surfaceArea() * count) {
+		// we shouldnt
+		return true;
+	}
+
+
 	//Recalculate for some reason well mostly because it needs to change and I am lazy
 	//might actually interesting to keep it like this since bounds will only be calculated once than
 	//int indicesMiddle = first + bestLeftCount - 1;
@@ -175,17 +194,19 @@ void BVHNode::partition(BVH* bvh) {
 	}
 	//not sure if required since local variable but yea 
 	delete[] backup;
-	bvh->pool[left].first = first;
-	bvh->pool[left].count = bestLeftCount;
-	bvh->pool[left].bounds = aabbLeft;
-	bvh->pool[left+1].first = first+rightIndice+1; //first+count-bestLeftCount;
-	bvh->pool[left+1].count = count - bestLeftCount;
-	bvh->pool[left+1].bounds = aabbRight;
+	//bvh->pool[left].first = first;
+	bvh->pool[leftFirst].count = bestLeftCount;
+	bvh->pool[leftFirst].bounds = aabbLeft;
+	//bvh->pool[left+1].first = first+rightIndice+1; //first+count-bestLeftCount;
+	bvh->pool[leftFirst +1].count = count - bestLeftCount;
+	bvh->pool[leftFirst +1].bounds = aabbRight;
+
+	return false;
 }
 
-AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
+/*AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
 	AABB box = AABB(glm::vec3(INFINITE, INFINITE, INFINITE), glm::vec3(-INFINITE, -INFINITE, -INFINITE));
-	for (int indice = node->first; indice < node->first + node->count; indice++) {
+	for (int indice = node->leftFirst; indice < node->leftFirst + node->count; indice++) {
 
 		AABB temp = (*(objects + indice))->getBounds();
 		box.leftBottom.x = min(temp.leftBottom.x, box.leftBottom.x);
@@ -197,7 +218,7 @@ AABB BVHNode::calculateBoundsNode(BVHNode* node, Triangle** objects) {
 		box.rightTop.z = max(temp.rightTop.z, box.rightTop.z);
 	}
 	return box;
-}
+}*/
 
 void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 	if (!bounds.intersects(r)) {
@@ -207,8 +228,8 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* inter
 		intersectTriangles(*r, bvh, intersection, normal, material, distance);
 	}
 	else {
-		bvh->pool[left].traverse(r, pointert, bvh, intersection, normal, material, distance);
-		bvh->pool[left+1].traverse(r, pointert, bvh, intersection, normal, material, distance);
+		bvh->pool[leftFirst].traverse(r, pointert, bvh, intersection, normal, material, distance);
+		bvh->pool[leftFirst +1].traverse(r, pointert, bvh, intersection, normal, material, distance);
 		//left->traverse(r, pointert, bvh, intersection, normal, material, distance);
 		//right->traverse(r, pointert, bvh, intersection, normal, material, distance);
 		//bvh->pool[pointert++].traverse( r, pointert, bvh, intersection, normal, material, distance );
@@ -223,15 +244,15 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance)
 		intersectTriangles(*r, bvh, distance);
 	}
 	else {
-		bvh->pool[left].traverse(r, pointert, bvh, distance);
-		bvh->pool[left+1].traverse(r, pointert, bvh, distance);
+		bvh->pool[leftFirst].traverse(r, pointert, bvh, distance);
+		bvh->pool[leftFirst +1].traverse(r, pointert, bvh, distance);
 	}
 }
 
 void BVHNode::intersectTriangles(const Ray r, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
 	float tempDistance = INFINITY;
 	//*distance = INFINITY;
-	for (int i = first; i < first + count; i++) {
+	for (int i = leftFirst; i < leftFirst + count; i++) {
 		Triangle* triangle = bvh->getTriangleByIndice(i);
 		glm::vec3 temp = triangle->intersection(r, &tempDistance);
 		if(tempDistance < *distance){
@@ -246,7 +267,7 @@ void BVHNode::intersectTriangles(const Ray r, BVH* bvh, glm::vec3* intersection,
 void BVHNode::intersectTriangles(const Ray r, BVH* bvh, float* distance) {
 	float tempDistance = INFINITY;
 	//*distance = INFINITY;
-	for (int i = first; i < first + count; i++) {
+	for (int i = leftFirst; i < leftFirst + count; i++) {
 		Triangle* triangle = bvh->getTriangleByIndice(i);
 		triangle->intersection(r, &tempDistance);
 		if (tempDistance < *distance) {

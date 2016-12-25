@@ -34,13 +34,13 @@ public:
 	//BVHNode* left;
 	//BVHNode* right;
 	//bool isLeaf = true;
-	int left;
-	int first, count;
+	int leftFirst;
+	int count;
 
 	BVHNode() {  }
-	void subdivide(BVH* bvh, unsigned int* poolIndex);
-	void partition(BVH* bvh);
-	AABB calculateBoundsNode(BVHNode* node, Triangle** objects);
+	void subdivide(BVH* bvh, unsigned int* poolIndex, int first);
+	bool partition(BVH* bvh, int first);
+	//AABB calculateBoundsNode(BVHNode* node, Triangle** objects);
 	void traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
 	void traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance);
 };

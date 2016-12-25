@@ -32,8 +32,8 @@ void Game::Tick( float dt )
 {
 	screen->Clear( 0 );
 	buttonHandler.updateKeys();
-	//	movementController.update(dt);
-	movementController.update();
+	movementController.update(dt);
+	//movementController.update();
 	tracer.traceScreen(screen->GetBuffer(), SCRWIDTH, SCRHEIGHT);
 	guiBuilder.draw();
 	//screen->Line( 2, 10, 50, 10, 0xff0000 );
