@@ -1,13 +1,13 @@
 #include "template.h"
 #include "BVHNode.h"
 
-void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex, int first) {
+void BVHNode::subdivide(BVH* bvh, unsigned int* poolIndex, unsigned int* first) {
 	leftFirst = *poolIndex;
 
 
-	if (partition(bvh, first)) {
-		leftFirst = first;
-		(*poolIndex) -= 2;
+	if (partition(bvh, *first)) {
+		leftFirst = *first;
+		(*first) += count;
 		return;
 	}
 	*poolIndex = leftFirst + 2;

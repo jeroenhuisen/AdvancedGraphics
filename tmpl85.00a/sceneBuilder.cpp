@@ -67,7 +67,7 @@ void sceneBuilder(Scene* scene) {
 	//std::vector<Triangle*> triangles = objectLoader.loadObject("importOBJ/box.obj");
 
 	int objSize = 0;
-	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/box.obj", &objSize);
+	ImportObject* obj = objectLoader.loadObjectImportObject("importOBJ/dragon1.obj", &objSize);
 	ImportObject* a = obj;
 	int amountOfTriangles = 0;
 	for (int i = 0; i < objSize; i++) {

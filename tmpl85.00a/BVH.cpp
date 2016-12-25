@@ -9,6 +9,7 @@ void BVH::constructBVH(Triangle** objects, int N) {
 	// allocate BVH root node
 	pool = new BVHNode[N * 2 - 1];
 	unsigned int poolIndex = 0;
+	unsigned int indicesIndex = 0;
 	root = &pool[poolIndex++];
 
 	// objects stored
@@ -18,7 +19,7 @@ void BVH::constructBVH(Triangle** objects, int N) {
 	root->leftFirst = 1;
 	root->count = N;
 	root->bounds = calculateBounds(objects, 0, root->count);//root->calculateBoundsNode(root, objects); 
-	root->subdivide(this, &poolIndex, 0);
+	root->subdivide(this, &poolIndex, &indicesIndex);
 }
 
 AABB BVH::calculateBounds(Triangle** objects, int first, int count) {

@@ -38,7 +38,7 @@ public:
 	int count;
 
 	BVHNode() {  }
-	void subdivide(BVH* bvh, unsigned int* poolIndex, int first);
+	void subdivide(BVH* bvh, unsigned int* poolIndex, unsigned int* first);
 	bool partition(BVH* bvh, int first);
 	//AABB calculateBoundsNode(BVHNode* node, Triangle** objects);
 	void traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance);
