@@ -48,6 +48,13 @@ bool BVHNode::partition(BVH* bvh, int first) {
 	float aLeft;
 	float aRight;
 
+	AABB aabbLeft(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
+	AABB aabbRight(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
+	// 1 triangle cannot be divided since this is not a SBVH sadly enough
+	if (count <= 1) {
+		return true;
+	}
+
 	for (int i = first; i < first + count; i++) {
 		Triangle* t = bvh->getTriangleByIndice(i);
 		glm::vec3 centroid = t->centroid;
@@ -65,42 +72,145 @@ bool BVHNode::partition(BVH* bvh, int first) {
 		//float zsurfaceAreaLeft = t->getBounds().surfaceArea();
 		float zsurfaceAreaLeft = 0;
 		float zsurfaceAreaRight = 0;
-		for (int y = first; y < first + count; y++) {
-			Triangle* temp = bvh->getTriangleByIndice(y);
+
+		std::vector<int> xLeft, xRight;
+		std::vector<int> yLeft, yRight;
+		std::vector<int> zLeft, zRight;
+
+
+		//not most effecient way 
+		for (int j = first; j < first + count; j++) {
+			Triangle* temp = bvh->getTriangleByIndice(j);
 			//xsplit
 			if (temp->centroid.x <= centroid.x) {
 				//left
 				xCounter++;
 				xsurfaceAreaLeft += temp->getBounds().surfaceArea();
+				xLeft.push_back(j);
 			}
 			else {
 				//right
 				xsurfaceAreaRight += temp->getBounds().surfaceArea();
+				xRight.push_back(j);
 			}
 			//ysplit
 			if (temp->centroid.y <= centroid.y) {
 				//left
 				yCounter++;
 				ysurfaceAreaLeft += temp->getBounds().surfaceArea();
+				yLeft.push_back(j);
 			}
 			else {
 				//right
 				ysurfaceAreaRight += temp->getBounds().surfaceArea();
+				yRight.push_back(j);
 			}
 			//zsplit
 			if (temp->centroid.z <= centroid.z) {
 				//left
 				zCounter++;
 				zsurfaceAreaLeft += temp->getBounds().surfaceArea();
+				zLeft.push_back(j);
 			}
 			else {
 				//right
 				zsurfaceAreaRight += temp->getBounds().surfaceArea();
+				zRight.push_back(j);
 			}
 		}
-		float xDifference = abs(xsurfaceAreaLeft - xsurfaceAreaRight);
-		float yDifference = abs(ysurfaceAreaLeft - ysurfaceAreaRight);
-		float zDifference = abs(zsurfaceAreaLeft - zsurfaceAreaRight);
+		AABB aabbDefault(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
+
+		AABB aabbXLeft = aabbDefault;
+		AABB aabbXRight = aabbDefault;
+		for (int x : xLeft) {
+			Triangle* temp = bvh->getTriangleByIndice(x);
+			maxBound(&aabbXLeft, &(temp->boundingBox));
+			
+		}
+		for (int x : xRight) {
+			Triangle* temp = bvh->getTriangleByIndice(x);
+			maxBound(&aabbXRight, &(temp->boundingBox));
+		}
+
+		AABB aabbYLeft = aabbDefault;
+		AABB aabbYRight = aabbDefault;
+		for (int y : yLeft) {
+			Triangle* temp = bvh->getTriangleByIndice(y);
+			maxBound(&aabbYLeft, &(temp->boundingBox));
+
+		}
+		for (int y : yRight) {
+			Triangle* temp = bvh->getTriangleByIndice(y);
+			maxBound(&aabbYRight, &(temp->boundingBox));
+		}
+
+
+		AABB aabbZLeft = aabbDefault;
+		AABB aabbZRight = aabbDefault;
+		for (int z : zLeft) {
+			Triangle* temp = bvh->getTriangleByIndice(z);
+			maxBound(&aabbZLeft, &(temp->boundingBox));
+
+		}
+		for (int z : zRight) {
+			Triangle* temp = bvh->getTriangleByIndice(z);
+			maxBound(&aabbZRight, &(temp->boundingBox));
+		}
+		//float xDifference = abs(xsurfaceAreaLeft - xsurfaceAreaRight);
+		//float yDifference = abs(ysurfaceAreaLeft - ysurfaceAreaRight);
+		//float zDifference = abs(zsurfaceAreaLeft - zsurfaceAreaRight);
+		float xSALeft = aabbXLeft.surfaceArea();
+		float xSARight = aabbXRight.surfaceArea();
+		float ySALeft = aabbYLeft.surfaceArea();
+		float ySARight = aabbYRight.surfaceArea();
+		float zSALeft = aabbZLeft.surfaceArea();
+		float zSARight = aabbZRight.surfaceArea();
+
+		float xSADifference = abs(xSALeft - xSARight);
+		float ySADifference = abs(ySALeft - ySARight);
+		float zSADifference = abs(zSALeft - zSARight);
+
+		if (xSADifference < lowestDifference) {
+			lowestDifference = xSADifference;
+			aLeft = xSALeft;
+			aRight = xSARight;
+			aabbLeft = aabbXLeft;
+			aabbRight = aabbXRight;
+
+			xAxis = true;
+			yAxis = false;
+			zAxis = false;
+
+			bestCentroid = centroid;
+			bestLeftCount = xCounter;
+		}
+		if (ySADifference < lowestDifference) {
+			lowestDifference = ySADifference;
+			aLeft = ySALeft;
+			aRight = ySARight;
+			aabbLeft = aabbYLeft;
+			aabbRight = aabbYRight;
+			xAxis = false;
+			yAxis = true;
+			zAxis = false;
+
+			bestCentroid = centroid;
+			bestLeftCount = yCounter;
+		}
+		if (zSADifference < lowestDifference) {
+			lowestDifference = zSADifference;
+			aLeft = zSALeft;
+			aRight = zSARight;
+			aabbLeft = aabbZLeft;
+			aabbRight = aabbZRight;
+			xAxis = false;
+			yAxis = false;
+			zAxis = true;
+
+			bestCentroid = centroid;
+			bestLeftCount = zCounter;
+		}
+		/*
 		if (xDifference < lowestDifference) {
 			lowestDifference = xDifference;
 			bestCentroid = centroid;
@@ -131,7 +241,7 @@ bool BVHNode::partition(BVH* bvh, int first) {
 			aLeft = zsurfaceAreaLeft;
 			aRight = zsurfaceAreaRight;
 		}
-		//y and z aswell
+		//y and z aswell*/
 	}
 
 	//should we split?
@@ -150,8 +260,8 @@ bool BVHNode::partition(BVH* bvh, int first) {
 	int rightIndice = count - 1; // first + count - 1;
 								 //for swapping
 								 //int* indices = getIndices();
-	AABB aabbLeft(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
-	AABB aabbRight(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
+	//AABB aabbLeft(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
+	//AABB aabbRight(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
 	unsigned int* backup = new unsigned int[count];
 	for (int i = 0; i < count; i++) {
 		backup[i] = bvh->indices[first + i];
@@ -177,14 +287,14 @@ bool BVHNode::partition(BVH* bvh, int first) {
 			//bvh->setIndice(leftIndice, i);
 			backup[leftIndice] = bvh->indices[i];
 			leftIndice++;
-			maxBound(&aabbLeft, &temp->getBounds());
+			//maxBound(&aabbLeft, &temp->getBounds());
 		}
 		else {
 			//right
 			//bvh->setIndice(rightIndice, i);
 			backup[rightIndice] = bvh->indices[i];
 			rightIndice--;
-			maxBound(&aabbRight, &temp->getBounds());
+			//maxBound(&aabbRight, &temp->getBounds());
 		}
 		//}
 	}
@@ -242,9 +352,11 @@ void BVHNode::isCloser(Ray* r, unsigned int pointert, BVH* bvh, float* distance)
 	if (!bounds.intersects(r, &tempDistance)) {
 		return;
 	}
+#if 1 // not sure tho
 	if (tempDistance > *distance) {
 		return;
 	}
+#endif
 	if (count != 0) {//isLeaf
 		intersectTriangles(*r, bvh, distance);
 	}
