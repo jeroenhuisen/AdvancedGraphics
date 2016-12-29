@@ -221,7 +221,8 @@ bool BVHNode::partition(BVH* bvh, int first) {
 }*/
 
 void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* intersection, glm::vec3* normal, Material* material, float* distance) {
-	if (!bounds.intersects(r)) {
+	float tempDistance = INFINITY;
+	if (!bounds.intersects(r, &tempDistance)) {
 		return;
 	}
 	if (count != 0) {//isLeaf
@@ -236,16 +237,20 @@ void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, glm::vec3* inter
 	}
 }
 
-void BVHNode::traverse(Ray* r, unsigned int pointert, BVH* bvh, float* distance) {
-	if (!bounds.intersects(r)) {
+void BVHNode::isCloser(Ray* r, unsigned int pointert, BVH* bvh, float* distance) {
+	float tempDistance = INFINITY;
+	if (!bounds.intersects(r, &tempDistance)) {
+		return;
+	}
+	if (tempDistance > *distance) {
 		return;
 	}
 	if (count != 0) {//isLeaf
 		intersectTriangles(*r, bvh, distance);
 	}
 	else {
-		bvh->pool[leftFirst].traverse(r, pointert, bvh, distance);
-		bvh->pool[leftFirst +1].traverse(r, pointert, bvh, distance);
+		bvh->pool[leftFirst].isCloser(r, pointert, bvh, distance);
+		bvh->pool[leftFirst +1].isCloser(r, pointert, bvh, distance);
 	}
 }
 

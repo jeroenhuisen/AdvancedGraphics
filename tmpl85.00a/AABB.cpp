@@ -23,7 +23,7 @@ float AABB::surfaceArea() {
 }
 
 // http://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
-bool AABB::intersects(Ray* r) {
+bool AABB::intersects(Ray* r, float* distance) {
 	// r->dir is unit direction vector of ray
 	glm::vec3 dirfrac;
 	dirfrac.x = 1.0f / r->direction.x;
@@ -41,23 +41,21 @@ bool AABB::intersects(Ray* r) {
 	float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
 	float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
 
-	float t = 0; //length of the ray so distance
-
 	// if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
 	if (tmax < 0)
 	{
-		t = tmax;
+		*distance = tmax;
 		return false;
 	}
 
 	// if tmin > tmax, ray doesn't intersect AABB
 	if (tmin > tmax)
 	{
-		t = tmax;
+		*distance = tmax;
 		return false;
 	}
 
-	t = tmin;
+	*distance = tmin;
 	r->bvhHit++;
 	return true;
 }

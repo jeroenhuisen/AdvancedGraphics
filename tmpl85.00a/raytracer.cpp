@@ -34,7 +34,7 @@ void Raytracer::tracePixel(Tmpl8::Pixel* pixel, const int x, const int y) {
 	Color test =  trace(&r, 0);
 #define BB 0
 #if BB
-	*pixel = (test + Color(0,r.bvhHit*10, 0)).getRGB();
+	*pixel = (test + Color(0,r.bvhHit*2, 0)).getRGB();
 #else
 	*pixel = test.getRGB();
 #endif
@@ -51,7 +51,10 @@ Color Raytracer::trace(Ray* r, int counter) {
 	float distance = INFINITE;
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
 
-	//return material.color; //without illumination
+#define NOLIGHT 0
+#if NOLIGHT
+	return material.color; //without illumination
+#endif
 	
 	if (material.getColor().r != 0 || material.getColor().g != 0 || material.getColor().b != 0) {
 		float angle = 0;
@@ -115,7 +118,7 @@ Color Raytracer::directIllumination(glm::vec3 intersection, glm::vec3 normal, fl
 			Color light = lights[i]->getColor();
 			light.to1();
 			*angle = glm::max(0.0f, glm::dot(normal, direction));
-			c += light * lights[i]->calculateStrength(distance) * *angle ;
+			c += light * lights[i]->calculateStrength(distance) * *angle;
 			//
 		}
 	}
