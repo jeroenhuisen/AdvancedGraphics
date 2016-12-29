@@ -51,7 +51,7 @@ Color Raytracer::trace(Ray* r, int counter) {
 	float distance = INFINITE;
 	nearestIntersection(r, &intersection, &normal, &material, &distance);
 
-#define NOLIGHT 0
+#define NOLIGHT 1
 #if NOLIGHT
 	return material.color; //without illumination
 #endif

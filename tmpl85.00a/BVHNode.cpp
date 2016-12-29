@@ -47,20 +47,35 @@ bool BVHNode::partition(BVH* bvh, int first) {
 
 	float aLeft;
 	float aRight;
+	AABB aabbDefault(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
 
-	AABB aabbLeft(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
-	AABB aabbRight(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
+	AABB aabbLeft = aabbDefault;
+	AABB aabbRight = aabbDefault;
 	// 1 triangle cannot be divided since this is not a SBVH sadly enough
 	if (count <= 1) {
 		return true;
 	}
 
+	/*std::vector<int> xLeft, xRight;
+	std::vector<int> yLeft, yRight;
+	std::vector<int> zLeft, zRight;*/
+
+	int* x = new int[count];
+	int* y = new int[count];
+	int* z = new int[count];
+
 	for (int i = first; i < first + count; i++) {
+	/*	xLeft.clear();
+		xRight.clear();
+		yLeft.clear();
+		yRight.clear();
+		zLeft.clear();
+		zRight.clear();*/
 		Triangle* t = bvh->getTriangleByIndice(i);
 		glm::vec3 centroid = t->centroid;
-		int xCounter = 0;
-		int yCounter = 0;
-		int zCounter = 0;
+		int xCounter = 0, xCounterRight = count-1;
+		int yCounter = 0, yCounterRight = count-1;
+		int zCounter = 0, zCounterRight = count-1;
 		//float xsurfaceAreaLeft = t->getBounds().surfaceArea();
 		float xsurfaceAreaLeft = 0;
 		float xsurfaceAreaRight = 0;
@@ -73,9 +88,8 @@ bool BVHNode::partition(BVH* bvh, int first) {
 		float zsurfaceAreaLeft = 0;
 		float zsurfaceAreaRight = 0;
 
-		std::vector<int> xLeft, xRight;
-		std::vector<int> yLeft, yRight;
-		std::vector<int> zLeft, zRight;
+
+
 
 
 		//not most effecient way 
@@ -84,78 +98,83 @@ bool BVHNode::partition(BVH* bvh, int first) {
 			//xsplit
 			if (temp->centroid.x <= centroid.x) {
 				//left
+				x[xCounter] = j;
 				xCounter++;
-				xsurfaceAreaLeft += temp->getBounds().surfaceArea();
-				xLeft.push_back(j);
+			//	xsurfaceAreaLeft += temp->getBounds().surfaceArea();
+			//	xLeft.push_back(j);
 			}
 			else {
 				//right
-				xsurfaceAreaRight += temp->getBounds().surfaceArea();
-				xRight.push_back(j);
+				x[xCounterRight] = j;
+				xCounterRight--;
+			//	xsurfaceAreaRight += temp->getBounds().surfaceArea();
+			//	xRight.push_back(j);
 			}
 			//ysplit
 			if (temp->centroid.y <= centroid.y) {
 				//left
+				y[yCounter] = j;
 				yCounter++;
-				ysurfaceAreaLeft += temp->getBounds().surfaceArea();
-				yLeft.push_back(j);
+				//ysurfaceAreaLeft += temp->getBounds().surfaceArea();
+				//yLeft.push_back(j);
 			}
 			else {
 				//right
-				ysurfaceAreaRight += temp->getBounds().surfaceArea();
-				yRight.push_back(j);
+				y[yCounterRight] = j;
+				yCounterRight--;
+				//ysurfaceAreaRight += temp->getBounds().surfaceArea();
+				//yRight.push_back(j);
 			}
 			//zsplit
 			if (temp->centroid.z <= centroid.z) {
 				//left
+				z[zCounter] = j;
 				zCounter++;
-				zsurfaceAreaLeft += temp->getBounds().surfaceArea();
-				zLeft.push_back(j);
+				//zsurfaceAreaLeft += temp->getBounds().surfaceArea();
+				//zLeft.push_back(j);
 			}
 			else {
 				//right
-				zsurfaceAreaRight += temp->getBounds().surfaceArea();
-				zRight.push_back(j);
+				z[zCounterRight] = j;
+				zCounterRight--;
+				//zsurfaceAreaRight += temp->getBounds().surfaceArea();
+				//zRight.push_back(j);
 			}
 		}
-		AABB aabbDefault(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
 
 		AABB aabbXLeft = aabbDefault;
 		AABB aabbXRight = aabbDefault;
-		for (int x : xLeft) {
-			Triangle* temp = bvh->getTriangleByIndice(x);
+		for (int x1 = 0; x1 < xCounter; x1++) {
+			Triangle* temp = bvh->getTriangleByIndice(x[x1]);
 			maxBound(&aabbXLeft, &(temp->boundingBox));
-			
 		}
-		for (int x : xRight) {
-			Triangle* temp = bvh->getTriangleByIndice(x);
+		for (int x1 = xCounterRight+1; x1 < count; x1++) {
+			Triangle* temp = bvh->getTriangleByIndice(x[x1]);
 			maxBound(&aabbXRight, &(temp->boundingBox));
 		}
 
 		AABB aabbYLeft = aabbDefault;
 		AABB aabbYRight = aabbDefault;
-		for (int y : yLeft) {
-			Triangle* temp = bvh->getTriangleByIndice(y);
+		for (int y1 = 0; y1 < yCounter; y1++) {
+			Triangle* temp = bvh->getTriangleByIndice(y[y1]);
 			maxBound(&aabbYLeft, &(temp->boundingBox));
-
 		}
-		for (int y : yRight) {
-			Triangle* temp = bvh->getTriangleByIndice(y);
+		for (int y1 = yCounterRight+1; y1 < count; y1++) {
+			Triangle* temp = bvh->getTriangleByIndice(y[y1]);
 			maxBound(&aabbYRight, &(temp->boundingBox));
 		}
 
-
 		AABB aabbZLeft = aabbDefault;
 		AABB aabbZRight = aabbDefault;
-		for (int z : zLeft) {
-			Triangle* temp = bvh->getTriangleByIndice(z);
+		for (int z1 = 0; z1 < zCounter; z1++) {
+			Triangle* temp = bvh->getTriangleByIndice(z[z1]);
 			maxBound(&aabbZLeft, &(temp->boundingBox));
-
 		}
-		for (int z : zRight) {
-			Triangle* temp = bvh->getTriangleByIndice(z);
+		for (int z1 = zCounterRight+1; z1 < count; z1++) {
+			Triangle* temp = bvh->getTriangleByIndice(z[z1]);
 			maxBound(&aabbZRight, &(temp->boundingBox));
 		}
+
 		//float xDifference = abs(xsurfaceAreaLeft - xsurfaceAreaRight);
 		//float yDifference = abs(ysurfaceAreaLeft - ysurfaceAreaRight);
 		//float zDifference = abs(zsurfaceAreaLeft - zsurfaceAreaRight);
@@ -243,6 +262,7 @@ bool BVHNode::partition(BVH* bvh, int first) {
 		}
 		//y and z aswell*/
 	}
+	delete[] x, y, z;
 
 	//should we split?
 	if ((aLeft * bestLeftCount + aRight * (count - bestLeftCount)) >= bounds.surfaceArea() * count) {
@@ -304,6 +324,7 @@ bool BVHNode::partition(BVH* bvh, int first) {
 	}
 	//not sure if required since local variable but yea 
 	delete[] backup;
+
 	//bvh->pool[left].first = first;
 	bvh->pool[leftFirst].count = bestLeftCount;
 	bvh->pool[leftFirst].bounds = aabbLeft;

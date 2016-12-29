@@ -8,7 +8,7 @@ AABB::AABB(const glm::vec3 leftBottom, const glm::vec3 rightTop):
 
 //@warning volume instead of surface
 float AABB::surfaceArea() {
-	glm::vec3 result = rightTop - leftBottom;
+	
 	//0 is kind of an issue 
 	/*if (result.x == 0) {
 		result.x = 0.1;
@@ -22,8 +22,11 @@ float AABB::surfaceArea() {
 	//return abs(result.x*result.y*result.z);
 	// 2 * SA(xy) + 2 * SA(xz) + 2 * SA(yz)
 	// 2 * (SA(XY) + SA(XZ) + SA(YZ)
+	glm::vec3 result = rightTop - leftBottom;
 	return 2.f * (result.x*result.y + result.x*result.z + result.y*result.z);
+
 }
+
 
 // http://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
 bool AABB::intersects(Ray* r, float* distance) {

@@ -7,6 +7,8 @@ public:
 	glm::vec3 leftBottom;
 	glm::vec3 rightTop;
 
+//	float SAH;
+
 	AABB() {}
 	AABB(const glm::vec3 leftBottom, const glm::vec3 rightTop);
 	float surfaceArea();
