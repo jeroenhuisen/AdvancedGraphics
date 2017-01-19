@@ -22,7 +22,7 @@
     <ProjectGuid>{9D24251F-FD72-4A76-9B1C-999ED22D4DCA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ogl_lab</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -196,6 +196,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="test2.cpp" />
+    <ClCompile Include="test.h" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>

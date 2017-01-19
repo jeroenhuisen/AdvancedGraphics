@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 #define PI				3.14159265358979323846f
 #define INVPI			(1.0f / PI)
 #define EPSILON			0.0001f
@@ -91,23 +93,22 @@ struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 target) {
 struct Ray GeneratePrimaryRay2(int x, int y)
 {
 	struct Ray r;
-	float3 p1 = (float3)(-1, -1, -1); // top left
-	float3 p2 = (float3)(1, -1, -1); // top right
-	float3 p3 = (float3)(-1, 1, -1); // bottom left
+	float3 p1 = (float3)(-1.0f, -1.0f, -1.0f); // top left
+	float3 p2 = (float3)(1.0f, -1.0f, -1.0f); // top right
+	float3 p3 = (float3)(-1.0f, 1.0f, -1.0f); // bottom left
 	float fx = (float)x / (float) SCRWIDTH;
 	float fy = (float)y / (float) SCRHEIGHT;
 	float3 p = p1 + (p2 - p1) * fx + (p3 - p1) * fy;
 	r.O = (float3)(0, 0, 0);
-	r.D = normalize(p - r.O);
+	r.D = p;
 	r.t = 1e34f;
 	return r;
 }
 
 float3 Trace(int x, int y, float3 pos, float3 target)
 {
-	struct Ray r = GeneratePrimaryRay2(x, y);
-
-	//struct Ray r = GeneratePrimaryRay(x, y, pos, target);	
+	struct Ray r = GeneratePrimaryRay(x, y, pos, target);
+	
 
 	return (float3)(r.D.x, r.D.y, r.D.z);
 }
