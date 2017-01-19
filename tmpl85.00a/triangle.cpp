@@ -34,13 +34,13 @@ glm::vec3 Triangle::intersection(const Ray r, float* distance) {
 		return glm::vec3(); // Intersection lies outside of the triangle
 	}
 	glm::vec3 Q = glm::cross(T, e1);
-	float v = dot(r.direction, Q) * inv_det;
+	float v = glm::dot(r.direction, Q) * inv_det;
 	if ((v < 0) || (u + v > 1)) {
 		return glm::vec3(); // Again, intersection outside of the triangle
 	}
 	float t = glm::dot(e2, Q) * inv_det;
 	if (t > 0) {
-		*distance = min(*distance, t);
+		*distance = glm::min(*distance, t);
 	}
 	return direction; // Normalised normal of the triangle
 }
