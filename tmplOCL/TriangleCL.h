@@ -1,6 +1,11 @@
 //#pragma once
 
-#include "MaterialCL.h"
+//#include "MaterialCL.h"
+
+struct Material {
+	float3 color;
+	//float reflectioness;
+};
 
 struct Triangle {
 	float3 v1, v2, v3; //vertices

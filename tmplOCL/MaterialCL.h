@@ -1,5 +1,5 @@
 //#pragma once
-struct Material {
+/*struct Material {
 	float3 color;
 	//float reflectioness;
-};
+};*/
