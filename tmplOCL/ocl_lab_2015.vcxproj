@@ -201,10 +201,15 @@
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightCL.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialCL.h" />
     <ClInclude Include="programs\bitonic.h" />
     <ClInclude Include="programs\randomnumbers.h" />
     <ClInclude Include="programs\raytracer.h" />
     <ClInclude Include="programs\scan.h" />
+    <ClInclude Include="RayCL.h" />
     <ClInclude Include="shared.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gltools.h" />
@@ -213,6 +218,8 @@
     <ClInclude Include="system.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="Triangle.h" />
+    <ClInclude Include="TriangleCL.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="programs\program.cl">

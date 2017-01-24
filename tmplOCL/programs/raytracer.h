@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 
 
 
@@ -65,50 +65,4 @@ float3 DiffuseReflectionCosWeighted(uint* seed)
 	float term1 = 2 * PI * r0;
 	float term2 = sqrt(1 - r1);
 	return (float3)(cos(term1) * term2, sin(term1) * term2, sqrt(r1));
-}
-
-struct Ray {
-	float3 O, D;
-	float t;
-};
-struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 target) {
-	struct Ray r;
-	float3 E = normalize(target - pos);
-	float3 up = (float3)(0, 1, 0);
-	float3 right = normalize(cross(up, E));
-	up = cross(E, right);
-	float3 C = pos + E;
-	float3 p1 = C - right + up; // top left
-	float3 p2 = C + right + up; // top right
-	float3 p3 = C - right - up; // bottom left
-	float fx = (float)x / SCRWIDTH;
-	float fy = (float)y / SCRHEIGHT;
-	float3 P = p1 + (p2 - p1) * fx + (p3 - p1) * fy;
-	r.D = normalize(P - E);
-	r.O = pos;
-	r.t = 1e34f;
-	return r;
-}
-
-struct Ray GeneratePrimaryRay2(int x, int y)
-{
-	struct Ray r;
-	float3 p1 = (float3)(-1.0f, -1.0f, -1.0f); // top left
-	float3 p2 = (float3)(1.0f, -1.0f, -1.0f); // top right
-	float3 p3 = (float3)(-1.0f, 1.0f, -1.0f); // bottom left
-	float fx = (float)x / (float) SCRWIDTH;
-	float fy = (float)y / (float) SCRHEIGHT;
-	float3 p = p1 + (p2 - p1) * fx + (p3 - p1) * fy;
-	r.O = (float3)(0, 0, 0);
-	r.D = p;
-	r.t = 1e34f;
-	return r;
-}
-
-float3 Trace(int x, int y, float3 pos, float3 target)
-{
-	struct Ray r = GeneratePrimaryRay(x, y, pos, target);
-	
-
-	return (float3)(r.D.x, r.D.y, r.D.z);
 }

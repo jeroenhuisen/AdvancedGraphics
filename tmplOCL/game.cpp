@@ -1,5 +1,7 @@
 #include "system.h"
-#include "test.h"
+//#include "test.h"
+#include "Triangle.h"
+#include "Light.h"
 
 static Texture* clOutput = 0;
 static Shader* shader = 0;
@@ -22,6 +24,17 @@ bool Game::Init()
 	//fix this so c++ style can be used
 	clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &pos);
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
+	int amountOfTriangles = 1;
+	Triangle* triangles = new Triangle[amountOfTriangles];
+	Material material;
+	material.color = { 1,1,1 };
+	*triangles = createTriangle(vec3(0, 1, 0), vec3(1, 1, 0), vec3(-1, 1, 0), material);
+	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(Triangle)*amountOfTriangles, &triangles );//triangles
+	testFunction->SetArgument(4, amountOfTriangles);
+	Light l;
+	clSetKernelArg(testFunction->GetKernel(), 5,  sizeof(Light), &l);//triangles
+	int amountOfLights = 1;
+	testFunction->SetArgument(6, amountOfLights);
 
 	// done
 	return true;
