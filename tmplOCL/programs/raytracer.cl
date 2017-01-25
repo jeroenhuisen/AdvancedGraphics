@@ -23,7 +23,7 @@ struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 target) {
 	float fy = (float)y / SCRHEIGHT;
 	float3 P = p1 + (p2 - p1) * fx + (p3 - p1) * fy;
 
-	r.direction = normalize(P - E);
+	r.direction = normalize(P - pos);//p-e
 	r.origin = pos;
 	r.t = 1e34f;
 	return r;
@@ -32,6 +32,7 @@ struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 target) {
 
 void intersection(struct Ray* r, struct Triangle object ) {
 	float3 P = cross(r->direction, object.e2);
+	//printf("OCL: e2 (%f,%f,%f)", r->direction.x, r->direction.y, r->direction.z);
 	float det = dot(object.e1, P);
 	if ((det > -EPSILON) && (det < EPSILON)) {
 		return; // Ray is either parallel to or inside the triangle
@@ -82,6 +83,7 @@ float3 nearestIntersection(struct Ray* r, struct Triangle objects, int amountOfO
 float3 Trace(int x, int y, float3 pos, float3 target, struct Triangle triangles, int amountOfTriangles, struct Light lights, int amountOfLights)
 {
 	struct Ray r = GeneratePrimaryRay(x, y, pos, target);
+	//printf("OCL: ray direction (%f,%f,%f)", r.direction.x, r.direction.y, r.direction.z);
 	int amountOfObjects = 1;
 	//struct Material material;
 	float3 color = (float3)(0, 0, 0);
@@ -102,6 +104,9 @@ __kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 targe
 	const uint pixelIdx = x + y * SCRWIDTH;
 	if (pixelIdx >= (SCRWIDTH * SCRHEIGHT)) return;
 	// do calculations
+	//printf("OCL: pos (%f,%f,%f)", pos.x, pos.y, pos.z);
+	//printf("OCL: target (%f,%f,%f)", target.x, target.y, target.z);
+	//printf("OCL: triangles v1(%f,%f,%f), v2(%f,%f,%f), v3(%f,%f,%f)", triangles.v1.x, triangles.v1.y, triangles.v1.z, triangles.v2.x, triangles.v2.y, triangles.v2.z, triangles.v3.x, triangles.v3.y, triangles.v3.z);
 	float3 color = Trace(x, y, pos, target, triangles, amountOfTriangles, lights, amountOfLights);
 	//float3 color = (float3)(x, y, 0);
 	// send result to output array

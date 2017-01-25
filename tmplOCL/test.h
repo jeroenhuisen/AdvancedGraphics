@@ -23,4 +23,5 @@ float3 operator*(const float3 lhs, const float rhs);
 float3 operator-(const float3 lhs, const float3 rhs);
 float3 operator+(const float3 lhs, const float3 rhs);
 extern void tester(int x, int y);
+extern void GeneratePrimaryRay(int x, int y, vec3 pos, vec3 dir);
 #endif

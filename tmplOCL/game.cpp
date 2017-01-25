@@ -1,5 +1,5 @@
 #include "system.h"
-//#include "test.h"
+#include "test.h"
 #include "Triangle.h"
 #include "Light.h"
 
@@ -28,7 +28,7 @@ bool Game::Init()
 	//Triangle* triangles = new Triangle[amountOfTriangles];
 	Material material;
 	material.color = { 1,0,0 };
-	Triangle triangle = createTriangle(vec3(0, 1, 1), vec3(1, 1, 0), vec3(-1, 1, 0), material);
+	Triangle triangle = createTriangle(vec3(0, 0, 1), vec3(0.5, -0.5, 1), vec3(-1, -1, 1), material);
 	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(Triangle), &triangle );//triangles
 	//testFunction->SetArgument(4, amountOfTriangles);
 	clSetKernelArg(testFunction->GetKernel(), 4, sizeof(int), &amountOfTriangles);
@@ -37,7 +37,10 @@ bool Game::Init()
 	int amountOfLights = 1;
 //	testFunction->SetArgument(6, amountOfLights);
 	clSetKernelArg(testFunction->GetKernel(), 6, sizeof(int), &amountOfLights);
-
+	
+	vec3 position = vec3(0, 0, 0);
+	vec3 dir = vec3(0, 0, 1);
+	GeneratePrimaryRay(400, 240, position, dir);
 	// done
 	return true;
 }
