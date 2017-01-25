@@ -34,7 +34,8 @@ bool Game::Init()
 	triangles[0] = triangle;
 	triangles[1] = triangle2;
 
-	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(Triangle), &triangle );//triangles
+	cl_mem deviceBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(Triangle), triangles, 0);
+	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(cl_mem), &deviceBuffer);//triangles
 	//testFunction->SetArgument(4, amountOfTriangles);
 	clSetKernelArg(testFunction->GetKernel(), 4, sizeof(int), &amountOfTriangles);
 	Light l;
@@ -46,8 +47,8 @@ bool Game::Init()
 	ints[0] = 0;
 	ints[1] = 1;
 
-	cl_mem deviceBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, 2 * sizeof(int), ints, 0);
-	clSetKernelArg(testFunction->GetKernel(), 7, sizeof(cl_mem), &deviceBuffer);
+	cl_mem deviceBuffer1 = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, 2 * sizeof(int), ints, 0);
+	clSetKernelArg(testFunction->GetKernel(), 7, sizeof(cl_mem), &deviceBuffer1);
 
 	vec3 position = vec3(0, 0, 0);
 	vec3 dir = vec3(0, 0, 1);
