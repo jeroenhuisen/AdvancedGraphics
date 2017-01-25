@@ -26,7 +26,8 @@ struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 target) {
 	r.direction = normalize(P - E);
 	r.origin = pos;
 	r.t = 1e34f;
-	return r;
+	return r;
+
 }
 
 void intersection(struct Ray* r, struct Triangle object ) {
@@ -58,33 +59,43 @@ float3 directIllumination(float3 intersection, float3 normal, struct Light light
 	return (float3)(1, 1, 1);
 }
 
-float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, struct Material* material) {
+float3 nearestIntersection(struct Ray* r, struct Triangle objects, int amountOfObjects, float3* material) {
 	float distance = -1;
 	float3 normal;
 	for (int i = 0; i < amountOfObjects; i++) {
 		distance = r->t;
-		intersection(r, objects[i]);
+		/*intersection(r, objects[i]);
 		if (r->t != distance) {//closer than last one
 			normal = objects[i].direction;
 			*material = objects[i].material;
+		}*/
+		intersection(r, objects);
+		if (r->t != distance) {//closer than last one
+			normal = objects.direction;
+			*material = objects.color;
 		}
 	}
 	return normal;
 
 }
 
-float3 Trace(int x, int y, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, struct Light lights, int amountOfLights)
+float3 Trace(int x, int y, float3 pos, float3 target, struct Triangle triangles, int amountOfTriangles, struct Light lights, int amountOfLights)
 {
 	struct Ray r = GeneratePrimaryRay(x, y, pos, target);
-	int amountOfObjects = 1;	struct Material material;	float3 normal = nearestIntersection(&r, triangles, amountOfObjects, &material);
+	int amountOfObjects = 1;
+	//struct Material material;
+	float3 color = (float3)(0, 0, 0);
+	float3 normal = nearestIntersection(&r, triangles, amountOfObjects, &color);
 	float3 intersection = r.origin + r.t * r.direction;
 
 	float angle = -1;
 	float3 mul = directIllumination(intersection, normal, lights, 0, &angle);
 
-	return material.color * mul; //color	//return (float3)(r.direction.x, r.direction.y, r.direction.z);
+	return color * mul; //color
+	//return (float3)(r.direction.x, r.direction.y, r.direction.z);
+
 }
-__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, struct Light lights, int amountOfLights)
+__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 target, struct Triangle triangles, int amountOfTriangles, struct Light lights, int amountOfLights)
 {
 	uint x = get_global_id(0);
 	uint y = get_global_id(1);
@@ -92,6 +103,7 @@ __kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 targe
 	if (pixelIdx >= (SCRWIDTH * SCRHEIGHT)) return;
 	// do calculations
 	float3 color = Trace(x, y, pos, target, triangles, amountOfTriangles, lights, amountOfLights);
+	//float3 color = (float3)(x, y, 0);
 	// send result to output array
 	/*int r = (int)(clamp( color.x, 0.f, 1.f ) * 255.0f);
 	int g = (int)(clamp( color.y, 0.f, 1.f ) * 255.0f);

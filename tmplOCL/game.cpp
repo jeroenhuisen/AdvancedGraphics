@@ -25,11 +25,11 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &pos);
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
 	int amountOfTriangles = 1;
-	Triangle* triangles = new Triangle[amountOfTriangles];
+	//Triangle* triangles = new Triangle[amountOfTriangles];
 	Material material;
-	material.color = { 1,1,1 };
-	*triangles = createTriangle(vec3(0, 1, 1), vec3(1, 1, 0), vec3(-1, 1, 0), material);
-	//clSetKernelArg(testFunction->GetKernel(), 3, sizeof(Triangle*)*amountOfTriangles, &triangles );//triangles
+	material.color = { 1,0,0 };
+	Triangle triangle = createTriangle(vec3(0, 1, 1), vec3(1, 1, 0), vec3(-1, 1, 0), material);
+	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(Triangle), &triangle );//triangles
 	//testFunction->SetArgument(4, amountOfTriangles);
 	clSetKernelArg(testFunction->GetKernel(), 4, sizeof(int), &amountOfTriangles);
 	Light l;

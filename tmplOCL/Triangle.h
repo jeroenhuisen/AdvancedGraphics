@@ -8,7 +8,8 @@ struct Triangle {
 
 	cl_float3 e1, e2; //precalculated (edge?) values
 
-	Material material;
+	//Material material;
+	cl_float3 color;
 };
 
 Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, Material material) {
@@ -24,6 +25,7 @@ Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, Material material) {
 	vec3 e2 = v3 - v1;
 	t.e1 = { e1.x, e1.y, e1.z };
 	t.e2 = { e2.x, e2.y, e2.z };
-	t.material = material;
+	//t.material = material;
+	t.color = material.color;
 	return t;
 }
