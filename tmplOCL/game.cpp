@@ -27,7 +27,7 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/bunny.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/scene1.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];
@@ -56,10 +56,10 @@ bool Game::Init()
 	Light l;
 	l.position = { 0,0,-1 };
 	l.color = { 1,1,1 };
-	l.lightIntensity = 1.0f; //100, 1.0, 0.045, 0.0075
+	l.lightIntensity = 3.0f; //100, 1.0, 0.045, 0.0075
 	l.attenuationConstant = 1;
-	l.attenuationLinear = 0.045f;
-	l.attenuationQuadratic = 0.0075f;
+	l.attenuationLinear = 0.45f;
+	l.attenuationQuadratic = 0.075f;
 	lights[0] = l;
 
 //	1.0f, 0.2f, 0.05f);
@@ -77,23 +77,26 @@ bool Game::Init()
 	
 //	testFunction->SetArgument(6, amountOfLights);
 	clSetKernelArg(testFunction->GetKernel(), 6, sizeof(int), &amountOfLights);
-	int* ints = new int[2];
-	ints[0] = 0;
-	ints[1] = 1;
+	len = 1;
+	ptr = new int[len];
 
-	cl_mem deviceBuffer1 = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, 2 * sizeof(int), ints, 0);
-	clSetKernelArg(testFunction->GetKernel(), 7, sizeof(cl_mem), &deviceBuffer1);
+	writeBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR, len * sizeof(int), ptr, 0);
+	clSetKernelArg(testFunction->GetKernel(), 7, sizeof(cl_mem), &writeBuffer);
 
 	vec3 position = vec3(0, 0, 0);
 	vec3 dir = vec3(0, 0, 1);
 	GeneratePrimaryRay(400, 240, position, dir);
 	// done
+	timer.init();
 	return true;
 }
 
 void Game::Tick()
 {
+	std::cout<<timer.elapsed()<<std::endl;
+	timer.reset();
 	testFunction->Run( outputBuffer );
+	clEnqueueReadBuffer(testFunction->GetQueue(), writeBuffer, CL_TRUE, 0, len * sizeof(int), ptr, 0, NULL, NULL);
 	shader->Bind();
 	shader->SetInputTexture( GL_TEXTURE0, "color", clOutput );
 	shader->SetInputMatrix( "view", mat4::Identity() );

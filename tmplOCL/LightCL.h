@@ -11,4 +11,5 @@ struct Light {
 
 float calculateStrength(struct Light l, const float distance) {
 	return l.lightIntensity / (l.attenuationConstant + l.attenuationLinear*distance + l.attenuationQuadratic*distance*distance);
+	//return l.lightIntensity / (distance*distance);
 }

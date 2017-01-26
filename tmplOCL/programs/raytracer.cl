@@ -170,5 +170,7 @@ __kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direc
 	float g = (clamp(color.y, 0.f, 1.f));
 	float b = (clamp(color.z, 0.f, 1.f));
 
+	ints[0] = 2;
+
 	write_imagef(outimg, (int2)(x, y), (float4)(r, g, b, 1));
 }

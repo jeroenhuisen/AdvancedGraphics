@@ -4,6 +4,11 @@ namespace ocllab {
 
 class Game
 {
+private:
+	timer timer;
+	cl_mem writeBuffer;
+	int* ptr;
+	int len;
 public:
 	bool Init();
 	void Tick();
