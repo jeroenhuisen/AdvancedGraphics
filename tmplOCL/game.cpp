@@ -2,6 +2,7 @@
 #include "test.h"
 #include "Triangle.h"
 #include "Light.h"
+#include "objectImporter.h"
 
 static Texture* clOutput = 0;
 static Shader* shader = 0;
@@ -24,15 +25,23 @@ bool Game::Init()
 	//fix this so c++ style can be used
 	clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &pos);
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
-	int amountOfTriangles = 2;
+	
+	ObjectImporter oi;
+	std::vector<Triangle> t = oi.loadObject("importOBJ/box1.obj");
+	int amountOfTriangles = t.size();
+
 	Triangle* triangles = new Triangle[amountOfTriangles];
-	Material material,material2;
+	for (int i = 0; i < amountOfTriangles; i++) {
+		triangles[i] = t[i];
+	}
+
+	/*Material material,material2;
 	material.color = { 1,0,0 };
 	material2.color = { 0,1,0 };
 	Triangle triangle = createTriangle(vec3(0, 0, 1), vec3(0.5, -0.5, 1), vec3(-1, -1, 1), material);
 	Triangle triangle2 = createTriangle(vec3(0, 0, 1), vec3(-0.5, 0.5, 1), vec3(1, 1, 1), material2);
 	triangles[0] = triangle;
-	triangles[1] = triangle2;
+	triangles[1] = triangle2;*/
 
 	cl_mem deviceBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(Triangle), triangles, 0);
 	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(cl_mem), &deviceBuffer);//triangles

@@ -67,14 +67,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>lib;lib\OpenCL\inc;lib\freeimage\inc;lib\OpenGL;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>lib\tinyobjloader-master;lib;lib\OpenCL\inc;lib\freeimage\inc;lib\OpenGL;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>lib\OpenCL\lib\x64;lib\freeimage\lib64;lib\OpenGL\x64;$(VCInstallDir)lib\amd64;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x64);</LibraryPath>
     <TargetName>ocllab64debug</TargetName>
     <OutDir>$(SolutionDir)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>lib;lib\OpenCL\inc;lib\freeimage\inc;lib\OpenGL;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>lib\tinyobjloader-master;lib;lib\OpenCL\inc;lib\freeimage\inc;lib\OpenGL;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>lib\OpenCL\lib\win32;lib\freeimage\lib32;lib\OpenGL\win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
     <TargetName>ocllab32debug</TargetName>
     <OutDir>$(SolutionDir)\</OutDir>
@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gltools.cpp" />
+    <ClCompile Include="objectImporter.cpp" />
     <ClCompile Include="opencl.cpp" />
     <ClCompile Include="system.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -199,12 +200,14 @@
     <ClCompile Include="test2.cpp" />
     <ClCompile Include="test.h" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightCL.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialCL.h" />
+    <ClInclude Include="objectImporter.h" />
     <ClInclude Include="programs\bitonic.h" />
     <ClInclude Include="programs\randomnumbers.h" />
     <ClInclude Include="programs\raytracer.h" />
