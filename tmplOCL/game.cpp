@@ -27,12 +27,15 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/box1.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/bunny.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];
 	for (int i = 0; i < amountOfTriangles; i++) {
 		triangles[i] = t[i];
+		triangles[i].v1.z += 5;
+		triangles[i].v2.z += 5;
+		triangles[i].v3.z += 5;
 	}
 
 	/*Material material,material2;
@@ -53,8 +56,23 @@ bool Game::Init()
 	Light l;
 	l.position = { 0,0,-1 };
 	l.color = { 1,1,1 };
+	l.lightIntensity = 1.0f; //100, 1.0, 0.045, 0.0075
+	l.attenuationConstant = 1;
+	l.attenuationLinear = 0.045f;
+	l.attenuationQuadratic = 0.0075f;
+	lights[0] = l;
 
-	cl_mem lightBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(Light), lights, 0);
+//	1.0f, 0.2f, 0.05f);
+	/*Light l1;
+	l1.position = { 0,0,0 };
+	l1.color = { 1,1,1 };
+	l1.lightIntensity = 0.5f; //100, 1.0, 0.045, 0.0075
+	l1.attenuationConstant = 1.0f;
+	l1.attenuationLinear = 0.2f;
+	l1.attenuationQuadratic = 0.05f;
+	lights[1] = l1;*/
+
+	cl_mem lightBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfLights * sizeof(Light), lights, 0);
 	clSetKernelArg(testFunction->GetKernel(), 5,  sizeof(cl_mem), &lightBuffer);//triangles
 	
 //	testFunction->SetArgument(6, amountOfLights);

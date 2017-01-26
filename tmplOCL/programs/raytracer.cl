@@ -6,10 +6,12 @@
 #include "../TriangleCL.h"
 #include "../LightCL.h"
 
+#define MAXVALUE 1e34f
 
-struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 target) {
+
+struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 direction) {
 	struct Ray r;
-	float3 E = normalize(target - pos);
+	float3 E = normalize(direction - pos);
 	float3 up = (float3)(0, 1, 0); //y axis
 	float3 right = normalize(cross(up, E));
 	up = cross(E, right);
@@ -25,7 +27,7 @@ struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 target) {
 
 	r.direction = normalize(P - pos);//p-e
 	r.origin = pos;
-	r.t = 1e34f;
+	r.t = MAXVALUE;
 	return r;
 
 }
@@ -54,21 +56,58 @@ void intersection(struct Ray* r, struct Triangle object ) {
 	}
 }
 
+bool isThereAIntersection(struct Ray r, __global struct Triangle* objects, int amountOfObjects, const float distanceResult) {
+	float distance = MAXVALUE;
 
-float3 directIllumination(float3 intersection, float3 normal, __global struct Light* lights, int amountOfLight, float* angle) {
+	for (int i = 0; i < amountOfObjects; i++) {
+		intersection(&r, objects[i]);
+
+		//float floatError = 0.01; //otherwise black lines where it shouldnt be
+		if (distance <= distanceResult ){//&& distance >= 0 + floatError) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool canReachLight(const float3 origin, const float3 direction, const float3 normal, __global struct Triangle* objects, int amountOfObjects, const float distanceResult) {
+
+	struct Ray r;
+	r.origin = origin + normal * 0.1f;
+	r.direction = direction;
+
+//#if SLOWBVH
+	return isThereAIntersection(r, objects, amountOfObjects, distanceResult);
+/*#else
+	return scene->isThereAIntersectionBVH(r, distanceResult);
+#endif*/
+
+}
+
+
+float3 directIllumination(float3 intersection, float3 normal, __global struct Triangle* objects, int amountOfObjects, __global struct Light* lights, int amountOfLights, float* angle) {
 	// simplify test
-	return (float3)(1, 1, 1);
-
-	for (int i = 0; i < amountOfLight; i++) {
-		float3 direction = lights[i]->position - intersection;
+	//return (float3)(1, 1, 1);
+	float3 c = (float3)(0,0,0); //color
+	//printf("OCL: %d\n", amountOfLight);
+	for (int i = 0; i < amountOfLights; i++){
+		float3 direction = lights[i].position - intersection;
 		float distance = length(direction);
+	//	printf("OCL: distance: %f\n", distance);
+	//	printf("OCL: intersection: (%f,%f,%f)\n", intersection.x, intersection.y, intersection.z);
 		direction = normalize(direction);
-		if (canReachLight(intersection, direction, normal, distance)) {
+		
+		if (canReachLight(intersection, direction, normal, objects, amountOfObjects, distance)) {
+			
 			*angle = max(0.0f,dot(normal, direction));
-			c += lights[i]->color * lights[i]->calculateStrength(distance) * *angle;
+	//		printf("OCL: %f\n", distance);
+			c += lights[i].color * calculateStrength(lights[i], distance) **angle;
 			//
 		}
 	}
+	//printf("ocl: c (%f, %f, %f)", c.x, c.y, c.z);
+	return c;
+	
 }
 
 float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float3* material) {
@@ -92,23 +131,26 @@ float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int
 
 }
 
-float3 Trace(int x, int y, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights)
+float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights)
 {
-	struct Ray r = GeneratePrimaryRay(x, y, pos, target);
+	struct Ray r = GeneratePrimaryRay(x, y, pos, direction);
 	//printf("OCL: ray direction (%f,%f,%f)", r.direction.x, r.direction.y, r.direction.z);
 	//struct Material material;
 	float3 color = (float3)(0, 0, 0);
 	float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &color);
+	if (r.t == MAXVALUE) {
+		return (float3)(0,0,0);
+	}
 	float3 intersection = r.origin + r.t * r.direction;
 
 	float angle = -1;
-	float3 mul = directIllumination(intersection, normal, lights, 0, &angle);
+	float3 mul = directIllumination(intersection, normal, triangles, amountOfTriangles, lights, amountOfLights, &angle);
 
 	return color * mul; //color
 	//return (float3)(r.direction.x, r.direction.y, r.direction.z);
 
 }
-__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints)
+__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints)
 {
 	uint x = get_global_id(0);
 	uint y = get_global_id(1);
@@ -118,7 +160,7 @@ __kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 targe
 	//printf("OCL: pos (%f,%f,%f)", pos.x, pos.y, pos.z);
 	//printf("OCL: target (%f,%f,%f)", target.x, target.y, target.z);
 	//printf("OCL: triangles v1(%f,%f,%f), v2(%f,%f,%f), v3(%f,%f,%f)", triangles.v1.x, triangles.v1.y, triangles.v1.z, triangles.v2.x, triangles.v2.y, triangles.v2.z, triangles.v3.x, triangles.v3.y, triangles.v3.z);
-	float3 color = Trace(x, y, pos, target, triangles, amountOfTriangles, lights, amountOfLights);
+	float3 color = Trace(x, y, pos, direction, triangles, amountOfTriangles, lights, amountOfLights);
 	//float3 color = (float3)(x, y, 0);
 	// send result to output array
 	/*int r = (int)(clamp( color.x, 0.f, 1.f ) * 255.0f);
