@@ -280,3 +280,5 @@ __pycache__/
 !tmpl85.00a/lib/SDL2-2.0.3/lib/x86
 
 !tmpl85.00a/importOBJ/*.obj
+!tmplOCL/importOBJ/*.obj
+
