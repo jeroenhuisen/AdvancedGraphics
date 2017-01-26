@@ -55,9 +55,20 @@ void intersection(struct Ray* r, struct Triangle object ) {
 }
 
 
-float3 directIllumination(float3 intersection, float3 normal, struct Light lights, int amountOfLight, float* angle) {
+float3 directIllumination(float3 intersection, float3 normal, __global struct Light* lights, int amountOfLight, float* angle) {
 	// simplify test
 	return (float3)(1, 1, 1);
+
+	for (int i = 0; i < amountOfLight; i++) {
+		float3 direction = lights[i]->position - intersection;
+		float distance = length(direction);
+		direction = normalize(direction);
+		if (canReachLight(intersection, direction, normal, distance)) {
+			*angle = max(0.0f,dot(normal, direction));
+			c += lights[i]->color * lights[i]->calculateStrength(distance) * *angle;
+			//
+		}
+	}
 }
 
 float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float3* material) {
@@ -81,7 +92,7 @@ float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int
 
 }
 
-float3 Trace(int x, int y, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, struct Light lights, int amountOfLights)
+float3 Trace(int x, int y, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights)
 {
 	struct Ray r = GeneratePrimaryRay(x, y, pos, target);
 	//printf("OCL: ray direction (%f,%f,%f)", r.direction.x, r.direction.y, r.direction.z);
@@ -97,7 +108,7 @@ float3 Trace(int x, int y, float3 pos, float3 target, __global struct Triangle* 
 	//return (float3)(r.direction.x, r.direction.y, r.direction.z);
 
 }
-__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, struct Light lights, int amountOfLights, __global int* ints)
+__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 target, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints)
 {
 	uint x = get_global_id(0);
 	uint y = get_global_id(1);

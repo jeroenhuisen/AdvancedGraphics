@@ -47,9 +47,16 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(cl_mem), &deviceBuffer);//triangles
 	//testFunction->SetArgument(4, amountOfTriangles);
 	clSetKernelArg(testFunction->GetKernel(), 4, sizeof(int), &amountOfTriangles);
-	Light l;
-	clSetKernelArg(testFunction->GetKernel(), 5,  sizeof(Light), &l);//triangles
+
 	int amountOfLights = 1;
+	Light* lights = new Light[amountOfLights];
+	Light l;
+	l.position = { 0,0,-1 };
+	l.color = { 1,1,1 };
+
+	cl_mem lightBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(Light), lights, 0);
+	clSetKernelArg(testFunction->GetKernel(), 5,  sizeof(cl_mem), &lightBuffer);//triangles
+	
 //	testFunction->SetArgument(6, amountOfLights);
 	clSetKernelArg(testFunction->GetKernel(), 6, sizeof(int), &amountOfLights);
 	int* ints = new int[2];
