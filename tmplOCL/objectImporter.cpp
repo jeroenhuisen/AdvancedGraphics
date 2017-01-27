@@ -30,8 +30,8 @@ vector<Triangle> ObjectImporter::loadObject(const std::string filename) {
 
 	vector<Triangle> meshes;
 	for (tinyobj::shape_t shape : shapes) {
+		std::cout << "# of indices: " << shape.mesh.indices.size() << std::endl;
 		for (size_t f = 0; f < shape.mesh.indices.size() / 3; f++) {
-			std::cout << "# of indices: " << shape.mesh.indices.size() << std::endl;
 			tinyobj::index_t idx0 = shape.mesh.indices[3 * f + 0];
 			tinyobj::index_t idx1 = shape.mesh.indices[3 * f + 1];
 			tinyobj::index_t idx2 = shape.mesh.indices[3 * f + 2];

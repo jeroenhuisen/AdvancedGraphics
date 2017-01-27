@@ -17,17 +17,18 @@ bool Game::Init()
 	// load OpenCL code
 	testFunction = new Kernel("programs/raytracer.cl", "TestFunction");
 
-	cl_float3 pos = { 0.0f, 0.0f, 0.0f };
+	//pos = { 0.0f, 0.0f, 0.0f };
 	cl_float3 target = { 0.0f, 0.0f, 1.0f };
 	// link cl output texture as an OpenCL buffer
 	outputBuffer = new Buffer(clOutput->GetID(), Buffer::TARGET);
 	testFunction->SetArgument(0, outputBuffer);
 	//fix this so c++ style can be used
-	clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &pos);
+	//clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &pos);
+	clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &(camera->position));
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/scene1.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/windmillSmall.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];
@@ -83,9 +84,9 @@ bool Game::Init()
 	writeBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR, len * sizeof(int), ptr, 0);
 	clSetKernelArg(testFunction->GetKernel(), 7, sizeof(cl_mem), &writeBuffer);
 
-	vec3 position = vec3(0, 0, 0);
+	/*vec3 position = vec3(0, 0, 0);
 	vec3 dir = vec3(0, 0, 1);
-	GeneratePrimaryRay(400, 240, position, dir);
+	GeneratePrimaryRay(400, 240, position, dir);*/
 	// done
 	timer.init();
 	return true;
@@ -93,8 +94,13 @@ bool Game::Init()
 
 void Game::Tick()
 {
-	std::cout<<timer.elapsed()<<std::endl;
+	float time = timer.elapsed();
+	std::cout<<time<<std::endl;
 	timer.reset();
+	buttonHandler->updateKeys();
+	movementController->update(time);
+	clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &(camera->position));
+	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &(camera->target));
 	testFunction->Run( outputBuffer );
 	clEnqueueReadBuffer(testFunction->GetQueue(), writeBuffer, CL_TRUE, 0, len * sizeof(int), ptr, 0, NULL, NULL);
 	shader->Bind();
@@ -106,5 +112,17 @@ void Game::Tick()
 void Game::Shutdown()
 {
 }
+
+void Game::KeyDown(unsigned int a_Key) {
+	buttonHandler->addButton(a_Key);
+	//std::cout << a_Key << std::endl;
+}
+
+void Game::KeyUp(unsigned int a_Key) {
+	buttonHandler->removeButton(a_Key);
+	//std::cout << "up: " << a_Key << std::endl;
+}
+
+
 
 // EOF

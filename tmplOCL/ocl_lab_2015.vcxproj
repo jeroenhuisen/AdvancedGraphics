@@ -184,8 +184,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gltools.cpp" />
+    <ClCompile Include="ButtonHandler.cpp" />
+    <ClCompile Include="MovementController.cpp" />
     <ClCompile Include="objectImporter.cpp" />
     <ClCompile Include="opencl.cpp" />
     <ClCompile Include="system.cpp">
@@ -203,10 +206,13 @@
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ButtonHandler.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightCL.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialCL.h" />
+    <ClInclude Include="MovementController.h" />
     <ClInclude Include="objectImporter.h" />
     <ClInclude Include="programs\bitonic.h" />
     <ClInclude Include="programs\randomnumbers.h" />
