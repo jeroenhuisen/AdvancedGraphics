@@ -18,17 +18,17 @@ bool Game::Init()
 	testFunction = new Kernel("programs/raytracer.cl", "TestFunction");
 
 	//pos = { 0.0f, 0.0f, 0.0f };
-	cl_float3 target = { 0.0f, 0.0f, 1.0f };
+	//cl_float3 target = { 0.0f, 0.0f, 1.0f };
 	// link cl output texture as an OpenCL buffer
 	outputBuffer = new Buffer(clOutput->GetID(), Buffer::TARGET);
 	testFunction->SetArgument(0, outputBuffer);
 	//fix this so c++ style can be used
 	//clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &pos);
 	clSetKernelArg(testFunction->GetKernel(), 1, sizeof(cl_float3), &(camera->position));
-	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
+	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &(camera->target));
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/windmillSmall1.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/windmillSmall.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];

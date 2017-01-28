@@ -26,9 +26,9 @@ Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, vec3 n1, vec3 n2, vec3 n3, Ma
 	t.v2 = { v2.x, v2.y, v2.z };
 	t.v3 = { v3.x, v3.y, v3.z };
 
-	vec3 dir = normalize(n1 + n2 + n3);//doesn't work
-	/*vec3 dir = normalize(cross((v2 - v1), (v3 - v1)));
-	if (dir1.x < 0 && dir.x > 0) {
+	//vec3 dir = normalize(n1 + n2 + n3);//doesn't work
+	vec3 dir = normalize(cross((v2 - v1), (v3 - v1)));
+	/*if (dir1.x < 0 && dir.x > 0) {
 		dir.x = dir.x*-1;
 	}
 	if (dir1.y < 0 && dir.y > 0) {
