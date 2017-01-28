@@ -14,6 +14,6 @@ struct Triangle {
 	float3 e1, e2; //precalculated (edge?) values
 
 	//struct Material material;
-	float3 color;
-	//float reflectioness;
+	float4 color;
+	//float3 reflect;
 };

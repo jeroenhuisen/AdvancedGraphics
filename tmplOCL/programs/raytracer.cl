@@ -112,7 +112,7 @@ float3 directIllumination(float3 intersection, float3 normal, __global struct Tr
 	
 }
 
-float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float3* color) {
+float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float4* color) {
 	//printf("OCL: objects (%f,%f,%f)", objects[0].v1.x, objects[0].v1.y, objects[0].v1.z);
 	float distance = -1;
 	float3 normal;
@@ -124,7 +124,7 @@ float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int
 			//printf("OCL: material (%f,%f,%f)", objects[i].color.x, objects[i].color.y, objects[i].color.z);
 			*color = objects[i].color;
 			//material->reflectioness = objects[i].reflectioness;
-			//printf("OCL: material (%f,%f,%f)", material->color.x, material->color.y, material->color.z);
+			//printf("OCL: material (%f,%f,%f)", color->x, color->y, color->z);
 		}
 		/*intersection(r, objects);
 		if (r->t != distance) {//closer than last one
@@ -141,14 +141,16 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 	struct Ray r = GeneratePrimaryRay(x, y, pos, direction);
 	//printf("OCL: ray direction (%f,%f,%f)", r.direction.x, r.direction.y, r.direction.z);
 	//struct Material material;
-	float3 color = (float3)(0, 0, 0);
-	//struct floa material;
+	//float3 color = (float3)(0, 0, 0, 0);
+	float4 material = (float4)(0,0,0,0);
 	//for(int bounces = 0; bounces < MAXBOUNCES; bounces++){
-		float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &color);
-		//printf("OCL: material (%f,%f,%f)", material.color.x, material.color.y, material.color.z);
+		float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
+		float3 color = (float3)(material.x, material.y, material.z);
 		if (r.t >= MAXVALUE) {
 			return (float3)(0,0,0);
 		}
+		//printf("OCL: color (%f,%f,%f)", color.x, color.y, color.z);
+		//printf("OCL: material (%f,%f,%f)", material.x, material.y, material.z);
 		float3 intersection = r.origin + r.t * r.direction;
 
 		float angle = -1;
