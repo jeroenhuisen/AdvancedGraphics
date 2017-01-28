@@ -14,8 +14,9 @@ Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, Material material) {
 	vec3 e2 = v3 - v1;
 	t.e1 = { e1.x, e1.y, e1.z };
 	t.e2 = { e2.x, e2.y, e2.z };
-	t.material = material;
-	//t.color = material.color;
+	//t.material = material;
+	t.color = material.color;
+	//t.reflectioness = material.reflectioness;
 	return t;
 }
 
@@ -42,7 +43,8 @@ Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, vec3 n1, vec3 n2, vec3 n3, Ma
 	vec3 e2 = v3 - v1;
 	t.e1 = { e1.x, e1.y, e1.z };
 	t.e2 = { e2.x, e2.y, e2.z };
-	t.material = material;
-	//t.color = material.color;
+	//t.material = material;
+	t.color = material.color;
+	//t.reflectioness = material.reflectioness;
 	return t;
 }

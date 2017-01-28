@@ -12,8 +12,9 @@ struct Triangle {
 
 	cl_float3 e1, e2; //precalculated (edge?) values
 
-	Material material;
-	//cl_float3 color;
+	//Material material;
+	cl_float3 color;
+	//cl_float reflectioness;
 };
 
 Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, Material material);
