@@ -143,7 +143,7 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 	//struct Material material;
 	//float3 color = (float3)(0, 0, 0, 0);
 	float4 material = (float4)(0,0,0,0);
-	//for(int bounces = 0; bounces < MAXBOUNCES; bounces++){
+	for(int bounces = 0; bounces < MAXBOUNCES; bounces++){
 		float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
 		float3 color = (float3)(material.x, material.y, material.z);
 		if (r.t >= MAXVALUE) {
@@ -154,18 +154,18 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 		float3 intersection = r.origin + r.t * r.direction;
 
 		float angle = -1;
-		/*if (material.reflectioness == 1) {
+		if (material.w == 1) {
 			//glm::vec3 reflect = r.getDirection() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
 			r.origin = intersection + 0.1f * Reflect(r.direction, normal);
 			r.direction = Reflect(direction, normal);
 			r.t = MAXVALUE;
-			printf("OCL: reflective %f", material.reflectioness);
+			printf("OCL: reflective %f", material.w);
 		}
-		else {*/
+		else {
 			float3 mul = directIllumination(intersection, normal, triangles, amountOfTriangles, lights, amountOfLights, &angle);
 			return color * mul; //color
-		//}
-	//}
+		}
+	}
 
 }
 __kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints)
