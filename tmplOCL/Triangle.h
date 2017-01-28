@@ -3,8 +3,8 @@
 #define TRIANGLE
 
 
-#include "system.h"
-#include "material.h"
+//#include "system.h"
+#include "Material.h"
 
 struct Triangle {
 	cl_float3 v1, v2, v3; //vertices
@@ -12,8 +12,8 @@ struct Triangle {
 
 	cl_float3 e1, e2; //precalculated (edge?) values
 
-	//Material material;
-	cl_float3 color;
+	Material material;
+	//cl_float3 color;
 };
 
 Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, Material material);

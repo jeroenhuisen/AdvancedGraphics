@@ -1,7 +1,7 @@
 //#pragma once
-#include "system.h"
+//#include "system.h"
 
 struct Material {
 	cl_float3 color;
-	//float reflectioness;
+	cl_float reflectioness;
 };

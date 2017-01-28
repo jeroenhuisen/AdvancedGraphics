@@ -9,6 +9,7 @@
 vector<Triangle> ObjectImporter::loadObject(const std::string filename) {
 	Material* pink = new Material;
 	pink->color = { 1,0,1 };
+	pink->reflectioness = 0.0f;
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;

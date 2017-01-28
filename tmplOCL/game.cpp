@@ -28,7 +28,7 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &target);
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/windmillSmall.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/scene1.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];
