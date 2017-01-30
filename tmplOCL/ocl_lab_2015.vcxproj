@@ -184,6 +184,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BVH.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gltools.cpp" />
@@ -207,7 +208,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ButtonHandler.h" />
+    <ClInclude Include="BVH.h" />
+    <ClInclude Include="BVHNode.h" />
+    <ClInclude Include="BVHNodeCL.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightCL.h" />
     <ClInclude Include="Material.h" />

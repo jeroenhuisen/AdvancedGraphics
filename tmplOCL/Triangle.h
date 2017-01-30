@@ -5,6 +5,7 @@
 
 //#include "system.h"
 #include "Material.h"
+#include "AABB.h"
 
 struct Triangle {
 	cl_float3 v1, v2, v3; //vertices
@@ -19,4 +20,6 @@ struct Triangle {
 
 Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, Material material);
 Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, vec3 n1, vec3 n2, vec3 n3, Material material);
+
+AABB getBounds(Triangle t); 
 #endif // !TRIANGLE

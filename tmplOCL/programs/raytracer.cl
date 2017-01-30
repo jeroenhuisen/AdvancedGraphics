@@ -102,8 +102,12 @@ float3 directIllumination(float3 intersection, float3 normal, __global struct Tr
 		if (canReachLight(intersection, direction, normal, objects, amountOfObjects, distance)) {
 			
 			*angle = max(0.0f,dot(normal, direction));
+			float a = dot(normal, direction);
+			if (a < 0) {
+				a *= -1;
+			}
 	//		printf("OCL: %f\n", distance);
-			c += lights[i].color * calculateStrength(lights[i], distance) **angle;
+			c += lights[i].color * calculateStrength(lights[i], distance) * a; //**angle;
 			//
 		}
 	}
@@ -136,6 +140,83 @@ float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int
 
 }
 
+// http://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
+bool bbIntersects(struct Ray* r, struct BVHNode bvhNode, float* distance) {
+	// r->dir is unit direction vector of ray
+	glm::vec3 dirfrac;
+	dirfrac.x = 1.0f / r->direction.x;
+	dirfrac.y = 1.0f / r->direction.y;
+	dirfrac.z = 1.0f / r->direction.z;
+	// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
+	// r->org is origin of ray
+	float t1 = (bvhNode.leftBottom.x - r->origin.x)*dirfrac.x;
+	float t2 = (bvhNode.rightTop.x - r->origin.x)*dirfrac.x;
+	float t3 = (bvhNode.leftBottom.y - r->origin.y)*dirfrac.y;
+	float t4 = (bvhNode.rightTop.y - r->origin.y)*dirfrac.y;
+	float t5 = (bvhNode.leftBottom.z - r->origin.z)*dirfrac.z;
+	float t6 = (bvhNode.rightTop.z - r->origin.z)*dirfrac.z;
+
+	float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
+	float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
+
+	// if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
+	if (tmax < 0)
+	{
+		*distance = tmax;
+		return false;
+	}
+
+	// if tmin > tmax, ray doesn't intersect AABB
+	if (tmin > tmax)
+	{
+		*distance = tmax;
+		return false;
+	}
+
+	*distance = tmin;
+	r->bvhHit++;
+	return true;
+
+}
+
+void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float4* color, struct BVHNode bvhNode) {
+
+	int pointer = 0;
+	int stack[maxBVH];
+	bool notDone = true;
+	while(notDone) {
+		bvhNode = bvhNodes[stack[pointer]];
+		//printf("OCL: objects (%f,%f,%f)", objects[0].v1.x, objects[0].v1.y, objects[0].v1.z);
+		float distance = MAXVALUE;
+
+		float tempDistance = MAXVALUE;
+		if (!bbIntersects(r, bvhNode, &tempDistance)) {
+			pointer--;
+			return;
+		}
+		if (bvhNode.count != 0) {//isLeaf
+			float3 normal;
+			for (int i = bvhNode.leftFirst; i < bvhNode.leftFirst + bvhNode.count; i++) {
+				distance = r->t;
+				intersection(r, objects[i]);
+				if (r->t != distance) {//closer than last one
+					normal = objects[i].direction;
+					//printf("OCL: material (%f,%f,%f)", objects[i].color.x, objects[i].color.y, objects[i].color.z);
+					*color = objects[i].color;
+					//material->reflectioness = objects[i].reflectioness;
+					//printf("OCL: material (%f,%f,%f)", color->x, color->y, color->z);
+				}
+			}
+		}
+		else {
+			//
+			stack[pointer++] = bvhNode->leftFirst;
+			stack[pointer++] = bvhNode->leftFirst+1;
+		}
+	}
+
+}
+
 float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights)
 {
 	struct Ray r = GeneratePrimaryRay(x, y, pos, direction);
@@ -143,7 +224,7 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 	//struct Material material;
 	//float3 color = (float3)(0, 0, 0, 0);
 	float4 material = (float4)(0,0,0,0);
-	for(int bounces = 0; bounces < MAXBOUNCES; bounces++){
+	//for(int bounces = 0; bounces < MAXBOUNCES; bounces++){
 		float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
 		float3 color = (float3)(material.x, material.y, material.z);
 		if (r.t >= MAXVALUE) {
@@ -154,21 +235,21 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 		float3 intersection = r.origin + r.t * r.direction;
 
 		float angle = -1;
-		if (material.w == 1) {
+		/*if (material.w == 1) {
 			//glm::vec3 reflect = r.getDirection() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
 			r.origin = intersection + 0.1f * Reflect(r.direction, normal);
 			r.direction = Reflect(direction, normal);
 			r.t = MAXVALUE;
 			printf("OCL: reflective %f", material.w);
 		}
-		else {
+		else {*/
 			float3 mul = directIllumination(intersection, normal, triangles, amountOfTriangles, lights, amountOfLights, &angle);
 			return color * mul; //color
-		}
-	}
+		//}
+	//}
 
 }
-__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints)
+__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints, __global struct BVHNode* bvhNode, __global unsigned int* indices)
 {
 	uint x = get_global_id(0);
 	uint y = get_global_id(1);

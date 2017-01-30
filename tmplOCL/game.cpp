@@ -3,6 +3,7 @@
 #include "Triangle.h"
 #include "Light.h"
 #include "objectImporter.h"
+#include "BVH.h"
 
 static Texture* clOutput = 0;
 static Shader* shader = 0;
@@ -83,6 +84,10 @@ bool Game::Init()
 
 	writeBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR, len * sizeof(int), ptr, 0);
 	clSetKernelArg(testFunction->GetKernel(), 7, sizeof(cl_mem), &writeBuffer);
+
+
+	BVH bvh;
+	bvh.constructBVH(triangles, amountOfTriangles);
 
 	/*vec3 position = vec3(0, 0, 0);
 	vec3 dir = vec3(0, 0, 1);

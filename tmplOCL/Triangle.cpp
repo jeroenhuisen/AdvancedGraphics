@@ -48,3 +48,63 @@ Triangle createTriangle(vec3 v1, vec3 v2, vec3 v3, vec3 n1, vec3 n2, vec3 n3, Ma
 //	t.reflect = material.reflectioness;
 	return t;
 }
+
+AABB getBounds(Triangle t) {
+	float xMin = min(t.v1.x, t.v2.x);
+	xMin = min(xMin, t.v3.x);
+	float yMin = min(t.v1.y, t.v2.y);
+	yMin = min(yMin, t.v3.y);
+	float zMin = min(t.v1.z, t.v2.z);
+	zMin = min(zMin, t.v3.z);
+
+	float xMax = max(t.v1.x, t.v2.x);
+	xMax = max(xMax, t.v3.x);
+	float yMax = max(t.v1.y, t.v2.y);
+	yMax = max(yMin, t.v3.y);
+	float zMax = max(t.v1.z, t.v2.z);
+	zMax = max(zMax, t.v3.z);
+
+	/*float xMin = v1.x, yMin = v1.y, zMin = v1.z;
+	float xMax = v1.x, yMax = v1.y, zMax = v1.z;
+
+	if (v2.x > xMin) {
+	xMax = v2.x;
+	}
+	else { // == aswell for no real reason
+	xMin = v2.x;
+	}
+	if (v2.y > yMin) {
+	yMax = v2.y;
+	}
+	else { // == aswell for no real reason
+	yMin = v2.y;
+	}
+	if (v2.z > zMin) {
+	zMax = v2.z;
+	}
+	else { // == aswell for no real reason
+	zMin = v2.z;
+	}
+
+
+	if (v3.x > xMin) {
+	xMax = v3.x;
+	}
+	else { // == aswell for no real reason
+	xMin = v3.x;
+	}
+	if (v3.y > yMin) {
+	yMax = v3.y;
+	}
+	else { // == aswell for no real reason
+	yMin = v3.y;
+	}
+	if (v3.z > zMin) {
+	zMax = v3.z;
+	}
+	else { // == aswell for no real reason
+	zMin = v3.z;
+	}
+	*/
+	return AABB(glm::vec3(xMin, yMin, zMin), glm::vec3(xMax, yMax, zMax));
+}
