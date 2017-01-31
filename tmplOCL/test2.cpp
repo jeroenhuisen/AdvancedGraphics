@@ -59,7 +59,9 @@ void nearestIntersectionBVH(struct Triangle* objects, int amountOfObjects, cl_fl
 	//printf("bvh 0 count %d, index %d", bvhNode.test.y, bvhNode.test.x);
 	//bvhNode = bvhNodes[7];
 	//printf("bvh 1 count %d, index %d", bvhNode.test.y, bvhNode.test.x);
+	float distance = INFINITY;
 
+	float rayDistance = INFINITY;
 
 	while (notDone) {
 		//printf("pointer %d, %d", pointer, stack[(pointer - 1)]);
@@ -67,21 +69,17 @@ void nearestIntersectionBVH(struct Triangle* objects, int amountOfObjects, cl_fl
 		//printf("leftBottom (%f, %f, %f), rightTop (%f, %f, %f), p %d", bvhNode.leftBottom.x, bvhNode.leftBottom.y, bvhNode.leftBottom.z, bvhNode.rightTop.x, bvhNode.rightTop.y, bvhNode.rightTop.z, pointer);
 		//printf("bvh reached count %d, index %d", bvhNode.count, bvhNode.leftFirst);
 		if (pointer > 24) {// safety
-			printf("A pointer is too high %d, %d\n", pointer - 1, stack[(pointer - 2)]);
-			printf("B pointer is too high %d, %d\n", pointer, stack[(pointer - 1)]);
+			//printf("A pointer is too high %d, %d\n", pointer - 1, stack[(pointer - 2)]);
+			//printf("B pointer is too high %d, %d\n", pointer, stack[(pointer - 1)]);
 			return;
 		}
 		//printf("OCL: objects (%f,%f,%f)", objects[0].v1.x, objects[0].v1.y, objects[0].v1.z);
-		float distance = INFINITY;
+
 
 		//float tempDistance = MAXVALUE;
 		bool test = true;
 		if (!test) { //no intersection
 													//printf(" doesn't interesect leftBottom (%f, %f, %f), rightTop (%f, %f, %f), p %d", bvhNode.leftBottom.x, bvhNode.leftBottom.y, bvhNode.leftBottom.z, bvhNode.rightTop.x, bvhNode.rightTop.y, bvhNode.rightTop.z, pointer);
-			if (pointer > 1) {
-				printf(" doesn't interesect leftBottom (%f, %f, %f), rightTop (%f, %f, %f), p %d\n", bvhNode.leftBottom.x, bvhNode.leftBottom.y, bvhNode.leftBottom.z, bvhNode.rightTop.x, bvhNode.rightTop.y, bvhNode.rightTop.z, pointer);
-				return;
-			}
 			pointer--;
 			if (pointer < 1) {
 				notDone = false;
@@ -91,26 +89,29 @@ void nearestIntersectionBVH(struct Triangle* objects, int amountOfObjects, cl_fl
 		}
 		else { // intersection
 			if (bvhNode.test.y != 0) {//isLeaf
-				printf("leaf is reached count %d, index %d\n", bvhNode.test.y, bvhNode.test.x);
+				//printf("leaf is reached count %d, index %d\n", bvhNode.test.y, bvhNode.test.x);
 				for (int i = bvhNode.test.x; i < bvhNode.test.x + bvhNode.test.y; i++) {
-					//distance = r->t;
+					distance = rayDistance;
 					//intersection(r, objects[bvhIndices[i]]);
-					//if (r->t != distance) {//closer than last one
+					if (rayDistance != distance) {//closer than last one
 						*normal = objects[bvhIndices[i]].direction;
 						//printf("OCL: material (%f,%f,%f)", objects[i].color.x, objects[i].color.y, objects[i].color.z);
 						*color = objects[bvhIndices[i]].color;
 						//material->reflectioness = objects[i].reflectioness;
-						printf("OCL: material (%f,%f,%f)\n", color->x, color->y, color->z);
-
-						notDone = false;
-						return;
-					//}
+						//printf("OCL: material (%f,%f,%f)\n", color->x, color->y, color->z);
+						//return;
+					}
+				}
+				pointer--;
+				if (pointer < 1) { //since pointer -1 is being used
+					notDone = false;
+					return;
 				}
 
 			}
 			else {
 				//
-				printf("else count %d, index %d\n", bvhNode.test.y, bvhNode.test.x);
+				//printf("else count %d, index %d\n", bvhNode.test.y, bvhNode.test.x);
 				//printf("pointerA %d, %d", pointer, stack[pointer]);
 				stack[pointer - 1] = bvhNode.test.x;
 				//printf("pointerB %d, %d", pointer, stack[pointer-1]);
