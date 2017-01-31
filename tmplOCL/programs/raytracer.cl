@@ -102,8 +102,9 @@ bool canReachLight(const float3 origin, const float3 direction, const float3 nor
 
 	//#if SLOWBVH
 	return isThereAIntersection(r, objects, amountOfObjects, distanceResult);
+	//return nearestIntersectionBVH(&r, objects, amountOfObjects, color, bvhNodes, bvhIndices, normal);
 	/*#else
-		return scene->isThereAIntersectionBVH(r, distanceResult);
+		return isThereAIntersectionBVH(r, distanceResult);
 	#endif*/
 
 }
@@ -111,7 +112,7 @@ bool canReachLight(const float3 origin, const float3 direction, const float3 nor
 
 float3 directIllumination(float3 intersection, float3 normal, __global struct Triangle* objects, int amountOfObjects, __global struct Light* lights, int amountOfLights, float* angle) {
 	// simplify test
-	return (float3)(1, 1, 1);
+	//return (float3)(1, 1, 1);
 	float3 c = (float3)(0, 0, 0); //color
 	//printf("OCL: %d\n", amountOfLight);
 	for (int i = 0; i < amountOfLights; i++) {
@@ -227,14 +228,14 @@ bool bbIntersects(struct Ray* r, struct BVHNodeStruct bvhNode, float* distance) 
 		return false;
 	}
 	//printf("tmin %f, tmax %f", tmin, tmax);
-	//if (tmin < *distance) {  
-	*distance = tmin;
-	//r->bvhHit++;
-	return true;
-	//}
-	/*else {
+	if (tmin < *distance) {
+		*distance = tmin;
+		//r->bvhHit++;
+		return true;
+	}
+	else {
 		return false; // if the distance is bigger than triangles wouldnt be closer so node can be skipped
-	}*/
+	}
 
 }
 

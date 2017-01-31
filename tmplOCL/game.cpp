@@ -29,7 +29,7 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &(camera->target));
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/triangle10a.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/windmillSmall.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];

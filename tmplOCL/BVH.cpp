@@ -305,8 +305,13 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 		aRight = zsurfaceAreaRight;
 		}
 		//y and z aswell*/
+		
 	}
 	delete[] x, y, z;
+
+	if (lowestDifference >= 4e8f) { // one of the sides is empty
+		return true;
+	}
 
 	//should we split?
 	glm::vec3 leftBottom = glm::vec3(bvhNode->leftBottom.x, bvhNode->leftBottom.y, bvhNode->leftBottom.z);
@@ -387,13 +392,22 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 }
 
 void BVH::maxBound(AABB* aabb, const AABB* check) {
-	aabb->leftBottom.x = min(check->leftBottom.x, aabb->leftBottom.x);
-	aabb->leftBottom.y = min(check->leftBottom.y, aabb->leftBottom.y);
-	aabb->leftBottom.z = min(check->leftBottom.z, aabb->leftBottom.z);
 
-	aabb->rightTop.x = max(check->rightTop.x, aabb->rightTop.x);
-	aabb->rightTop.y = max(check->rightTop.y, aabb->rightTop.y);
-	aabb->rightTop.z = max(check->rightTop.z, aabb->rightTop.z);
+	int x = min(check->leftBottom.x, aabb->leftBottom.x);
+	int y =  min(check->leftBottom.y, aabb->leftBottom.y);
+	int z =  min(check->leftBottom.z, aabb->leftBottom.z);
+
+
+	aabb->leftBottom.x = x;
+	aabb->leftBottom.y = y;
+	aabb->leftBottom.z = z;
+
+	 x = max(check->rightTop.x, aabb->rightTop.x);
+	 y = max(check->rightTop.y, aabb->rightTop.y);
+	 z = max(check->rightTop.z, aabb->rightTop.z);
+	aabb->rightTop.x = x;
+	aabb->rightTop.y = y;
+	aabb->rightTop.z = z;
 }
 
 float BVH::surfaceArea(AABB aabb) {
