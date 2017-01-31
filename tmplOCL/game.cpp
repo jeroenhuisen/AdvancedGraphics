@@ -29,7 +29,7 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &(camera->target));
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/unitBox.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/triangle10a.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];
@@ -137,7 +137,7 @@ void Game::Tick()
 	clEnqueueReadBuffer(testFunction->GetQueue(), writeBuffer, CL_TRUE, 0, len * sizeof(int), ptr, 0, NULL, NULL);
 	shader->Bind();
 	shader->SetInputTexture( GL_TEXTURE0, "color", clOutput );
-	shader->SetInputMatrix( "view", mat4::Identity() );
+	shader->SetInputMatrix( "view", mat4::Identity() ); //wait could I have used this for the camera movement? probably yes.
 	DrawQuad();
 }
 
