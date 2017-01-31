@@ -29,7 +29,7 @@ bool Game::Init()
 	clSetKernelArg(testFunction->GetKernel(), 2, sizeof(cl_float3), &(camera->target));
 	
 	ObjectImporter oi;
-	std::vector<Triangle> t = oi.loadObject("importOBJ/windmillSmall.obj");
+	std::vector<Triangle> t = oi.loadObject("importOBJ/box1.obj");
 	int amountOfTriangles = t.size();
 
 	Triangle* triangles = new Triangle[amountOfTriangles];
@@ -48,8 +48,8 @@ bool Game::Init()
 	triangles[0] = triangle;
 	triangles[1] = triangle2;*/
 
-	cl_mem deviceBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(Triangle), triangles, 0);
-	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(cl_mem), &deviceBuffer);//triangles
+	cl_mem triangleBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(Triangle), triangles, 0);
+	clSetKernelArg(testFunction->GetKernel(), 3, sizeof(cl_mem), &triangleBuffer);//triangles
 	//testFunction->SetArgument(4, amountOfTriangles);
 	clSetKernelArg(testFunction->GetKernel(), 4, sizeof(int), &amountOfTriangles);
 
@@ -87,7 +87,27 @@ bool Game::Init()
 
 
 	BVH bvh;
-	bvh.constructBVH(triangles, amountOfTriangles);
+	unsigned int poolIndex = 0;
+	bvh.constructBVH(triangles, amountOfTriangles, &poolIndex);
+	poolIndex--;// poolIndex is bvh length and was 1 to much since it was used as the next pointer
+
+	BVHNodeStruct* bvhNodes = new BVHNodeStruct[poolIndex];
+	for (int i = 0; i < poolIndex; i++) {
+		bvhNodes[i] = bvh.pool[i];
+	}
+
+
+	cl_mem bvhBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, poolIndex * sizeof(BVHNodeStruct), bvhNodes, 0);
+	clSetKernelArg(testFunction->GetKernel(), 8, sizeof(cl_mem), &bvhBuffer);
+
+	cl_mem indicesBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(unsigned int), bvh.indices, 0);
+	clSetKernelArg(testFunction->GetKernel(), 9, sizeof(cl_mem), &indicesBuffer);
+	
+	// stack for bvh traverse
+	int* stack = new int[poolIndex];
+	cl_mem stackBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_WRITE, poolIndex * sizeof(int), &stack, 0);
+	clSetKernelArg(testFunction->GetKernel(), 10, sizeof(cl_mem), &stackBuffer);
+
 
 	/*vec3 position = vec3(0, 0, 0);
 	vec3 dir = vec3(0, 0, 1);

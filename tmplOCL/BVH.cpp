@@ -2,26 +2,30 @@
 
 #include "BVH.h"
 
-void BVH::constructBVH(Triangle* objects, int N) {
+void BVH::constructBVH(Triangle* objects, int N, unsigned int* poolIndex) {
 	// create index array
 	indices = new unsigned int[N];
 	for (int i = 0; i < N; i++) indices[i] = i;//ISNT USED YET>
 											   // allocate BVH root node
 	pool = new BVHNodeStruct[N * 2 - 1];
-	unsigned int poolIndex = 0;
+	//unsigned int poolIndex = 0;
+	*poolIndex = 0;
 	unsigned int indicesIndex = 0;
-	root = pool[poolIndex++];
+	BVHNodeStruct* temp = &pool[(*poolIndex)++];
+
 
 	// objects stored
 	this->objects = objects;
 
 	// subdivide root node
-	root.leftFirst = 1;
-	root.count = N;
-	AABB bounds = calculateBounds(objects, root.count);//root->calculateBoundsNode(root, objects); 
-	root.leftBottom = { bounds.leftBottom.x, bounds.leftBottom.y, bounds.leftBottom.z };
-	root.rightTop = { bounds.rightTop.x, bounds.rightTop.y, bounds.rightTop.z };
-	subdivide(&root, &poolIndex, &indicesIndex);
+	temp->leftFirst = 1;
+	temp->count = N;
+	AABB bounds = calculateBounds(objects, temp->count);//root->calculateBoundsNode(root, objects); 
+	temp->leftBottom = { bounds.leftBottom.x, bounds.leftBottom.y, bounds.leftBottom.z };
+	temp->rightTop = { bounds.rightTop.x, bounds.rightTop.y, bounds.rightTop.z };
+	subdivide(temp, poolIndex, &indicesIndex);
+	root = *temp;
+	//pool[0] = root;
 }
 
 AABB BVH::calculateBounds(Triangle* objects, int count) {

@@ -13,7 +13,7 @@ public:
 	Triangle* objects;
 
 	//public:
-	void constructBVH(Triangle* objects, int N);
+	void constructBVH(Triangle* objects, int N, unsigned int* poolIndex);
 	AABB calculateBounds(Triangle* objects, int count);
 
 	void subdivide(BVHNodeStruct* bvhNode, unsigned int* poolIndex, unsigned int* first);
@@ -21,7 +21,7 @@ public:
 	//AABB calculateBoundsNode(BVHNode* node);
 
 	Triangle* getTriangleByIndice(unsigned int indiceIndex);
-	void setIndice(unsigned int index, unsigned int value);
+	//void setIndice(unsigned int index, unsigned int value);
 
 	float surfaceArea(AABB aabb);
 	glm::vec3 calcCentroid(Triangle* t);

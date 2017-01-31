@@ -5,6 +5,7 @@
 #include "../RayCL.h"
 #include "../TriangleCL.h"
 #include "../LightCL.h"
+#include "../BVHNodeCL.h"
 //#include "../MaterialCL.h"
 
 #define MAXVALUE 1e34f
@@ -89,7 +90,7 @@ bool canReachLight(const float3 origin, const float3 direction, const float3 nor
 
 float3 directIllumination(float3 intersection, float3 normal, __global struct Triangle* objects, int amountOfObjects, __global struct Light* lights, int amountOfLights, float* angle) {
 	// simplify test
-	//return (float3)(1, 1, 1);
+	return (float3)(1, 1, 1);
 	float3 c = (float3)(0,0,0); //color
 	//printf("OCL: %d\n", amountOfLight);
 	for (int i = 0; i < amountOfLights; i++){
@@ -141,9 +142,13 @@ float3 nearestIntersection(struct Ray* r, __global struct Triangle* objects, int
 }
 
 // http://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
-bool bbIntersects(struct Ray* r, struct BVHNode bvhNode, float* distance) {
+bool bbIntersects(struct Ray* r, struct BVHNodeStruct bvhNode, float* distance) {
 	// r->dir is unit direction vector of ray
-	glm::vec3 dirfrac;
+	float3 dirfrac;
+	/*float3 unit = r->direction - r->origin;
+	unit = normalize(unit);
+	printf("dir %f,%f,%f", r->direction.x, r->direction.y, r->direction.z);
+	printf("dir1 %f,%f,%f", unit.x, unit.y, unit.z);*/
 	dirfrac.x = 1.0f / r->direction.x;
 	dirfrac.y = 1.0f / r->direction.y;
 	dirfrac.z = 1.0f / r->direction.z;
@@ -172,60 +177,90 @@ bool bbIntersects(struct Ray* r, struct BVHNode bvhNode, float* distance) {
 		*distance = tmax;
 		return false;
 	}
-
+	//printf("tmin %f, tmax %f", tmin, tmax);
 	*distance = tmin;
-	r->bvhHit++;
+	//r->bvhHit++;
 	return true;
 
 }
 
-void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float4* color, struct BVHNode bvhNode) {
+void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float4* color, __global struct BVHNodeStruct* bvhNodes, __global unsigned int* bvhIndices, __global int* stack, float3* normal) {
 
 	int pointer = 0;
-	int stack[maxBVH];
-	bool notDone = true;
+	stack[pointer++] = 0; //initialize;
+	bool notDone = false;
+	struct BVHNodeStruct bvhNode;
+
+	bvhNode = bvhNodes[0];
+	//printf("bvhNode 0, %d,%d", bvhNode.count, bvhNode.leftFirst);
+	printf("bvh 0 count %d, index %d", bvhNode.count, bvhNode.leftFirst);
+	bvhNode = bvhNodes[1];
+	printf("bvh 1 count %d, index %d", bvhNode.count, bvhNode.leftFirst);
+
+
 	while(notDone) {
-		bvhNode = bvhNodes[stack[pointer]];
+		printf("pointer %d, %d", pointer, stack[1]);
+		bvhNode = bvhNodes[stack[pointer-1]];
+		//printf("leftBottom (%f, %f, %f), rightTop (%f, %f, %f), p %d", bvhNode.leftBottom.x, bvhNode.leftBottom.y, bvhNode.leftBottom.z, bvhNode.rightTop.x, bvhNode.rightTop.y, bvhNode.rightTop.z, pointer);
+		//printf("bvh reached count %d, index %d", bvhNode.count, bvhNode.leftFirst);
+		if (pointer > 2 * amountOfObjects) {// safety
+			printf("pointer is too high %d", pointer);
+			return;
+		}
 		//printf("OCL: objects (%f,%f,%f)", objects[0].v1.x, objects[0].v1.y, objects[0].v1.z);
 		float distance = MAXVALUE;
 
-		float tempDistance = MAXVALUE;
-		if (!bbIntersects(r, bvhNode, &tempDistance)) {
+		//float tempDistance = MAXVALUE;
+		if (!bbIntersects(r, bvhNode, &distance)) {
+			//printf(" doesn't interesect leftBottom (%f, %f, %f), rightTop (%f, %f, %f), p %d", bvhNode.leftBottom.x, bvhNode.leftBottom.y, bvhNode.leftBottom.z, bvhNode.rightTop.x, bvhNode.rightTop.y, bvhNode.rightTop.z, pointer);
 			pointer--;
-			return;
+			if (pointer < 0) {
+				notDone = false;
+				return;
+			}
+
 		}
 		if (bvhNode.count != 0) {//isLeaf
-			float3 normal;
+			printf("leaf is reached count %d, index %d", bvhNode.count, bvhNode.leftFirst);
 			for (int i = bvhNode.leftFirst; i < bvhNode.leftFirst + bvhNode.count; i++) {
 				distance = r->t;
-				intersection(r, objects[i]);
+				intersection(r, objects[bvhIndices[i]]);
 				if (r->t != distance) {//closer than last one
-					normal = objects[i].direction;
+					*normal = objects[bvhIndices[i]].direction;
 					//printf("OCL: material (%f,%f,%f)", objects[i].color.x, objects[i].color.y, objects[i].color.z);
-					*color = objects[i].color;
+					*color = objects[bvhIndices[i]].color;
 					//material->reflectioness = objects[i].reflectioness;
-					//printf("OCL: material (%f,%f,%f)", color->x, color->y, color->z);
+					printf("OCL: material (%f,%f,%f)", color->x, color->y, color->z);
+					
+					notDone = false;
 				}
 			}
+
 		}
 		else {
 			//
-			stack[pointer++] = bvhNode->leftFirst;
-			stack[pointer++] = bvhNode->leftFirst+1;
+			printf("else count %d, index %d", bvhNode.count, bvhNode.leftFirst);
+			stack[pointer++] = bvhNode.leftFirst;
+			stack[pointer++] = bvhNode.leftFirst+1;
 		}
 	}
 
 }
 
-float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights)
+float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global struct BVHNodeStruct* bvhNodes, __global unsigned int* bvhIndices, __global int* stack)
 {
 	struct Ray r = GeneratePrimaryRay(x, y, pos, direction);
 	//printf("OCL: ray direction (%f,%f,%f)", r.direction.x, r.direction.y, r.direction.z);
 	//struct Material material;
 	//float3 color = (float3)(0, 0, 0, 0);
 	float4 material = (float4)(0,0,0,0);
-	//for(int bounces = 0; bounces < MAXBOUNCES; bounces++){
-		float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
+	for(int bounces = 0; bounces < MAXBOUNCES; bounces++){
+//#if 0
+	//	float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
+//#else
+		float3 normal;
+		nearestIntersectionBVH(&r, triangles, amountOfTriangles, &material, bvhNodes, bvhIndices, stack, &normal);
+//#endif
 		float3 color = (float3)(material.x, material.y, material.z);
 		if (r.t >= MAXVALUE) {
 			return (float3)(0,0,0);
@@ -235,8 +270,8 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 		float3 intersection = r.origin + r.t * r.direction;
 
 		float angle = -1;
-		/*if (material.w == 1) {
-			//glm::vec3 reflect = r.getDirection() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
+		/* (material.w == 1) {
+			//glm::vec3 reflect = r.getDirectiion() - 2.0f * glm::dot(r.getDirection(), normal) * normal;
 			r.origin = intersection + 0.1f * Reflect(r.direction, normal);
 			r.direction = Reflect(direction, normal);
 			r.t = MAXVALUE;
@@ -246,22 +281,27 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 			float3 mul = directIllumination(intersection, normal, triangles, amountOfTriangles, lights, amountOfLights, &angle);
 			return color * mul; //color
 		//}
-	//}
+	}
+	int value = 1;
+	printf("more than max bounces %d", value);
+	return (0, 0, 0);
 
 }
-__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints, __global struct BVHNode* bvhNode, __global unsigned int* indices)
+__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints, __global struct BVHNodeStruct* bvhNode, __global unsigned int* indices, __global int* stack)
 {
 	uint x = get_global_id(0);
 	uint y = get_global_id(1);
 	const uint pixelIdx = x + y * SCRWIDTH;
 	if (pixelIdx >= (SCRWIDTH * SCRHEIGHT)) return;
+	//printf("I am starting %d", amountOfTriangles);
 	// do calculations
 	//printf("OCL: pos (%f,%f,%f)", pos.x, pos.y, pos.z);
 	//printf("OCL: target (%f,%f,%f)", target.x, target.y, target.z);
 	//printf("OCL: triangles v1(%f,%f,%f), v2(%f,%f,%f), v3(%f,%f,%f)", triangles.v1.x, triangles.v1.y, triangles.v1.z, triangles.v2.x, triangles.v2.y, triangles.v2.z, triangles.v3.x, triangles.v3.y, triangles.v3.z);
 	//printf("OCL: triangle color (%f,%f,%f)", triangles[12].color.x, triangles[12].color.y, triangles[12].color.z);
 
-	float3 color = Trace(x, y, pos, direction, triangles, amountOfTriangles, lights, amountOfLights);
+	printf("OCL:bvh 1 count %d, index %d", bvhNode[1].count, bvhNode[1].leftFirst);
+	float3 color;// = Trace(x, y, pos, direction, triangles, amountOfTriangles, lights, amountOfLights, bvhNode, indices, stack);
 	//float3 color = (float3)(x, y, 0);
 	// send result to output array
 	/*int r = (int)(clamp( color.x, 0.f, 1.f ) * 255.0f);

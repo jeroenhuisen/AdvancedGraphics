@@ -1,6 +1,5 @@
-#pragma once
 
-struct BVHNode {
+struct BVHNodeStruct {
 	float3 leftBottom;
 	float3 rightTop;
 
