@@ -89,7 +89,7 @@ bool Game::Init()
 	BVH bvh;
 	unsigned int poolIndex = 0;
 	bvh.constructBVH(triangles, amountOfTriangles, &poolIndex);
-	poolIndex--;// poolIndex is bvh length and was 1 to much since it was used as the next pointer
+	//poolIndex--;// poolIndex is bvh length and was 1 to much since it was used as the next pointer
 
 	BVHNodeStruct* bvhNodes = new BVHNodeStruct[poolIndex];
 	for (int i = 0; i < poolIndex; i++) {
@@ -107,13 +107,17 @@ bool Game::Init()
 	
 	// stack for bvh traverse
 	int* stack = new int[poolIndex];
-	cl_mem stackBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_WRITE, poolIndex * sizeof(int), &stack, 0);
-	clSetKernelArg(testFunction->GetKernel(), 10, sizeof(cl_mem), &stackBuffer);
+	/*cl_mem stackBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_WRITE, poolIndex * sizeof(int), &stack, 0);*/
+	// use poolIndex
+	clSetKernelArg(testFunction->GetKernel(), 10, poolIndex * sizeof(int), NULL);
 
 
 	/*vec3 position = vec3(0, 0, 0);
 	vec3 dir = vec3(0, 0, 1);
 	GeneratePrimaryRay(400, 240, position, dir);*/
+	cl_float3 normal;
+	cl_float3 color;
+	nearestIntersectionBVH(triangles, amountOfTriangles, &color, bvhNodes, bvh.indices, stack, &normal);
 	// done
 	timer.init();
 	return true;
