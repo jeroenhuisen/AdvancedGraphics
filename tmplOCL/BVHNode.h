@@ -27,6 +27,7 @@ struct BVHNodeStruct {
 	cl_float3 leftBottom;
 	cl_float3 rightTop;
 
-	cl_int leftFirst;
-	cl_int count; //amount of triangles
+	//cl_int leftFirst;
+	//cl_int count; //amount of triangles
+	cl_int3 test;
 };

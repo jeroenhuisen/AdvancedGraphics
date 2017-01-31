@@ -188,19 +188,19 @@ void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, in
 
 	int pointer = 0;
 	stack[pointer++] = 0; //initialize;
-	bool notDone = false;
+	bool notDone = true;
 	struct BVHNodeStruct bvhNode;
 
-	bvhNode = bvhNodes[0];
+	//bvhNode = bvhNodes[0];
 	//printf("bvhNode 0, %d,%d", bvhNode.count, bvhNode.leftFirst);
-	printf("bvh 0 count %d, index %d", bvhNode.count, bvhNode.leftFirst);
-	bvhNode = bvhNodes[1];
-	printf("bvh 1 count %d, index %d", bvhNode.count, bvhNode.leftFirst);
+	//printf("bvh 0 count %d, index %d", bvhNode.test.y, bvhNode.test.x);
+	//bvhNode = bvhNodes[7];
+	//printf("bvh 1 count %d, index %d", bvhNode.test.y, bvhNode.test.x);
 
 
 	while(notDone) {
-		printf("pointer %d, %d", pointer, stack[1]);
-		bvhNode = bvhNodes[stack[pointer-1]];
+		printf("pointer %d, %d", pointer, stack[(pointer - 1)]);
+		bvhNode = bvhNodes[stack[(pointer-1)]];
 		//printf("leftBottom (%f, %f, %f), rightTop (%f, %f, %f), p %d", bvhNode.leftBottom.x, bvhNode.leftBottom.y, bvhNode.leftBottom.z, bvhNode.rightTop.x, bvhNode.rightTop.y, bvhNode.rightTop.z, pointer);
 		//printf("bvh reached count %d, index %d", bvhNode.count, bvhNode.leftFirst);
 		if (pointer > 2 * amountOfObjects) {// safety
@@ -220,9 +220,9 @@ void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, in
 			}
 
 		}
-		if (bvhNode.count != 0) {//isLeaf
-			printf("leaf is reached count %d, index %d", bvhNode.count, bvhNode.leftFirst);
-			for (int i = bvhNode.leftFirst; i < bvhNode.leftFirst + bvhNode.count; i++) {
+		if (bvhNode.test.y != 0) {//isLeaf
+			printf("leaf is reached count %d, index %d", bvhNode.test.y, bvhNode.test.x);
+			for (int i = bvhNode.test.x; i < bvhNode.test.x + bvhNode.test.y; i++) {
 				distance = r->t;
 				intersection(r, objects[bvhIndices[i]]);
 				if (r->t != distance) {//closer than last one
@@ -239,9 +239,12 @@ void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, in
 		}
 		else {
 			//
-			printf("else count %d, index %d", bvhNode.count, bvhNode.leftFirst);
-			stack[pointer++] = bvhNode.leftFirst;
-			stack[pointer++] = bvhNode.leftFirst+1;
+			printf("else count %d, index %d", bvhNode.test.y, bvhNode.test.x);
+			printf("pointerA %d, %d", pointer, stack[pointer]);
+			stack[pointer++] = bvhNode.test.x;
+			printf("pointerB %d, %d", pointer, stack[pointer-1]);
+			stack[pointer++] = bvhNode.test.x +1;
+			printf("pointerC %d, %d", pointer, stack[pointer - 1]);
 		}
 	}
 
@@ -298,10 +301,9 @@ __kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direc
 	//printf("OCL: pos (%f,%f,%f)", pos.x, pos.y, pos.z);
 	//printf("OCL: target (%f,%f,%f)", target.x, target.y, target.z);
 	//printf("OCL: triangles v1(%f,%f,%f), v2(%f,%f,%f), v3(%f,%f,%f)", triangles.v1.x, triangles.v1.y, triangles.v1.z, triangles.v2.x, triangles.v2.y, triangles.v2.z, triangles.v3.x, triangles.v3.y, triangles.v3.z);
-	//printf("OCL: triangle color (%f,%f,%f)", triangles[12].color.x, triangles[12].color.y, triangles[12].color.z);
 
-	printf("OCL:bvh 1 count %d, index %d", bvhNode[1].count, bvhNode[1].leftFirst);
-	float3 color;// = Trace(x, y, pos, direction, triangles, amountOfTriangles, lights, amountOfLights, bvhNode, indices, stack);
+	//printf("OCL:bvh 1 count %d, index %d", bvhNode[1].test.y, bvhNode[1].test.x);
+	float3 color = Trace(x, y, pos, direction, triangles, amountOfTriangles, lights, amountOfLights, bvhNode, indices, stack);
 	//float3 color = (float3)(x, y, 0);
 	// send result to output array
 	/*int r = (int)(clamp( color.x, 0.f, 1.f ) * 255.0f);

@@ -96,8 +96,10 @@ bool Game::Init()
 		bvhNodes[i] = bvh.pool[i];
 	}
 
+	int test = poolIndex * sizeof(BVHNodeStruct);
 
-	cl_mem bvhBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, poolIndex * sizeof(BVHNodeStruct), bvhNodes, 0);
+
+	cl_mem bvhBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, test, bvhNodes, 0);
 	clSetKernelArg(testFunction->GetKernel(), 8, sizeof(cl_mem), &bvhBuffer);
 
 	cl_mem indicesBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, amountOfTriangles * sizeof(unsigned int), bvh.indices, 0);

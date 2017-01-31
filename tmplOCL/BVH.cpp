@@ -18,9 +18,9 @@ void BVH::constructBVH(Triangle* objects, int N, unsigned int* poolIndex) {
 	this->objects = objects;
 
 	// subdivide root node
-	temp->leftFirst = 1;
-	temp->count = N;
-	AABB bounds = calculateBounds(objects, temp->count);//root->calculateBoundsNode(root, objects); 
+	temp->test.x = 1;
+	temp->test.y = N;
+	AABB bounds = calculateBounds(objects, temp->test.y);//root->calculateBoundsNode(root, objects); 
 	temp->leftBottom = { bounds.leftBottom.x, bounds.leftBottom.y, bounds.leftBottom.z };
 	temp->rightTop = { bounds.rightTop.x, bounds.rightTop.y, bounds.rightTop.z };
 	subdivide(temp, poolIndex, &indicesIndex);
@@ -46,18 +46,18 @@ AABB BVH::calculateBounds(Triangle* objects, int count) {
 }
 
 void BVH::subdivide(BVHNodeStruct* bvhNode, unsigned int* poolIndex, unsigned int* first) {
-	bvhNode->leftFirst = *poolIndex;
+	bvhNode->test.x = *poolIndex;
 
 
 	if (partition(bvhNode,*first)) {
-		bvhNode->leftFirst = *first;
-		(*first) += bvhNode->count;
+		bvhNode->test.x = *first;
+		(*first) += bvhNode->test.y;
 		return;
 	}
-	*poolIndex = bvhNode->leftFirst + 2;
-	subdivide(&pool[bvhNode->leftFirst], poolIndex, first);
-	subdivide(&pool[bvhNode->leftFirst+1], poolIndex, first);
-	bvhNode->count = 0;
+	*poolIndex = bvhNode->test.x + 2;
+	subdivide(&pool[bvhNode->test.x], poolIndex, first);
+	subdivide(&pool[bvhNode->test.x+1], poolIndex, first);
+	bvhNode->test.y = 0;
 
 }
 /*
@@ -95,7 +95,7 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 	AABB aabbLeft = aabbDefault;
 	AABB aabbRight = aabbDefault;
 	// 1 triangle cannot be divided since this is not a SBVH sadly enough
-	if (bvhNode->count <= 1) {
+	if (bvhNode->test.y <= 1) {
 		return true;
 	}
 
@@ -103,11 +103,11 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 	std::vector<int> yLeft, yRight;
 	std::vector<int> zLeft, zRight;*/
 
-	int* x = new int[bvhNode->count];
-	int* y = new int[bvhNode->count];
-	int* z = new int[bvhNode->count];
+	int* x = new int[bvhNode->test.y];
+	int* y = new int[bvhNode->test.y];
+	int* z = new int[bvhNode->test.y];
 
-	for (int i = first; i < first + bvhNode->count; i++) {
+	for (int i = first; i < first + bvhNode->test.y; i++) {
 		/*	xLeft.clear();
 		xRight.clear();
 		yLeft.clear();
@@ -116,9 +116,9 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 		zRight.clear();*/
 		Triangle* t = getTriangleByIndice(i);
 		glm::vec3 centroid = calcCentroid(t);
-		int xCounter = 0, xCounterRight = bvhNode->count - 1;
-		int yCounter = 0, yCounterRight = bvhNode->count - 1;
-		int zCounter = 0, zCounterRight = bvhNode->count - 1;
+		int xCounter = 0, xCounterRight = bvhNode->test.y - 1;
+		int yCounter = 0, yCounterRight = bvhNode->test.y - 1;
+		int zCounter = 0, zCounterRight = bvhNode->test.y - 1;
 		//float xsurfaceAreaLeft = t->getBounds().surfaceArea();
 		float xsurfaceAreaLeft = 0;
 		float xsurfaceAreaRight = 0;
@@ -136,7 +136,7 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 
 
 		//not most effecient way 
-		for (int j = first; j < first + bvhNode->count; j++) {
+		for (int j = first; j < first + bvhNode->test.y; j++) {
 			Triangle* temp = getTriangleByIndice(j);
 			glm::vec3 tempCentroid = calcCentroid(temp);
 			//xsplit
@@ -192,7 +192,7 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 			Triangle* temp = getTriangleByIndice(x[x1]);
 			maxBound(&aabbXLeft, &getBounds(*temp));
 		}
-		for (int x1 = xCounterRight + 1; x1 < bvhNode->count; x1++) {
+		for (int x1 = xCounterRight + 1; x1 < bvhNode->test.y; x1++) {
 			Triangle* temp = getTriangleByIndice(x[x1]);
 			maxBound(&aabbXRight, &getBounds(*temp));
 		}
@@ -203,7 +203,7 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 			Triangle* temp =getTriangleByIndice(y[y1]);
 			maxBound(&aabbYLeft, &getBounds(*temp));
 		}
-		for (int y1 = yCounterRight + 1; y1 <  bvhNode->count; y1++) {
+		for (int y1 = yCounterRight + 1; y1 <  bvhNode->test.y; y1++) {
 			Triangle* temp = getTriangleByIndice(y[y1]);
 			maxBound(&aabbYRight, &getBounds(*temp));
 		}
@@ -214,7 +214,7 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 			Triangle* temp = getTriangleByIndice(z[z1]);
 			maxBound(&aabbZLeft, &getBounds(*temp));
 		}
-		for (int z1 = zCounterRight + 1; z1 <  bvhNode->count; z1++) {
+		for (int z1 = zCounterRight + 1; z1 <  bvhNode->test.y; z1++) {
 			Triangle* temp = getTriangleByIndice(z[z1]);
 			maxBound(&aabbZRight, &getBounds(*temp));
 		}
@@ -313,7 +313,7 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 	glm::vec3 rightTop = glm::vec3(bvhNode->rightTop.x, bvhNode->rightTop.y, bvhNode->rightTop.z);
 	AABB* bounds = new AABB(leftBottom, rightTop);
 	float test = surfaceArea(*bounds);
-	if ((aLeft * bestLeftCount + aRight * (bvhNode->count - bestLeftCount)) >= surfaceArea(*bounds) * bvhNode->count) {
+	if ((aLeft * bestLeftCount + aRight * (bvhNode->test.y - bestLeftCount)) >= surfaceArea(*bounds) * bvhNode->test.y) {
 		// we shouldnt
 		return true;
 	}
@@ -325,17 +325,17 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 	//setIndice(bestIndice, indicesMiddle);
 	//left->first = bestIndice;
 	int leftIndice = 0;// first;
-	int rightIndice = bvhNode->count - 1; // first + count - 1;
+	int rightIndice = bvhNode->test.y - 1; // first + count - 1;
 								 //for swapping
 								 //int* indices = getIndices();
 								 //AABB aabbLeft(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
 								 //AABB aabbRight(glm::vec3(INFINITY, INFINITY, INFINITY), glm::vec3(-INFINITY, -INFINITY, -INFINITY));
-	unsigned int* backup = new unsigned int[bvhNode->count];
-	for (int i = 0; i < bvhNode->count; i++) {
+	unsigned int* backup = new unsigned int[bvhNode->test.y];
+	for (int i = 0; i < bvhNode->test.y; i++) {
 		backup[i] = indices[first + i];
 	}
 
-	for (int i = first; i < first + bvhNode->count; i++) {
+	for (int i = first; i < first + bvhNode->test.y; i++) {
 		//if (i != bestIndice) {
 		Triangle* temp = getTriangleByIndice(i);
 		glm::vec3 tempCentroid = calcCentroid(temp);
@@ -368,20 +368,20 @@ bool BVH::partition(BVHNodeStruct* bvhNode, int first) {
 		//}
 	}
 	//overwrite values;
-	for (int i = 0; i < bvhNode->count; i++) {
+	for (int i = 0; i < bvhNode->test.y; i++) {
 		indices[first + i] = backup[i];
 	}
 	//not sure if required since local variable but yea 
 	delete[] backup;
 
 	//bvh->pool[left].first = first;
-	pool[bvhNode->leftFirst].count = bestLeftCount;
-	pool[bvhNode->leftFirst].leftBottom = { aabbLeft.leftBottom.x, aabbLeft.leftBottom.y, aabbLeft.leftBottom.z };
-	pool[bvhNode->leftFirst].rightTop = { aabbLeft.rightTop.x, aabbLeft.rightTop.y, aabbLeft.rightTop.z };
+	pool[bvhNode->test.x].test.y = bestLeftCount;
+	pool[bvhNode->test.x].leftBottom = { aabbLeft.leftBottom.x, aabbLeft.leftBottom.y, aabbLeft.leftBottom.z };
+	pool[bvhNode->test.x].rightTop = { aabbLeft.rightTop.x, aabbLeft.rightTop.y, aabbLeft.rightTop.z };
 	//bvh->pool[left+1].first = first+rightIndice+1; //first+count-bestLeftCount;
-	pool[bvhNode->leftFirst + 1].count = bvhNode->count - bestLeftCount;
-	pool[bvhNode->leftFirst +1 ].leftBottom = { aabbRight.leftBottom.x, aabbRight.leftBottom.y, aabbRight.leftBottom.z };
-	pool[bvhNode->leftFirst + 1].rightTop = { aabbRight.rightTop.x, aabbRight.rightTop.y, aabbRight.rightTop.z };
+	pool[bvhNode->test.x + 1].test.y = bvhNode->test.y - bestLeftCount;
+	pool[bvhNode->test.x +1 ].leftBottom = { aabbRight.leftBottom.x, aabbRight.leftBottom.y, aabbRight.leftBottom.z };
+	pool[bvhNode->test.x + 1].rightTop = { aabbRight.rightTop.x, aabbRight.rightTop.y, aabbRight.rightTop.z };
 
 	return false;
 }
