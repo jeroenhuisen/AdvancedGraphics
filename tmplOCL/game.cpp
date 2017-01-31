@@ -109,7 +109,8 @@ bool Game::Init()
 	int* stack = new int[poolIndex];
 	/*cl_mem stackBuffer = clCreateBuffer(testFunction->GetContext(), CL_MEM_READ_WRITE, poolIndex * sizeof(int), &stack, 0);*/
 	// use poolIndex
-	clSetKernelArg(testFunction->GetKernel(), 10, poolIndex * sizeof(int), NULL);
+	//clSetKernelArg(testFunction->GetKernel(), 10, poolIndex * sizeof(int), NULL);
+	//clSetKernelArg(testFunction->GetKernel(), 10,sizeof(cl_mem), &stackBuffer);
 
 
 	/*vec3 position = vec3(0, 0, 0);

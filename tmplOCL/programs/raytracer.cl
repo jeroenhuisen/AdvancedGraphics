@@ -13,8 +13,11 @@
 #define DEBUG
 #ifdef DEBUG
 #define XDEBUG 410
-#define YDEBUG 240
+#define YDEBUG 220
 #endif
+//#define LIMITED
+
+#define STACKSIZE 128
 
 struct Ray GeneratePrimaryRay(int x, int y, float3 pos, float3 direction) {
 	struct Ray r;
@@ -193,9 +196,10 @@ bool bbIntersects(struct Ray* r, struct BVHNodeStruct bvhNode, float* distance) 
 
 }
 
-void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float4* color, __global struct BVHNodeStruct* bvhNodes, __global unsigned int* bvhIndices, __local int* stack, float3* normal) {
+void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, int amountOfObjects, float4* color, __global struct BVHNodeStruct* bvhNodes, __global unsigned int* bvhIndices, float3* normal) {
 
 	int pointer = 0;
+	int stack[STACKSIZE];//needs to be predefined :(
 	stack[pointer++] = 0; //initialize;
 	bool notDone = true;
 	struct BVHNodeStruct bvhNode;
@@ -210,11 +214,15 @@ void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, in
 	while (notDone) {
 
 #ifdef DEBUG
+#ifdef LIMITED
 		uint x = get_global_id(0);
 		uint y = get_global_id(1);
 		if (x == XDEBUG && y == YDEBUG) {
-			printf("pointer %d, %d", pointer, stack[(pointer - 1)]);
+#endif
+		//	printf("pointer %d, %d", pointer, stack[(pointer - 1)]);
+#ifdef LIMITED
 		}
+#endif
 #endif
 	
 		bvhNode = bvhNodes[stack[(pointer-1)]];
@@ -240,9 +248,13 @@ void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, in
 			if (bvhNode.test.y != 0) {//isLeaf
 				//printf("leaf is reached count %d, index %d", bvhNode.test.y, bvhNode.test.x);
 #ifdef DEBUG
+#ifdef LIMITED
 				if (x == XDEBUG && y == YDEBUG) {
-					printf("leaf is reached count %d, index %d", bvhNode.test.y, bvhNode.test.x);
+#endif
+					//printf("leaf is reached count %d, index %d", bvhNode.test.y, bvhNode.test.x);
+#ifdef LIMITED
 				}
+#endif
 #endif
 				for (int i = bvhNode.test.x; i < bvhNode.test.x + bvhNode.test.y; i++) {
 
@@ -250,7 +262,16 @@ void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, in
 					intersection(r, objects[bvhIndices[i]]);
 					if (r->t != distance) {//closer than last one
 						*normal = objects[bvhIndices[i]].direction;
-						//printf("OCL: material (%f,%f,%f)", objects[i].color.x, objects[i].color.y, objects[i].color.z);
+#ifdef DEBUG
+#ifdef LIMITED
+						if (x == XDEBUG && y == YDEBUG) {
+#endif
+//							printf("OCL: material (%f,%f,%f)", objects[bvhIndices[i]].color.x, objects[bvhIndices[i]].color.y, objects[bvhIndices[i]].color.z);
+#ifdef LIMITED
+						}
+#endif
+#endif
+					
 						*color = objects[bvhIndices[i]].color;
 						//material->reflectioness = objects[i].reflectioness;
 						//printf("OCL: material (%f,%f,%f)", color->x, color->y, color->z);
@@ -280,7 +301,7 @@ void nearestIntersectionBVH(struct Ray* r, __global struct Triangle* objects, in
 
 }
 
-float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global struct BVHNodeStruct* bvhNodes, __global unsigned int* bvhIndices, __local int* stack)
+float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global struct BVHNodeStruct* bvhNodes, __global unsigned int* bvhIndices)
 {
 	struct Ray r = GeneratePrimaryRay(x, y, pos, direction);
 	//printf("OCL: ray direction (%f,%f,%f)", r.direction.x, r.direction.y, r.direction.z);
@@ -291,17 +312,19 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 //#if 0
 		//float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
 //#else
-		float3 normal;
-		nearestIntersectionBVH(&r, triangles, amountOfTriangles, &material, bvhNodes, bvhIndices, stack, &normal);
+		float3 normal = (float3)(0, 0, 0);
+		nearestIntersectionBVH(&r, triangles, amountOfTriangles, &material, bvhNodes, bvhIndices, &normal);
 		//return (float3)(0, 0, 0);
 //#endif
 		float3 color = (float3)(material.x, material.y, material.z);
 #ifdef DEBUG
+#ifdef LIMITED
 		uint x = get_global_id(0);
 		uint y = get_global_id(1);
 		if (x == XDEBUG && y == YDEBUG) {
 			return (float3)(0, 1, 0);
 		}
+#endif
 #endif
 
 		if (r.t >= MAXVALUE) {
@@ -329,7 +352,7 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 	return (0, 0, 0);
 
 }
-__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints, __global struct BVHNodeStruct* bvhNode, __global unsigned int* indices, __local int* stack)
+__kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direction, __global struct Triangle* triangles, int amountOfTriangles, __global struct Light* lights, int amountOfLights, __global int* ints, __global struct BVHNodeStruct* bvhNode, __global unsigned int* indices)
 {
 	uint x = get_global_id(0);
 	uint y = get_global_id(1);
@@ -341,7 +364,7 @@ __kernel void TestFunction(write_only image2d_t outimg, float3 pos, float3 direc
 	//printf("OCL: target (%f,%f,%f)", target.x, target.y, target.z);
 	//printf("OCL: triangles v1(%f,%f,%f), v2(%f,%f,%f), v3(%f,%f,%f)", triangles.v1.x, triangles.v1.y, triangles.v1.z, triangles.v2.x, triangles.v2.y, triangles.v2.z, triangles.v3.x, triangles.v3.y, triangles.v3.z);
 
-	float3 color = Trace(x, y, pos, direction, triangles, amountOfTriangles, lights, amountOfLights, bvhNode, indices, stack);
+	float3 color = Trace(x, y, pos, direction, triangles, amountOfTriangles, lights, amountOfLights, bvhNode, indices);
 	//float3 color = (float3)(x, y, 0);
 	// send result to output array
 	/*int r = (int)(clamp( color.x, 0.f, 1.f ) * 255.0f);
