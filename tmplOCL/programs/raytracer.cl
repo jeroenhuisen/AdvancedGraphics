@@ -10,7 +10,7 @@
 
 #define MAXVALUE 1e34f
 #define MAXBOUNCES 10
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define XDEBUG 410
 #define YDEBUG 150
@@ -169,8 +169,8 @@ bool bbIntersects(struct Ray* r, struct BVHNodeStruct bvhNode, float* distance) 
 	float3 dirfrac;
 
 
-	float3 unit = r->direction - r->origin;
-	unit = normalize(unit);
+	//float3 unit = r->direction - r->origin;
+	float3 unit = normalize(r->direction);
 	/*printf("dir %f,%f,%f", r->direction.x, r->direction.y, r->direction.z);
 	printf("dir1 %f,%f,%f", unit.x, unit.y, unit.z);*/
 	dirfrac.x = 1.0f / unit.x;// r->direction.x;
@@ -355,7 +355,7 @@ float3 Trace(int x, int y, float3 pos, float3 direction, __global struct Triangl
 	float4 material = (float4)(0, 0, 0, 0);
 	for (int bounces = 0; bounces < MAXBOUNCES; bounces++) {
 		//#if 0
-				//float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
+		//		float3 normal = nearestIntersection(&r, triangles, amountOfTriangles, &material);
 		//#else
 		float3 normal = (float3)(0, 0, 0);
 		nearestIntersectionBVH(&r, triangles, amountOfTriangles, &material, bvhNodes, bvhIndices, &normal);
